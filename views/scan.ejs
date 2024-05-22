@@ -1,0 +1,10 @@
+<%- include('templates/header') %>
+
+<%- include('templates/navbar', {navLinks: navLinks}) %>
+
+<form action="/predict" method="post" enctype="multipart/form-data">
+    <input type="file" name="garbage" accept=".png, .jpeg, .jpg" capture="user"/>
+    <input type="submit">
+</form>
+
+<%- include('templates/footer') %>

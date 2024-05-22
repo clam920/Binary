@@ -14,6 +14,9 @@ require('./routes/googleAuth.js');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 
+// Handles image uploads
+const multer  = require('multer')
+
 // Mongo security information
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
@@ -197,7 +200,7 @@ const userCollection = database.db(mongodb_database).collection('users');
 const navLinks = [
     { name: 'Home', link: '/' },
     { name: 'Recycle Centers', link: '/recycleCenters' },
-    { name: 'Scan', link: '/' },
+    { name: 'Scan', link: '/scan' },
     { name: 'Tutorial', link: '/tutorial' },
     { name: 'Profile', link: '/profile' },
 ];
@@ -298,6 +301,21 @@ app.get('/recycleCenters', (req, res) => {
     const email = req.body.email;
     res.render('recycleCenters', { navLinks });
 });
+
+app.get('/scan', (req, res) => {
+    res.render('scan', { navLinks });
+});
+
+const upload = multer();
+const predict = require('./predict');
+
+app.post('/predict', upload.single('garbage'), async (req, res) => {
+    imageEncoding = req.file.buffer;
+    const prediction = await predict(imageEncoding);
+    console.log(`This trash is most likely ${prediction}.`);
+
+    res.render('scan', { navLinks });
+})
 
 // Logout 
 app.post('/logout', (req, res) => {
