@@ -2,18 +2,14 @@
     <%- include('templates/navbar', {navLinks: navLinks}) %>
         <div class="pt-5">
             <div id="map" class="container text-center"></div>
-            <div class="container text-center mt-3">
-                <select id="mySelection" class="form-select" aria-label="Default select example">
-                    <option>--Open this select menu--</option>
-                    <otion value="cardboard">Cardboard</option>
-                        <option value="glass">Glass</option>
-                        <option value="metal">Metal</option>
-                        <option value="plastic">Plastic</option>
-                        <option value="paper">Paper</option>
-                        <option value="trash">Trash</option>
-                </select>
-                <button type="button" onclick="getSelected()" class="btn btn-primary mt-2">Find location</button>
+            <div class="container input-group mt-3 mb-3">
+                <input type="text" id="auto-suggest" autocomplete="off" class="form-control" placeholder="Start typing..." aria-label="Recipient's username"
+                    aria-describedby="button-addon2">
+                <button class="btn btn-outline-primary" type="button" id="button-addon2" onclick="getSelected2()">Find Location</button>
             </div>
+            <div id="suggestions"></div>
+
+            <div id="infoCard" class="container d-flex flex-row justify-content-evenly mt-5 text-center"></div>
 
             <script>
                 mapboxgl.accessToken = 'pk.eyJ1IjoiZGFycmVsZ2lvIiwiYSI6ImNsdzhoMDRibjJjc2EybnF6a2FhdWs2YTgifQ.11mCPzXcuXT20hmypmw50w';

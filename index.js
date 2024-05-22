@@ -135,32 +135,76 @@ const data = [
     }
 ]
 
-const getSelected = () => {
-    var selection = document.getElementById("mySelection").value;
-    if (facilities.length > 0) {
-        facilities.splice(0, facilities.length);
-    }
-    data.forEach(el => {
-        if (el.type === selection) {
-            facilities = el.facility;
-        }
-    });
+// const getSelected = () => {
+//     var selection = document.getElementById("mySelection").value;
+//     if (facilities.length > 0) {
+//         facilities.splice(0, facilities.length);
+//     }
+//     data.forEach(el => {
+//         if (el.type === selection) {
+//             facilities = el.facility;
+//         }
+//     });
 
-    removeMarkers();
+//     removeMarkers();
 
-    // add markers to map
-    for (const feature of facilities) {
-        // console.log(feature)
-        // create a HTML element for each feature
-        const el = document.createElement('div');
-        el.className = 'marker';
-        const popup = new mapboxgl.Popup({ offset: 25 }).setText(feature.place);
+//     // add markers to map
+//     for (const feature of facilities) {
+//         // console.log(feature)
+//         // create a HTML element for each feature
+//         const el = document.createElement('div');
+//         el.className = 'marker';
+//         const popup = new mapboxgl.Popup({ offset: 25 }).setText(feature.place);
 
 
-        // make a marker for each feature and add to the map
-        new mapboxgl.Marker(el).setLngLat(feature.coordinates).addTo(map).setPopup(popup);
-    }
-}
+//         // make a marker for each feature and add to the map
+//         new mapboxgl.Marker(el).setLngLat(feature.coordinates).addTo(map).setPopup(popup);
+//     }
+// }
+
+// const getSelected2 = () => {
+//     var selection = document.getElementById("auto-suggest").value;
+//     // console.log(selection);
+//     if (facilities.length > 0) {
+//         facilities.splice(0, facilities.length);
+//     }
+//     data.forEach(el => {
+//         if (el.type === selection) {
+//             facilities = el.facility;
+//         }
+//     });
+
+//     removeMarkers();
+
+//     document.getElementById("infoCard").innerHTML = "";
+
+//     // add markers to map
+//     for (const feature of facilities) {
+//         // console.log(feature)
+//         // create a HTML element for each feature
+//         const el = document.createElement('div');
+//         el.className = 'marker';
+//         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(feature.place + "\n\n" + `<a href="${feature.directions}" target="_blank">${feature.directions}</a>`);
+
+//         // make a marker for each feature and add to the map
+//         new mapboxgl.Marker(el).setLngLat(feature.coordinates).addTo(map).setPopup(popup);
+
+//         // info card for features
+//         const elCard = document.createElement('div');
+//         elCard.className = 'card';
+//         elCard.style = 'width: 18rem;';
+//         elCard.innerHTML = `<div class="card-body">
+//         <h5 class="card-title">${feature.place}</h5>
+//         <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+//         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+//         <a href="#" class="card-link">Card link</a>
+//         <a href="#" class="card-link">Another link</a>
+//     </div>`;
+
+//         document.getElementById("infoCard").appendChild(elCard);
+
+//     }
+// }
 
 function removeMarkers() {
     const markers = document.getElementsByClassName('marker');
