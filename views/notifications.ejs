@@ -1,0 +1,19 @@
+<%- include('templates/header') %>
+  <link rel="stylesheet" href="/css/notifications.css">
+
+  <%- include('templates/navbar', {navLinks: navLinks, username}) %>
+
+    <h1>Notifications</h1>
+
+    <div id="notifications">
+
+      <div class="card">
+        <h5 class="card-header">Create a Notification</h5>
+        <div class="card-body">
+          <p class="card-text">The notification will remind you of the weekly waste collection of your place</p>
+            <a href="/createNotification" class="btn btn-primary">Create</a>
+        </div>
+      </div>
+    </div>
+
+    <%- include('templates/footer') %>

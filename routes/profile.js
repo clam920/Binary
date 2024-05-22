@@ -7,7 +7,6 @@ const navLinks = [
     {name: 'Recycle Centers', link: '/'},
     {name: 'Scan', link: '/'},
     {name: 'Tutorial', link: '/tutorial'},
-    {name: 'Profile', link: '/profile'}
 ];
 
 const mongodb_database = process.env.MONGODB_DATABASE;

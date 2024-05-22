@@ -1,0 +1,43 @@
+<%- include('templates/header') %>
+
+<%- include('templates/navbar', {navLinks: navLinks, username}) %>
+
+<div style="display: grid; place-items: center;">
+  <h2 style="margin: 2vw;"><a href="/notifications">←</a> Notifications</h2>
+  <form action='/recordNotification' method='post' style="width: auto;">
+    <!-- title -->
+      <div class="row mb-3">
+          <label for="inputEmail3" class="col-sm-2 col-form-label" >Title</label>
+          <input type="text" class="form-control" id="inputEmail3" name='title' required=true>
+      </div>
+      <!-- notes -->
+      <div class="row mb-3">
+          <label for="inputPassword3" class="col-sm-2 col-form-label">Notes</label>
+          <textarea type="text" class="form-control" id="inputPassword3" name='notes'></textarea>
+      </div>
+      <!-- Day -->
+      <div class="row mb-3">
+        <label for="inputEmail3" class="col-sm-2 col-form-label" >Day</label>
+        <select id="day-of-week" name="day-of-week" class="form-select" aria-label="Default select example" required>
+          <option value="" disabled selected>Select a day</option>
+          <option value="monday">Monday</option>
+          <option value="tuesday">Tuesday</option>
+          <option value="wednesday">Wednesday</option>
+          <option value="thursday">Thursday</option>
+          <option value="friday">Friday</option>
+          <option value="saturday">Saturday</option>
+          <option value="sunday">Sunday</option>
+      </select>
+      </div>
+      <!-- time -->
+      <div class="row mb-3">
+        <label for="inputEmail3" class="col-sm-2 col-form-label" >Time</label>
+        <input type="time" class="form-control" id="inputEmail3" name='time' min="00:00" max="23:59" required>
+      </div>
+
+      <div style="display: grid; place-items: center;">
+          <button type="submit" class="btn btn-primary">Create</button>
+      </div>
+  </form>
+</div>
+<%- include('templates/footer') %>

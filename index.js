@@ -202,8 +202,7 @@ const navLinks = [
     { name: 'Home', link: '/' },
     { name: 'Recycle Centers', link: '/recycleCenters' },
     { name: 'Scan', link: '/' },
-    { name: 'Tutorial', link: '/tutorial' },
-    { name: 'Profile', link: '/profile' },
+    { name: 'Tutorial', link: '/tutorial' }
 ];
 
 // Passport to use google authentication
@@ -247,6 +246,25 @@ app.use('/confirmEmail', confirmEmail); // gets the email to check if it exist i
 app.use('/resetPassword', resetPassword); // gets the answer and verify if it matches with the one in the database redirect to a form where the user enter the new password
 app.use('/changePassword', changePassword); // gets the new password and verify it with joi and resets the new one in the database
 
+// goes to the notification link
+app.get('/notifications', (req, res) => {
+    if (!req.session.authenticated) {
+        res.redirect('/login');
+        return;
+    }
+
+    res.render('notifications', {navLinks, username: req.session.username})
+});
+
+app.get('/createNotification', (req, res) =>{
+    if (!req.session.authenticated) {
+        res.redirect('/login');
+        return;
+    }
+
+    res.render('createNotification', {navLinks, username:req.session.username})
+});
+
 /** Arrays of tutorial articles to be parsed from tutorial.json */
 let tutorialArray;
 
@@ -265,7 +283,7 @@ fs.readFile('tutorial.JSON', 'utf-8', (err, data) => {
 });
 
 app.get('/tutorial', (req, res) => {
-    res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks });
+    res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks, username: req.session.username});
 });
 
 /** clickable article details. */
@@ -302,7 +320,7 @@ app.get('/recycleCenters', (req, res) => {
         return;
     }
     const email = req.body.email;
-    res.render('recycleCenters', { navLinks });
+    res.render('recycleCenters', { navLinks, username: req.session.username });
 });
 
 // Logout 
