@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const input = document.getElementById('auto-suggest');
     const suggestionsBox = document.getElementById('suggestions');
 
+
+
     // let suggestions = [];
 
     try {
@@ -53,14 +55,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 const getSelected2 = () => {
-    // console.log(suggestions + " askjdakda")
     var selection = document.getElementById("auto-suggest").value;
     // console.log(selection);
     if (facilities.length > 0) {
         facilities.splice(0, facilities.length);
     }
     suggestions.forEach(el => {
-        console.log(el.type + " type")
         if (el.type === selection) {
             facilities = el.facility;
         }
@@ -70,11 +70,8 @@ const getSelected2 = () => {
     removeMarkers();
 
     document.getElementById("infoCard").innerHTML = "";
-    console.log("above for of")
     // add markers to map
     for (const feature of facilities) {
-        console.log("In here")
-        console.log(feature)
         // create a HTML element for each feature
         const el = document.createElement('div');
         el.className = 'marker';

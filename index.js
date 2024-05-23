@@ -4,6 +4,8 @@ const fs = require(`fs`);
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const axios = require('axios');
+const cors = require('cors');
 
 // Authentication with google
 const passport = require('passport');
@@ -22,12 +24,17 @@ const mongodb_database = process.env.MONGODB_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 
+// google maps and places security information
+const mapsAPIkey = process.env.GOOGLE_MAPS_API_KEY;
+
 var mongoStore = MongoStore.create({
     mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/${mongodb_database}`,
     crypto: {
         secret: mongodb_session_secret
     }
 });
+
+app.use(cors());
 
 app.use(session({
     secret: node_session_secret,
@@ -189,7 +196,24 @@ const data = [
 //         }
 //     });
 // });
-
+function getMapResult() {
+    // const mapResult = await fetch(`https://maps.googleapis.com/maps/api/place/details/json
+    //     ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
+    //     &key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ`)
+    // console.log((mapResult));
+    axios.get(`https://maps.googleapis.com/maps/api/place/details/json
+    ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
+    &key=${mapsAPIkey}`)
+        .then(function (response) {
+            // handle success
+            console.log(response.data);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.message);
+        })
+}
+getMapResult();
 
 
 // routes
@@ -313,7 +337,7 @@ app.get('/home', (req, res) => {
     res.render('home', { navLinks: navLinks, username: req.session.username });
 });
 
-app.get('/recycleCenters', (req, res) => {
+app.get('/recycleCenters', async (req, res) => {
     if (!req.session.authenticated) {
         res.redirect('/login');
         return;
