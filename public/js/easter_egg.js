@@ -3,30 +3,16 @@ document.addEventListener("DOMContentLoaded", sortingGame);
 function sortingGame() {
     const itemsData = [
         { id: "apple", emoji: "🍎", name: "Apple", bin: "compost-bin" },
-        {
-            id: "glass-bottle",
-            emoji: "🍾",
-            name: "Glass Bottle",
-            bin: "recycle-bin",
-        },
-        {
-            id: "cardboard-box",
-            emoji: "📦",
-            name: "Cardboard Box",
-            bin: "mixed-paper-bin",
-        },
+        { id: "glass-bottle", emoji: "🍾", name: "Glass Bottle", bin: "recycle-bin" },
+        { id: "cardboard-box", emoji: "📦", name: "Cardboard Box", bin: "mixed-paper-bin" },
         { id: "grapes", emoji: "🍇", name: "Grapes", bin: "compost-bin" },
-        {
-            id: "newspaper",
-            emoji: "📰",
-            name: "Newspaper",
-            bin: "mixed-paper-bin",
-        },
+        { id: "newspaper", emoji: "📰", name: "Newspaper", bin: "mixed-paper-bin" },
         { id: "razor", emoji: "🪒", name: "Razor", bin: "trash-bin" },
     ];
 
     const itemsContainer = document.querySelector(".items");
     const bins = document.querySelectorAll(".bin");
+    const binContainers = document.querySelectorAll('.bin-container');
     itemsContainer.innerHTML = ""; // Clear previous items
     bins.forEach((bin) => {
         while (bin.firstChild && bin.firstChild.className !== "bin-name") {
@@ -62,6 +48,18 @@ function sortingGame() {
         bin.addEventListener("drop", drop);
     });
 
+    binContainers.forEach((container) => {
+        container.addEventListener("dragover", () => {
+            container.classList.add("dragging-over");
+        });
+        container.addEventListener("dragleave", () => {
+            container.classList.remove("dragging-over");
+        });
+        container.addEventListener("drop", () => {
+            container.classList.remove("dragging-over");
+        });
+    });
+
     function getRandomItems(arr, num) {
         const shuffled = arr.slice().sort(() => 0.5 - Math.random());
         return shuffled.slice(0, num);
@@ -91,7 +89,7 @@ function sortingGame() {
             returnItemToOriginalPosition(draggableElement);
             mistakes++;
             displayMistakes();
-            displayMessage("Incorrect", "incorrect");
+            displayMessage("Oh no! That's the wrong bin!");
             if (mistakes === 3) {
                 gameOver();
             }
@@ -113,10 +111,7 @@ function sortingGame() {
     function returnItemToOriginalPosition(item) {
         const originalPosition = item.getAttribute("data-original-position");
         const originalParent = itemsContainer;
-        originalParent.insertBefore(
-            item,
-            originalParent.children[originalPosition]
-        );
+        originalParent.insertBefore(item, originalParent.children[originalPosition]);
     }
 
     function displayMistakes() {
@@ -128,7 +123,7 @@ function sortingGame() {
         messageElement.className = type;
         setTimeout(() => {
             messageElement.textContent = "";
-        }, 1000);
+        }, 1500);
     }
 
     function checkCompletion() {
@@ -155,15 +150,13 @@ function sortingGame() {
         });
 
         if (allCorrect) {
-            alert(
-                `Congratulations! You have successfully sorted all the items with ${mistakes} mistakes.`
-            );
+            alert(`Congratulations! You have successfully sorted all the items with ${mistakes} mistakes.`);
             resetGame();
         }
     }
 
     function gameOver() {
-        alert("Game over");
+        alert("Game over! You got it wrong three times 😢");
         resetGame();
     }
 
