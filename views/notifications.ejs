@@ -22,4 +22,36 @@
           <% } %>
     </div>
 
+    <script>
+//       function requestNotificationPermission() {
+//     if (Notification.permission !== 'granted') {
+//         Notification.requestPermission().then(permission => {
+//             if (permission === 'granted') {
+//                 console.log('Notification permission granted.');
+//             } else {
+//                 console.log('Notification permission denied.');
+//             }
+//         });
+//     }
+// }
+
+// document.addEventListener('DOMContentLoaded', requestNotificationPermission);
+
+  function testNotification(){
+    Notification.requestPermission().then(perm => {
+      if (perm === 'granted'){
+        const noti = new Notification('Test of notification', {
+          body: 'More Text',
+          data: {Title: 'House', day: 'Friday', time: '7 pm'},
+          icon: '/images/favicon.png',
+          tag: 'test'
+        });
+
+        noti.addEventListener("show", e =>{
+          console.log('It works!');
+        })
+      }
+    });
+  }
+    </script>
     <%- include('templates/footer') %>
