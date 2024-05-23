@@ -308,13 +308,33 @@ app.get('/scan', (req, res) => {
 
 const upload = multer();
 const predict = require('./predict');
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
 
 app.post('/predict', upload.single('garbage'), async (req, res) => {
-    imageEncoding = req.file.buffer;
-    const prediction = await predict(imageEncoding);
+    // console.log(req);
+    // console.log(req.body.buffer);
+
+    let image;
+
+    if (req.file) {
+        // image upload
+        image = req.file.buffer;
+    } else {
+        // webcam capture
+        const base64String = req.body.file.replace('data:image/png;base64,', '');
+        const binString = atob(base64String);
+        image = Uint8Array.from(binString, (m) => m.codePointAt(0));
+    }
+
+    const prediction = await predict(image);
     console.log(`This trash is most likely ${prediction}.`);
 
-    res.render('scan', { navLinks });
+    res.redirect('scan', { navLinks });
+});
+
+app.get('/camera', (req, res) => {
+    res.render('camera', { navLinks });
 })
 
 // Logout 

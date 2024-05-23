@@ -11,7 +11,7 @@ async function predict(imageEncoding) {
     const model_url = 'http://localhost:3050/TrainedModel-15/model.json'
     const model = await tf.loadLayersModel(model_url);
 
-    image = tf.node.decodeImage(imageEncoding).resizeNearestNeighbor([224, 224]).toFloat().div(255.0).expandDims(0);;
+    image = tf.node.decodeImage(imageEncoding, 3).resizeNearestNeighbor([224, 224]).toFloat().div(255.0).expandDims(0);;
     // console.log(image);
 
     const predictionTensor = model.predict(image);
