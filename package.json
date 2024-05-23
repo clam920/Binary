@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@andreekeberg/imagedata": "^1.0.2",
+    "@floating-ui/dom": "^1.6.5",
     "@tensorflow/tfjs": "^4.19.0",
     "@tensorflow/tfjs-node": "^4.19.0",
     "bcrypt": "^5.1.1",

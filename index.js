@@ -317,6 +317,7 @@ app.post('/predict', upload.single('garbage'), async (req, res) => {
 
     let image;
 
+    // convert to correct format
     if (req.file) {
         // image upload
         image = req.file.buffer;
@@ -327,14 +328,25 @@ app.post('/predict', upload.single('garbage'), async (req, res) => {
         image = Uint8Array.from(binString, (m) => m.codePointAt(0));
     }
 
+    // predict bin based on image
     const prediction = await predict(image);
+
+
     console.log(`This trash is most likely ${prediction}.`);
 
-    res.redirect('scan', { navLinks });
+    res.redirect('/prediction');
+
+    console.log('after redirecting');
+    // res.send(prediction);
+    // res.redirect('/scan');
 });
 
 app.get('/camera', (req, res) => {
     res.render('camera', { navLinks });
+})
+
+app.get('/prediction', (req, res) => {
+    res.render('prediction', { navLinks });
 })
 
 // Logout 

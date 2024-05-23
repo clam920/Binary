@@ -18,13 +18,21 @@
         // DATA URL
         const img_data = await canvas.toDataURL('image/png');
 
-        await fetch('predict', {
+        // Get prediction
+        const response = await fetch('predict', {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             mode: 'cors',
             cache: 'default',
-            body: JSON.stringify({ file: img_data}),
+            body: JSON.stringify({ file: img_data }),
         });
+        
+        fetch('prediction');
+
+        console.log(response);
+
+        // console.log(response);
+        // console.log(`The trash is most likely ${response}`);
 
         // BLOB
         // canvas.toBlob(async blob => {
@@ -36,9 +44,6 @@
         //         body: JSON.stringify({ file: blob }),
         //     });
         // });
-
-        // console.log(player);
-        // console.log(typeof player);
     });
 
     async function loadVideo() {

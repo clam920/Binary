@@ -1,0 +1,48 @@
+<%- include('templates/header') %>
+
+<%- include('templates/navbar', {navLinks: navLinks}) %>
+
+<script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.5"></script>
+
+<img>
+<div>Prediction: </div>
+<div>Not quite right?</div>
+
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Not quite right?
+    </button>
+    <div class="dropdown-menu">
+        <form>
+            <div class="form-group">
+                <label for="options">Select an option:</label>
+                <select class="form-control" id="options" onchange="showOtherInput()">
+                    <option value="Option1">Glass</option>
+                    <option value="Option2">Paper</option>
+                    <option value="Option3">Plastic</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group" id="otherOption" style="display: none;">
+                <label for="other">Please specify:</label>
+                <input type="text" class="form-control" id="other">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function showOtherInput() {
+        var selectBox = document.getElementById('options');
+        var otherOption = document.getElementById('otherOption');
+        if (selectBox.value === 'Other') {
+            otherOption.style.display = 'block';
+        } else {
+            otherOption.style.display = 'none';
+        }
+    }
+</script>
+
+<%- include('templates/footer') %>
