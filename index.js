@@ -1,4 +1,4 @@
-require('./utils.js');
+require('./public/js/utils.js');
 
 const fs = require(`fs`);
 require('dotenv').config();
@@ -263,6 +263,10 @@ fs.readFile('tutorial.JSON', 'utf-8', (err, data) => {
         console.error('Error parsing JSON', error);
     }
 });
+
+app.get('/egg', (req, res) => {
+    res.render("easter_egg", {navLinks: navLinks});
+})
 
 app.get('/tutorial', (req, res) => {
     res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks });
