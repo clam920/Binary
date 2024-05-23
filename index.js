@@ -247,22 +247,47 @@ app.use('/resetPassword', resetPassword); // gets the answer and verify if it ma
 app.use('/changePassword', changePassword); // gets the new password and verify it with joi and resets the new one in the database
 
 // goes to the notification link
-app.get('/notifications', (req, res) => {
+app.get('/notifications', async (req, res) => {
     if (!req.session.authenticated) {
         res.redirect('/login');
         return;
     }
 
-    res.render('notifications', {navLinks, username: req.session.username})
+    const email = req.session.email;
+
+    const notifications = await userCollection.find({ email:email }).project({ notifications: 1}).toArray();
+
+    res.render('notifications', { navLinks, username: req.session.username, notifications: notifications[0].notifications})
 });
 
-app.get('/createNotification', (req, res) =>{
+app.get('/createNotification', (req, res) => {
     if (!req.session.authenticated) {
         res.redirect('/login');
         return;
     }
 
-    res.render('createNotification', {navLinks, username:req.session.username})
+    res.render('createNotification', { navLinks, username: req.session.username })
+});
+
+app.post('/recordNotification', async (req, res) => {
+    const email = req.session.email;
+    const title = req.body.title;
+    const notes = req.body.notes;
+    const day = req.body.day;
+    const time = req.body.time;
+
+    const reminder = {
+        title: title,
+        notes: notes,
+        day: day,
+        time: time
+    };
+
+
+    await userCollection.updateOne({ email }, { $push: { notifications: reminder } });
+    console.log("Notification stored succesfully");
+
+    res.redirect('/notifications');
 });
 
 /** Arrays of tutorial articles to be parsed from tutorial.json */
@@ -283,7 +308,7 @@ fs.readFile('tutorial.JSON', 'utf-8', (err, data) => {
 });
 
 app.get('/tutorial', (req, res) => {
-    res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks, username: req.session.username});
+    res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks, username: req.session.username });
 });
 
 /** clickable article details. */
