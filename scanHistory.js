@@ -17,12 +17,12 @@ const userCollection = database.db(process.env.MONGODB_DATABASE).collection('use
 
 const storage = multer.memoryStorage();
 
-// Format restriction to only .jpeg, .jpg, .png and .tiff below 3MB */
+// Format restriction to only .jpeg, .jpg, and .png below 3MB */
 const upload = multer({
     storage: storage,
     limits: { fileSize: 3 * 1024 * 1024 }, // 3MB file size limit
     fileFilter: (req, file, callback) => {
-        const allowedTypes = /jpeg|jpg|png|tiff/;
+        const allowedTypes = /jpeg|jpg|png/;
         const mimetype = allowedTypes.test(file.mimetype);
         const extname = allowedTypes.test(file.originalname.toLowerCase());
 

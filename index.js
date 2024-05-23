@@ -203,7 +203,7 @@ const userCollection = database.db(mongodb_database).collection('users');
 const navLinks = [
     { name: 'Home', link: '/' },
     { name: 'Recycle Centers', link: '/recycleCenters' },
-    { name: 'Scan', link: '/' },
+    { name: 'Scan History', link: '/history' },
     { name: 'Tutorial', link: '/tutorial' },
     { name: 'Profile', link: '/profile' },
 ];
