@@ -10,12 +10,17 @@
                         "facility": [
                                 {
                                         "place": "NORTH SHORE RECYCLING AND WASTE CENTRE",
-                                        "coordinates": [-123.01809661781101, 49.30128946964686]
+                                        "coordinates": [-123.01809661781101, 49.30128946964686],
+                                        "directions": "https://maps.app.goo.gl/2t6sn7BZBcnauV56A",
+                                        "placeID": "ChIJw5MD3ZNwhlQRvstXN3AeLXk"
                                 },
                                 {
                                         "place": "POWELL STREET RETURN-IT BOTTLE DEPOT",
-                                        "coordinates": [-123.06668623130273, 49.28432306230311]
+                                        "coordinates": [-123.06668623130273, 49.28432306230311],
+                                        "directions": "https://maps.app.goo.gl/VkH4tu6EQ4AE2wkSA",
+                                        "placeID": ""
                                 }
+
                         ]
                 },
                 {
@@ -23,18 +28,22 @@
                         "facility": [
                                 {
                                         "coordinates": [-122.46152803131277, 9.090931848515034],
+                                        "directions": "https://maps.app.goo.gl/ngXdeKQDdFSYoy14A",
                                         "place": "BLUE PLANET RECYCLING",
                                 },
                                 {
                                         "coordinates": [-122.81127270247502, 49.118203173139264],
+                                        "directions": "https://maps.app.goo.gl/hxGFJyvzRh5wYJMk9",
                                         "place": "EMTERRA ENVIRONMENTAL - SURREY",
                                 },
                                 {
                                         "coordinates": [-123.10084884294041, 49.25716962771798],
+                                        "directions": "https://maps.app.goo.gl/bNihFfdGjDWv5EXGA",
                                         "place": "URBAN SOURCE",
                                 },
                                 {
                                         "coordinates": [-122.62682891358655, 49.20014503465938],
+                                        "directions": "https://maps.app.goo.gl/FVSg7VphsdzHFX4HA",
                                         "place": "WESTCOAST PLASTIC RECYCLING",
                                 }
                         ]
@@ -44,10 +53,12 @@
                         "facility": [
                                 {
                                         "coordinates": [-123.06668623130273, 49.28432306230311],
+                                        "directions": "https://maps.app.goo.gl/VkH4tu6EQ4AE2wkSA",
                                         "place": "POWELL STREET RETURN-IT BOTTLE DEPOT",
                                 },
                                 {
                                         "coordinates": [-123.09190007177935, 49.20640098139237],
+                                        "directions": "https://maps.app.goo.gl/e16WwSDwQmV7wcHf8",
                                         "place": "BEGG CARTON EXCHANGE",
                                 }
                         ]
@@ -57,31 +68,17 @@
                         "facility": [
                                 {
                                         "coordinates": [-123.06668623130273, 49.28432306230311],
+                                        "directions": "https://maps.app.goo.gl/DRqLkQt17RrgHhYw5",
                                         "place": "POWELL STREET RETURN-IT BOTTLE DEPOT",
                                 },
                                 {
                                         "coordinates": [-123.10642038874201, 49.20894031159841],
+                                        "directions": "https://maps.app.goo.gl/kk2Et7rKTVJ1F6U99",
                                         "place": "SOUTH VAN BOTTLE DEPOT",
                                 },
                                 {
                                         "coordinates": [-123.1149743134225, 49.20867115835692],
-                                        "place": "VANCOUVER ZERO WASTE CENTER",
-                                },
-                        ]
-                },
-                {
-                        "type": "paper",
-                        "facility": [
-                                {
-                                        "coordinates": [-123.06668623130273, 49.28432306230311],
-                                        "place": "POWELL STREET RETURN-IT BOTTLE DEPOT",
-                                },
-                                {
-                                        "coordinates": [-123.10642038874201, 49.20894031159841],
-                                        "place": "SOUTH VAN BOTTLE DEPOT",
-                                },
-                                {
-                                        "coordinates": [-123.1149743134225, 49.20867115835692],
+                                        "directions": "https://maps.app.goo.gl/RhPkzSSUxZtWDeGW7",
                                         "place": "VANCOUVER ZERO WASTE CENTER",
                                 },
                         ]
@@ -91,16 +88,17 @@
                         "facility": [
                                 {
                                         "coordinates": [-123.08198097141488, 49.27338112280383],
+                                        "directions": "https://maps.app.goo.gl/YEMhyRQUHdF1Th5m6",
                                         "place": "REGIONAL RECYCLING - VANCOUVER",
                                 },
                                 {
                                         "coordinates": [-122.57650130520572, 49.20857510585476],
+                                        "directions": "https://maps.app.goo.gl/Ew55YVVVPFRJeWzR7",
                                         "place": "WESTERN DRUM RECYCLERS",
                                 },
                         ]
                 }
         ]
-
         const getSelected2 = () => {
                 var selection = document.getElementById("auto-suggest").value;
                 // console.log(selection);
@@ -135,9 +133,7 @@
                         elCard.innerHTML = `<div class="card-body">
         <h5 class="card-title">${feature.place}</h5>
         <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a>
+        <a href="${feature.directions}" target="_blank" class="card-link">Get directions..</a>
     </div>`;
 
                         document.getElementById("infoCard").appendChild(elCard);
@@ -169,7 +165,6 @@
                 input.addEventListener('input', () => {
                         const query = input.value.toLowerCase();
                         suggestionsBox.innerHTML = '';
-                        console.log(query);
                         if (query) {
                                 const filteredSuggestions = suggestions.filter(item => item.type.toLowerCase().includes(query));
 
