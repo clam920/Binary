@@ -135,83 +135,62 @@ const data = [
     }
 ]
 
-// const getSelected = () => {
-//     var selection = document.getElementById("mySelection").value;
-//     if (facilities.length > 0) {
-//         facilities.splice(0, facilities.length);
-//     }
-//     data.forEach(el => {
-//         if (el.type === selection) {
-//             facilities = el.facility;
+
+// document.addEventListener('DOMContentLoaded', async () => {
+//     const input = document.getElementById('auto-suggest');
+//     const suggestionsBox = document.getElementById('suggestions');
+
+//     let suggestions = [];
+
+//     // read suggestions from the JSON file
+
+//     fs.readFile('type.json', 'utf-8', (err, data) => {
+//         if (err) {
+//             console.error('Error reading file:', err);
+//             return;
+//         }
+
+//         try {
+//             console.log(JSON.parse(data))
+//         } catch (error) {
+//             console.error('Error parsing JSON', error);
 //         }
 //     });
 
-//     removeMarkers();
+//     // Show suggestions based on user input
+//     input.addEventListener('input', () => {
+//         const query = input.value.toLowerCase();
+//         suggestionsBox.innerHTML = '';
+//         if (query) {
+//             const filteredSuggestions = suggestions.filter(item => item.type.toLowerCase().includes(query));
 
-//     // add markers to map
-//     for (const feature of facilities) {
-//         // console.log(feature)
-//         // create a HTML element for each feature
-//         const el = document.createElement('div');
-//         el.className = 'marker';
-//         const popup = new mapboxgl.Popup({ offset: 25 }).setText(feature.place);
+//             filteredSuggestions.forEach(suggestion => {
+//                 const suggestionElement = document.createElement('div');
+//                 suggestionElement.textContent = suggestion.type;
+//                 suggestionElement.addEventListener('click', () => {
+//                     input.value = suggestion.type;
+//                     suggestionsBox.innerHTML = '';
+//                     suggestionsBox.style.display = 'none';
+//                 });
+//                 console.log(suggestionElement)
+//                 suggestionsBox.appendChild(suggestionElement);
+//             });
 
-
-//         // make a marker for each feature and add to the map
-//         new mapboxgl.Marker(el).setLngLat(feature.coordinates).addTo(map).setPopup(popup);
-//     }
-// }
-
-// const getSelected2 = () => {
-//     var selection = document.getElementById("auto-suggest").value;
-//     // console.log(selection);
-//     if (facilities.length > 0) {
-//         facilities.splice(0, facilities.length);
-//     }
-//     data.forEach(el => {
-//         if (el.type === selection) {
-//             facilities = el.facility;
+//             suggestionsBox.style.display = 'block';
+//         } else {
+//             suggestionsBox.style.display = 'none';
 //         }
 //     });
 
-//     removeMarkers();
+//     // Hide suggestions when clicking outside the input or suggestions box
+//     document.addEventListener('click', (event) => {
+//         if (!suggestionsBox.contains(event.target) && event.target !== input) {
+//             suggestionsBox.style.display = 'none';
+//         }
+//     });
+// });
 
-//     document.getElementById("infoCard").innerHTML = "";
 
-//     // add markers to map
-//     for (const feature of facilities) {
-//         // console.log(feature)
-//         // create a HTML element for each feature
-//         const el = document.createElement('div');
-//         el.className = 'marker';
-//         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(feature.place + "\n\n" + `<a href="${feature.directions}" target="_blank">${feature.directions}</a>`);
-
-//         // make a marker for each feature and add to the map
-//         new mapboxgl.Marker(el).setLngLat(feature.coordinates).addTo(map).setPopup(popup);
-
-//         // info card for features
-//         const elCard = document.createElement('div');
-//         elCard.className = 'card';
-//         elCard.style = 'width: 18rem;';
-//         elCard.innerHTML = `<div class="card-body">
-//         <h5 class="card-title">${feature.place}</h5>
-//         <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-//         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-//         <a href="#" class="card-link">Card link</a>
-//         <a href="#" class="card-link">Another link</a>
-//     </div>`;
-
-//         document.getElementById("infoCard").appendChild(elCard);
-
-//     }
-// }
-
-function removeMarkers() {
-    const markers = document.getElementsByClassName('marker');
-    while (markers.length > 0) {
-        markers[0].parentNode.removeChild(markers[0]);
-    }
-}
 
 // routes
 // Login router
@@ -298,7 +277,7 @@ fs.readFile('tutorial.json', 'utf-8', (err, data) => {
 
     try {
         tutorialArray = JSON.parse(data);
-        console.log(tutorialArray[0]);
+        // console.log(tutorialArray[0]);
     } catch (error) {
         console.error('Error parsing JSON', error);
     }
