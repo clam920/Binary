@@ -4,6 +4,7 @@ const fs = require(`fs`);
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const path = require('path');
 
 // use scanHistory.js to log user scan history
 const scanHistoryRouter = require('./scanHistory');
@@ -193,6 +194,7 @@ const port = process.env.PORT || 3000;
 const expireTime = 60 * 60 * 1000;// Hour, minutes, seconds miliseconds
 
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: false })); //to parse the body
 
 var { database } = include('databaseConnection');
@@ -204,7 +206,7 @@ const userCollection = database.db(mongodb_database).collection('users');
 const navLinks = [
     { name: 'Home', link: '/' },
     { name: 'Recycle Centers', link: '/recycleCenters' },
-    { name: 'Scan', link: '/scan' },
+    { name: 'Scan History', link: '/history' },
     { name: 'Tutorial', link: '/tutorial' },
     { name: 'Profile', link: '/profile' },
 ];
@@ -278,6 +280,32 @@ app.post('/articles/:articleId', (req, res) => {
 });
 
 app.use('/', scanHistoryRouter);
+
+app.get('/history', async (req, res) => {
+    try {
+        // Get username from session
+        const username = req.session.username;
+        if (!username) {
+            return res.status(400).send('Username is required.');
+        }
+
+        // Fetch user document from MongoDB
+        const user = await userCollection.findOne({ username: username });
+
+        if (!user) {
+            return res.status(404).send('User not found.');
+        }
+
+        // Get scan history from user document
+        const scanHistory = user.scanHistory || [];
+
+        // Render history.ejs with scan history data
+        res.render('history', { scanHistory: scanHistory, navLinks: navLinks });
+    } catch (error) {
+        console.error('Error fetching scan history:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 // Links to the main page
 app.get('/', (req, res) => {
