@@ -1,0 +1,14 @@
+<%- include('templates/header') %>
+<%- include('templates/navbar', {navLinks: navLinks}) %>
+
+<div class="scan-history-container">
+    <h1>Scan History</h1>
+    <% scanHistory.forEach(scan => { %>
+        <div class="scan-item">
+            <p>Time: <%= new Date(scan.timestamp).toLocaleString() %></p>
+            <img src="<%= scan.scanData %>" alt="Scan Image">
+        </div>
+    <% }) %>
+</div>
+
+<%- include('templates/footer') %>

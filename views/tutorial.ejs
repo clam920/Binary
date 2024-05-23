@@ -1,10 +1,10 @@
 <%- include('templates/header') %>
 <%- include('templates/navbar', {navLinks: navLinks}) %>
     <% for(let i = 0; i<tutorialArray.length; i++) { %>
-        <div class="card text-center text-white bg-success mb-3 mx-auto" style="max-width: 18rem;">
+        <div class="card text-center text-white mb-3 mx-auto" style="max-width: 18rem; background-color: #606c38;">
             <div class="card-header"><%= tutorialArray[i].title %></div>
             <form action="/articles/<%= i %>" method="post">
-                <button type="submit" class="btn btn-primary">Details</button>
+                <button type="submit" class="btn btn-primary" style="background-color: #ede1b5; color: #555">Details</button>
             </form>        
         </div>
     <% } %>

@@ -1,0 +1,65 @@
+<%- include('templates/header') %>
+
+<%- include('templates/navbar', {navLinks: navLinks}) %>
+
+<video id="player" controls autoplay></video>
+<button id="capture">Capture</button>
+<canvas id="canvas" width="320" height="240"></canvas>
+
+<script>
+    const player = document.getElementById('player');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const captureButton = document.getElementById('capture');
+
+    captureButton.addEventListener('click', async () => {
+        context.drawImage(player, 0, 0, canvas.width, canvas.height);
+
+        // DATA URL
+        const img_data = await canvas.toDataURL('image/png');
+
+        // Get prediction
+        fetch('predict', {
+            method: 'POST',
+            redirect: 'follow',
+            headers: { "Content-Type": "application/json" },
+            mode: 'cors',
+            cache: 'default',
+            body: JSON.stringify({ file: img_data }),
+        }).then(res => res.text()).then(htmlStr => {
+            document.open();
+            document.write(htmlStr);
+            document.close();
+        });
+        
+        // fetch('prediction');
+
+        // console.log(response);
+
+        // console.log(response);
+        // console.log(`The trash is most likely ${response}`);
+
+        // BLOB
+        // canvas.toBlob(async blob => {
+        //     const prediction = await fetch('predict', {
+        //         method: 'POST',
+        //         headers: { "Content-Type": "application/json" },
+        //         mode: 'cors',
+        //         cache: 'default',
+        //         body: JSON.stringify({ file: blob }),
+        //     });
+        // });
+    });
+
+    async function loadVideo() {
+        const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        });
+
+        player.srcObject = stream;
+    }
+    loadVideo();
+</script>
+
+<%- include('templates/footer') %>
+
