@@ -17,6 +17,9 @@ require('./routes/googleAuth.js');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 
+// Handles image uploads
+const multer  = require('multer')
+
 // Mongo security information
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
@@ -201,7 +204,7 @@ const userCollection = database.db(mongodb_database).collection('users');
 const navLinks = [
     { name: 'Home', link: '/' },
     { name: 'Recycle Centers', link: '/recycleCenters' },
-    { name: 'Scan', link: '/' },
+    { name: 'Scan', link: '/scan' },
     { name: 'Tutorial', link: '/tutorial' },
     { name: 'Profile', link: '/profile' },
 ];
@@ -304,6 +307,53 @@ app.get('/recycleCenters', (req, res) => {
     const email = req.body.email;
     res.render('recycleCenters', { navLinks });
 });
+
+app.get('/scan', (req, res) => {
+    res.render('scan', { navLinks });
+});
+
+const upload = multer();
+const predict = require('./predict');
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
+
+app.post('/predict', upload.single('garbage'), async (req, res) => {
+    // console.log(req);
+    // console.log(req.body.buffer);
+
+    let image;
+
+    // convert to correct format
+    if (req.file) {
+        // image upload
+        image = req.file.buffer;
+    } else {
+        // webcam capture
+        const base64String = req.body.file.replace('data:image/png;base64,', '');
+        const binString = atob(base64String);
+        image = Uint8Array.from(binString, (m) => m.codePointAt(0));
+    }
+
+    // predict bin based on image
+    const prediction = await predict(image);
+
+
+    console.log(`This trash is most likely ${prediction}.`);
+
+    res.redirect('/prediction');
+
+    console.log('after redirecting');
+    // res.send(prediction);
+    // res.redirect('/scan');
+});
+
+app.get('/camera', (req, res) => {
+    res.render('camera', { navLinks });
+})
+
+app.get('/prediction', (req, res) => {
+    res.render('prediction', { navLinks });
+})
 
 // Logout 
 app.post('/logout', (req, res) => {

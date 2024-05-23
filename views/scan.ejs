@@ -1,0 +1,14 @@
+<%- include('templates/header') %>
+
+<%- include('templates/navbar', {navLinks: navLinks}) %>
+
+<a href="./camera">Take Photo</a>
+
+<div>or</div>
+
+<form action="/predict" method="post" enctype="multipart/form-data">
+    <input type="file" name="garbage" accept=".png, .jpeg, .jpg" capture="user"/>
+    <input type="submit">
+</form>
+
+<%- include('templates/footer') %>
