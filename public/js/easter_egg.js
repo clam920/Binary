@@ -152,12 +152,15 @@ function sortingGame() {
         if (allCorrect) {
             alert(`Congratulations! You have successfully sorted all the items with ${mistakes} mistakes.`);
             resetGame();
+            // window.location.href("https://www.google.com/")
+            location.assign("/")
         }
     }
 
     function gameOver() {
         alert("Game over! You got it wrong three times 😢");
         resetGame();
+        location.assign("/")
     }
 
     function resetGame() {
