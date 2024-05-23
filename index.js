@@ -368,7 +368,7 @@ app.post('/predict', upload.single('garbage'), async (req, res) => {
 
     console.log(`This trash is most likely ${prediction}.`);
 
-    res.redirect('/prediction');
+    res.render('prediction', { navLinks, prediction, image });
 
     console.log('after redirecting');
     // res.send(prediction);

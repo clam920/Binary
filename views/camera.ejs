@@ -19,17 +19,22 @@
         const img_data = await canvas.toDataURL('image/png');
 
         // Get prediction
-        const response = await fetch('predict', {
+        fetch('predict', {
             method: 'POST',
+            redirect: 'follow',
             headers: { "Content-Type": "application/json" },
             mode: 'cors',
             cache: 'default',
             body: JSON.stringify({ file: img_data }),
+        }).then(res => res.text()).then(htmlStr => {
+            document.open();
+            document.write(htmlStr);
+            document.close();
         });
         
-        fetch('prediction');
+        // fetch('prediction');
 
-        console.log(response);
+        // console.log(response);
 
         // console.log(response);
         // console.log(`The trash is most likely ${response}`);

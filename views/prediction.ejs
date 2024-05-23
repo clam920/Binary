@@ -6,8 +6,17 @@
 <script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.5"></script>
 
 <img>
-<div>Prediction: </div>
+<div>Prediction: <%- prediction %></div>
 <div>Not quite right?</div>
+<%- image %>
+
+<button id="saveHistory">Save to History</button>
+
+
+        <form action="/picUpload" method="POST" enctype="multipart/form-data">
+            <input type="file" name="image">
+            <button type="submit">Upload Image</button>
+        </form>
 
 <div class="dropdown">
     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -43,6 +52,21 @@
             otherOption.style.display = 'none';
         }
     }
+
+    var image = '<%= image %>';
+
+    document.getElementById("saveHistory").addEventListener("click", () => {
+        console.log(image);
+
+        fetch('picUpload', {
+            method: 'POST',
+            redirect: 'follow',
+            headers: { "Content-Type": "application/json" },
+            mode: 'cors',
+            cache: 'default',
+            body: JSON.stringify({ file: image }),
+        });
+    });
 </script>
 
 <%- include('templates/footer') %>

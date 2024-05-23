@@ -41,6 +41,10 @@ router.use(mongoSanitize(
 ));
 
 router.post('/picUpload', upload.single('image'), async (req, res) => {
+    if (req.body.file) {
+        console.log(req.body.file);
+    }
+
     try {
         // get username from the session
         const username = req.session.username;
