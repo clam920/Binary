@@ -210,7 +210,7 @@ app.get('/', (req, res) => {
         return;
     }
 
-    res.render('home', { navLinks: navLinks, username: req.session.username });
+    res.render('scan', { navLinks: navLinks, username: req.session.username });
 });
 
 app.get('/home', (req, res) => {
@@ -219,7 +219,7 @@ app.get('/home', (req, res) => {
         return;
     }
 
-    res.render('home', { navLinks: navLinks, username: req.session.username });
+    res.render('scan', { navLinks: navLinks, username: req.session.username });
 });
 
 app.get('/recycleCenters', async (req, res) => {

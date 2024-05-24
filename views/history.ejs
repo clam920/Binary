@@ -6,6 +6,7 @@
     <% scanHistory.forEach(scan => { %>
         <div class="scan-item">
             <p>Time: <%= new Date(scan.timestamp).toLocaleString() %></p>
+            <p>Type: <%= scan.scanType %></p>
             <img src="<%= scan.scanData %>" alt="Scan Image">
         </div>
     <% }) %>
