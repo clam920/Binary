@@ -5,9 +5,6 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path');
-const webPush = require('web-push');
-const cron = require('node-cron');
-const bodyParser = require('body-parser');
 
 // use scanHistory.js to log user scan history
 const scanHistoryRouter = require('./scanHistory');
@@ -17,15 +14,6 @@ const cors = require('cors');
 // Authentication with google
 const passport = require('passport');
 require('./routes/googleAuth.js');
-
-const publicKey = process.env.PUBLIC_KEY;
-const privateKey = process.env.PRIVATE_KEY;
-
-// Web push for notifications
-webPush.setVapidDetails(
-    'mailto:manasesvillalobos80@gmail.com',
-    publicKey, privateKey
-);
 
 // Mongo db information necessary
 // to create a session 
@@ -95,22 +83,12 @@ const confirmEmail = require('./routes/reset_password/confirmEmail.js');
 const resetPassword = require('./routes/reset_password/resetPassword.js');
 const changePassword = require('./routes/reset_password/changePassword.js');
 
-// Notifications route
-const notifications = require('./routes/notifications/notifications.js');
-const createNotification = require('./routes/notifications/createNotification.js');
-const recordNotification = require('./routes/notifications/recordNotification.js');
-const deleteNotification = require('./routes/notifications/deleteNotification.js');
-const saveSubscription = require('./routes/notifications/saveSubscription.js');
-const updateNotification = require('./routes/notifications/modifyNotification.js');
-
-
 const port = process.env.PORT || 3000;
 const expireTime = 60 * 60 * 1000;// Hour, minutes, seconds miliseconds
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: false })); //to parse the body
-app.use(bodyParser.json());
 
 var { database } = include('databaseConnection');
 
@@ -119,7 +97,7 @@ const userCollection = database.db(mongodb_database).collection('users');
 
 // navigation bar links
 const navLinks = [
-    { name: 'Home', link: '/' },
+    { name: 'Home', link: '/scan' },
     { name: 'Recycle Centers', link: '/recycleCenters' },
     { name: 'Scan History', link: '/history' },
     { name: 'Tutorial', link: '/tutorial' },
@@ -166,60 +144,6 @@ app.use('/confirmEmail', confirmEmail); // gets the email to check if it exist i
 app.use('/resetPassword', resetPassword); // gets the answer and verify if it matches with the one in the database redirect to a form where the user enter the new password
 app.use('/changePassword', changePassword); // gets the new password and verify it with joi and resets the new one in the database
 
-//Notifications
-app.use('/notifications', notifications);
-app.use('/createNotification', createNotification); // form to create notifications
-app.use('/recordNotification', recordNotification); // it is post it will store the notification in database
-app.use('/deleteNotification', deleteNotification); //it will delete a notification
-app.use('/save-subscription', saveSubscription); // it will save the subscribtion of the user that is necessary to webPush and service worker
-app.use('/updateNotification', updateNotification); // to update a notification
-
-// Schedule notifications check
-cron.schedule('* * * * *', async () => {
-    console.log('Checking for due notifications...');
-    const now = new Date();
-    const users = await userCollection.find({}).toArray();
-
-    for (const user of users) {
-        if (user.notifications && user.subscription) {
-            for (const notification of user.notifications) {
-                const today = now.getDay();
-                const day = notification.day;
-
-                // Check if the notification day is today or earlier in the week
-                if (day == today) {
-                    const hourNow = now.getHours();
-                    const minuteNow = now.getMinutes();
-                    const [hour, minute] = notification.time.split(':').map(Number);
-
-                    // Check if the current time matches the notification time
-                    if (hourNow === hour && minuteNow === minute) {
-                        const payload = JSON.stringify({
-                            title: notification.title,
-                            body: notification.notes
-                        });
-
-                        // console.log('The day is: ' + day);
-                        // console.log('Today is: ' + today);
-                        // console.log('The hour: ' + hour);
-                        // console.log('time now is: ' + hourNow);
-                        // console.log('The minute: ' + minute);
-                        // console.log('minute now is: ' + minuteNow);
-                        try {
-                            await webPush.sendNotification(user.subscription, payload);
-                            console.log('Push notification sent successfully');
-                        } catch (error) {
-                            console.error('Error sending push notification', error);
-                        }
-
-                    }
-                }
-            }
-        }
-    }
-});
-
-
 /** Arrays of tutorial articles to be parsed from tutorial.json */
 let tutorialArray;
 
@@ -242,7 +166,7 @@ app.get('/egg', (req, res) => {
 })
 
 app.get('/tutorial', (req, res) => {
-    res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks, username: req.session.username });
+    res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks });
 });
 
 /** clickable article details. */
@@ -272,7 +196,7 @@ app.get('/history', async (req, res) => {
         const scanHistory = user.scanHistory || [];
 
         // Render history.ejs with scan history data
-        res.render('history', { scanHistory: scanHistory, navLinks: navLinks, username });
+        res.render('history', { scanHistory: scanHistory, navLinks: navLinks, username: req.session.username });
     } catch (error) {
         console.error('Error fetching scan history:', error);
         res.status(500).send('Internal Server Error');
@@ -298,8 +222,6 @@ app.get('/home', (req, res) => {
     res.render('home', { navLinks: navLinks, username: req.session.username });
 });
 
-
-
 app.get('/recycleCenters', async (req, res) => {
     if (!req.session.authenticated) {
         res.redirect('/login');
@@ -310,45 +232,14 @@ app.get('/recycleCenters', async (req, res) => {
 });
 
 app.get('/scan', (req, res) => {
-    res.render('scan', { navLinks });
+    res.render('scan', { navLinks, username: req.session.username });
 });
 
 const upload = multer();
-const predict = require('./predict');
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
-
-// app.post('/predict', upload.single('garbage'), async (req, res) => {
-//     // console.log(req);
-//     // console.log(req.body.buffer);
-
-//     let image;
-
-//     // convert to correct format
-//     if (req.file) {
-//         // image upload
-//         image = req.file.buffer;
-//     } else {
-//         // webcam capture
-//         const base64String = req.body.file.replace('data:image/png;base64,', '');
-//         const binString = atob(base64String);
-//         image = Uint8Array.from(binString, (m) => m.codePointAt(0));
-//     }
-
-//     // predict bin based on image
-//     const prediction = await predict(image);
-
-
-//     console.log(`This trash is most likely ${prediction}.`);
-
-//     res.redirect('/prediction');
-
-//     console.log('after redirecting');
-//     // res.send(prediction);
-//     // res.redirect('/scan');
-// });
-
 const cloudinary = require('cloudinary').v2;
+const { ObjectId } = require('mongodb');
 
 // Configure Cloudinary
 cloudinary.config({
