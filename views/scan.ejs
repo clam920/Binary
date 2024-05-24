@@ -24,6 +24,7 @@
 
 <script>
     let imageFile;
+    let type;
 
     const inputChoice = document.getElementById("inputChoice");
     const image = document.getElementById("image");
@@ -115,9 +116,8 @@
                 }
             }
 
-            const type = categories[maxIndex];
-            console.log(type);
-            document.getElementById("prediction").innerHTML = "This trash is most likely " + type + ".";
+            type = categories[maxIndex];
+            document.getElementById("prediction").innerHTML = "This item is most likely " + type + ".";
 
             save.style.display = "Block";
             done.style.display = "Block";
@@ -132,13 +132,14 @@
         reader.onloadend = function () {
             let base64String = reader.result;
             console.log(base64String);
+            console.log(type);
 
             fetch('saveImage', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 mode: 'cors',
                 cache: 'default',
-                body: JSON.stringify({ file: base64String }),
+                body: JSON.stringify({ file: base64String, type: type }),
             });
         } 
     });
