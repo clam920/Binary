@@ -276,6 +276,7 @@ app.use('/deleteNotification', deleteNotification); //it will delete a notificat
 app.use('/save-subscription', saveSubscription); // it will save the subscribtion of the user that is necessary to webPush and service worker
 app.use('/updateNotification', updateNotification); // to update a notification
 
+// test to merge
 // Schedule notifications check
 cron.schedule('* * * * *', async () => {
     console.log('Checking for due notifications...');
