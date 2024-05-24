@@ -4,7 +4,8 @@
   "description": "| Name | Details |\r |-----:|---------|\r | Dom | Front End |\r | Darrel | Back End |\r | John | AI Implementation |\r | Chun Ki | Back End/AI |\r | Manases | Front End |",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "author": "BBY-08",
   "license": "ISC",
