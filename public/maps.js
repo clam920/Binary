@@ -86,7 +86,7 @@ const getSelected2 = () => {
         elCard.style = 'width: 18rem;';
         elCard.innerHTML = `<div class="card-body">
 <h5 class="card-title">${feature.place}</h5>
-<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+<h6 class="card-subtitle mb-2 text-muted">09.00 - 16.30</h6>
 <a href="${feature.directions}" target="_blank" class="card-link">Get directions..</a>
 </div>`;
 
