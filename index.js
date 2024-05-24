@@ -94,6 +94,7 @@ var { database } = include('databaseConnection');
 
 // connect the collection of users in the database
 const userCollection = database.db(mongodb_database).collection('users');
+const complaintCollection = database.db(mongodb_database).collection('complaints');
 
 // navigation bar links
 const navLinks = [
@@ -278,13 +279,23 @@ app.post('/saveImage', async (req, res) => {
     });
 });
 
-app.get('/camera', (req, res) => {
-    res.render('camera', { navLinks });
-})
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/prediction', (req, res) => {
-    res.render('prediction', { navLinks });
-})
+app.post('/complaint', async (req, res) => {
+    const type = req.body.type[0] !== 'Other' ? req.body.type[0] : req.body.type[1];
+    const allowForTraining = req.body.allowForTraining === '' ? true : false;
+
+    console.log(type);
+    console.log(allowForTraining);
+
+    await complaintCollection.insertOne({
+        type,
+        allowForTraining,
+    })
+
+    res.redirect('/scan');
+});
 
 // Logout 
 app.post('/logout', (req, res) => {
