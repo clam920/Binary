@@ -363,8 +363,8 @@ app.post('/predict', upload.single('garbage'), async (req, res) => {
     }
 
     // predict bin based on image
+    console.log(image);
     const prediction = await predict(image);
-
 
     console.log(`This trash is most likely ${prediction}.`);
 
