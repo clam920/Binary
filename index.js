@@ -240,37 +240,76 @@ app.get('/scan', (req, res) => {
 
 const upload = multer();
 const predict = require('./predict');
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb' }));
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
 
-app.post('/predict', upload.single('garbage'), async (req, res) => {
-    // console.log(req);
-    // console.log(req.body.buffer);
+// app.post('/predict', upload.single('garbage'), async (req, res) => {
+//     // console.log(req);
+//     // console.log(req.body.buffer);
 
-    let image;
+//     let image;
 
-    // convert to correct format
-    if (req.file) {
-        // image upload
-        image = req.file.buffer;
-    } else {
-        // webcam capture
-        const base64String = req.body.file.replace('data:image/png;base64,', '');
-        const binString = atob(base64String);
-        image = Uint8Array.from(binString, (m) => m.codePointAt(0));
-    }
+//     // convert to correct format
+//     if (req.file) {
+//         // image upload
+//         image = req.file.buffer;
+//     } else {
+//         // webcam capture
+//         const base64String = req.body.file.replace('data:image/png;base64,', '');
+//         const binString = atob(base64String);
+//         image = Uint8Array.from(binString, (m) => m.codePointAt(0));
+//     }
 
-    // predict bin based on image
-    console.log(image);
-    const prediction = await predict(image);
+//     // predict bin based on image
+//     const prediction = await predict(image);
 
-    console.log(`This trash is most likely ${prediction}.`);
 
-    res.render('prediction', { navLinks, prediction, image });
+//     console.log(`This trash is most likely ${prediction}.`);
 
-    console.log('after redirecting');
-    // res.send(prediction);
-    // res.redirect('/scan');
+//     res.redirect('/prediction');
+
+//     console.log('after redirecting');
+//     // res.send(prediction);
+//     // res.redirect('/scan');
+// });
+
+const cloudinary = require('cloudinary').v2;
+
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_CLOUD_KEY,
+    api_secret: process.env.CLOUDINARY_CLOUD_SECRET
+});
+
+app.post('/saveImage', async (req, res) => {
+    const username = req.session.username;
+
+    const imageURI = req.body.file;
+    const imageType = req.body.type;
+    const imageID = new ObjectId();
+    const imageDate = new Date();
+
+    // cloudinary
+    await cloudinary.uploader.upload(imageURI, { 
+        public_id: imageID
+    }, async function(error, result) { 
+        console.log(result); 
+
+        // Prepare scan history entry
+        const scanEntry = {
+            scanId: imageID,
+            timestamp: imageDate,
+            scanData: result.secure_url,
+            scanType: imageType
+        };
+
+        // Update user's scan history in MongoDB
+        const updateResult = await userCollection.updateOne(
+            { username: username },
+            { $push: { scanHistory: scanEntry } }
+        );
+    });
 });
 
 app.get('/camera', (req, res) => {
