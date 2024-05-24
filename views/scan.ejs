@@ -10,12 +10,14 @@
         <input type="file" name="fileupload" accept="image/*" onchange="displayImage(event)" id="inputGroupFile04">
     </div>
 
-    <video id="video" autoplay></video>
+    <video id="video" class="image" autoplay></video>
     <button id="capture">Take Photo</button>
-    <img id="image">
+    <img id="image" class="image">
     <button id="usePhoto">Use Photo</button>
     <div id="prediction"></div>
     <button id="save">Save to History</button>
+    <a href="./scan"><button id="done">Done</button></a>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
@@ -29,10 +31,13 @@
     const capture = document.getElementById("capture");
     const usePhoto = document.getElementById("usePhoto")
     const save = document.getElementById("save");
+    const done = document.getElementById("done");
 
     video.style.display = "None";
     capture.style.display = "None";
     usePhoto.style.display = "None";
+    save.style.display = "None";
+    done.style.display = "None";
 
     document.getElementById("takeAPhoto").addEventListener("click", () => {
         inputChoice.style.display = "None";
@@ -74,13 +79,14 @@
     }
 
     function displayImage(event) {
+        inputChoice.style.display = "None";
+
         imageFile = event.target.files[0];
-        console.log(imageFile);
+        // console.log(imageFile);
 
         image.src = URL.createObjectURL(event.target.files[0]);
         console.log(URL.createObjectURL(event.target.files[0]));
         image.onload = () => { URL.revokeObjectURL(this.src) };
-        // document.getElementById("input_image_container").style.display = "block";
 
         usePhoto.style.display = "Block";
     }
@@ -112,6 +118,9 @@
             const type = categories[maxIndex];
             console.log(type);
             document.getElementById("prediction").innerHTML = "This trash is most likely " + type + ".";
+
+            save.style.display = "Block";
+            done.style.display = "Block";
         });
     }
 
@@ -134,5 +143,13 @@
         } 
     });
 </script>
+
+<style>
+    .image {
+        height: 20em;
+        width: auto;
+        border-radius: 30px;
+    }
+</style>
 
 <%- include('templates/footer') %>

@@ -308,6 +308,7 @@ app.get('/scan', (req, res) => {
 
 const upload = multer();
 const predict = require('./predict');
+const { ObjectId } = require('mongodb');
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
 
@@ -350,12 +351,32 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_CLOUD_SECRET
 });
 
-app.post('/saveImage', (req, res) => {
+app.post('/saveImage', async (req, res) => {
+    const username = req.session.username;
+    
     const imageURI = req.body.file;
+    const imageID = new ObjectId();
+    const imageDate = new Date();
 
-    cloudinary.uploader.upload(imageURI,
-    { public_id: "olympic_flag" }, 
-    function(error, result) {console.log(result); });
+    // cloudinary
+    await cloudinary.uploader.upload(imageURI, { 
+        public_id: imageID
+    }, async function(error, result) { 
+        console.log(result); 
+
+        // Prepare scan history entry
+        const scanEntry = {
+            scanId: imageID,
+            timestamp: imageDate,
+            scanData: result.secure_url
+        };
+
+        // Update user's scan history in MongoDB
+        const updateResult = await userCollection.updateOne(
+            { username: username },
+            { $push: { scanHistory: scanEntry } }
+        );
+    });
 });
 
 app.get('/camera', (req, res) => {
