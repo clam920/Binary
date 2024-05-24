@@ -2,13 +2,137 @@
 
 <%- include('templates/navbar', {navLinks: navLinks}) %>
 
-<a href="./camera">Take Photo</a>
+<div>
+    <div id="inputChoice">
+        <button id="takeAPhoto">Take a Photo</button>
+        <span>or</span>
+        <!-- <button id="uploadPhoto">Choose from Library</button> -->
+        <input type="file" name="fileupload" accept="image/*" onchange="displayImage(event)" id="inputGroupFile04">
+    </div>
 
-<div>or</div>
+    <video id="video" autoplay></video>
+    <button id="capture">Take Photo</button>
+    <img id="image">
+    <button id="usePhoto">Use Photo</button>
+    <div id="prediction"></div>
+    <button id="save">Save to History</button>
+</div>
 
-<form action="/predict" method="post" enctype="multipart/form-data">
-    <input type="file" name="garbage" accept=".png, .jpeg, .jpg" capture="user"/>
-    <input type="submit">
-</form>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+
+<script>
+    let imageFile;
+
+    const inputChoice = document.getElementById("inputChoice");
+    const image = document.getElementById("image");
+    const video = document.getElementById("video");
+    const capture = document.getElementById("capture");
+    const usePhoto = document.getElementById("usePhoto")
+    const save = document.getElementById("save");
+
+    video.style.display = "None";
+    capture.style.display = "None";
+    usePhoto.style.display = "None";
+
+    document.getElementById("takeAPhoto").addEventListener("click", () => {
+        inputChoice.style.display = "None";
+
+        loadWebcam();
+
+        video.style.display = "Block";
+        capture.style.display = "Block";
+    });
+    // load video
+    var imageCapture;
+
+    function loadWebcam() {
+        navigator.mediaDevices.getUserMedia({video: true})
+        .then(mediaStream => {
+            video.srcObject = mediaStream;
+
+            const track = mediaStream.getVideoTracks()[0];
+            imageCapture = new ImageCapture(track);
+        });
+    }
+
+    capture.addEventListener("click", takePhoto);
+
+    function takePhoto() {
+        imageCapture.takePhoto()
+        .then(async blob => {
+            imageFile = blob;
+            console.log(imageFile);
+
+            image.src = URL.createObjectURL(blob);
+            image.onload = () => { URL.revokeObjectURL(this.src) };
+
+            video.style.display = "None";
+            capture.style.display = "None";
+
+            usePhoto.style.display = "Block";
+        })
+    }
+
+    function displayImage(event) {
+        imageFile = event.target.files[0];
+        console.log(imageFile);
+
+        image.src = URL.createObjectURL(event.target.files[0]);
+        console.log(URL.createObjectURL(event.target.files[0]));
+        image.onload = () => { URL.revokeObjectURL(this.src) };
+        // document.getElementById("input_image_container").style.display = "block";
+
+        usePhoto.style.display = "Block";
+    }
+
+    usePhoto.addEventListener("click", predict);
+
+    async function predict() {
+        model = await tf.loadLayersModel('./TrainedModel-15/model.json');
+        const imageTensor = tf.browser.fromPixels(image).resizeNearestNeighbor([224, 224]).toFloat().div(255.0).expandDims(0);
+        
+        let prediction = model.predict(imageTensor);
+        prediction.print();
+        
+        prediction.data()
+        .then(data => {
+            let categories = ['Cardboard', 'Glass', 'Plastic', 'Paper', 'Metal', 'Trash'];
+
+            for (let i = 0; i < categories.length; i++) {
+                console.log(categories[i] + ": " + data[i]);
+            }
+
+            for (let i = 0, max = -1; i < categories.length; i++) {
+                if (data[i] > max) {
+                    max = data[i];
+                    maxIndex = i;
+                }
+            }
+
+            const type = categories[maxIndex];
+            console.log(type);
+            document.getElementById("prediction").innerHTML = "This trash is most likely " + type + ".";
+        });
+    }
+
+    save.addEventListener("click", () => {
+        console.log(imageFile);
+
+        let reader = new FileReader();
+        reader.readAsDataURL(imageFile);
+        reader.onloadend = function () {
+            let base64String = reader.result;
+            console.log(base64String);
+
+            fetch('saveImage', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                mode: 'cors',
+                cache: 'default',
+                body: JSON.stringify({ file: base64String }),
+            });
+        } 
+    });
+</script>
 
 <%- include('templates/footer') %>

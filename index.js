@@ -341,6 +341,23 @@ app.post('/predict', upload.single('garbage'), async (req, res) => {
     // res.redirect('/scan');
 });
 
+const cloudinary = require('cloudinary').v2;
+
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_CLOUD_KEY,
+    api_secret: process.env.CLOUDINARY_CLOUD_SECRET
+});
+
+app.post('/saveImage', (req, res) => {
+    const imageURI = req.body.file;
+
+    cloudinary.uploader.upload(imageURI,
+    { public_id: "olympic_flag" }, 
+    function(error, result) {console.log(result); });
+});
+
 app.get('/camera', (req, res) => {
     res.render('camera', { navLinks });
 })
