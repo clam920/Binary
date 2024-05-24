@@ -3,7 +3,7 @@ const router = require('express').Router();
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const { ObjectId } = require('mongodb');
-const { database } = require('./databaseConnection');
+const { database } = require('./public/js/databaseConnection');
 
 
 // Configure Cloudinary
@@ -106,7 +106,7 @@ router.use((err, req, res, next) => {
         return res.status(400).send(err.message);
     } else if (err) {
         return res.status(400).send(err.message);
-    }   
+    }
     next();
 });
 

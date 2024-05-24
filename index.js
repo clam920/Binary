@@ -1,4 +1,4 @@
-require('./utils.js');
+require('./public/js/utils.js');
 
 const fs = require(`fs`);
 require('dotenv').config();
@@ -8,6 +8,8 @@ const path = require('path');
 
 // use scanHistory.js to log user scan history
 const scanHistoryRouter = require('./scanHistory');
+const axios = require('axios');
+const cors = require('cors');
 
 // Authentication with google
 const passport = require('passport');
@@ -19,7 +21,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 
 // Handles image uploads
-const multer  = require('multer')
+const multer = require('multer')
 
 // Mongo security information
 const mongodb_user = process.env.MONGODB_USER;
@@ -29,6 +31,8 @@ const mongodb_database = process.env.MONGODB_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 
+// google maps and places security information
+const mapsAPIkey = process.env.GOOGLE_MAPS_API_KEY;
 
 var mongoStore = MongoStore.create({
     mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/${mongodb_database}`,
@@ -37,6 +41,8 @@ var mongoStore = MongoStore.create({
     }
 });
 
+app.use(cors());
+
 app.use(session({
     secret: node_session_secret,
     store: mongoStore,
@@ -44,138 +50,25 @@ app.use(session({
     resave: true
 }));
 
-// import data from "./assets/type.json" assert { type: 'json' };
-var facilities = [];
-const data = [
-    {
-        "type": "glass",
-        "facility": [
-            {
-                "place": "NORTH SHORE RECYCLING AND WASTE CENTRE",
-                "coordinates": [-123.01809661781101, 49.30128946964686]
-            },
-            {
-                "place": "POWELL STREET RETURN-IT BOTTLE DEPOT",
-                "coordinates": [-123.06668623130273, 49.28432306230311]
-            }
-        ]
-    },
-    {
-        "type": "plastic",
-        "facility": [
-            {
-                "coordinates": [-122.46152803131277, 9.090931848515034],
-                "place": "BLUE PLANET RECYCLING",
-            },
-            {
-                "coordinates": [-122.81127270247502, 49.118203173139264],
-                "place": "EMTERRA ENVIRONMENTAL - SURREY",
-            },
-            {
-                "coordinates": [-123.10084884294041, 49.25716962771798],
-                "place": "URBAN SOURCE",
-            },
-            {
-                "coordinates": [-122.62682891358655, 49.20014503465938],
-                "place": "WESTCOAST PLASTIC RECYCLING",
-            }
-        ]
-    },
-    {
-        "type": "cardboard",
-        "facility": [
-            {
-                "coordinates": [-123.06668623130273, 49.28432306230311],
-                "place": "POWELL STREET RETURN-IT BOTTLE DEPOT",
-            },
-            {
-                "coordinates": [-123.09190007177935, 49.20640098139237],
-                "place": "BEGG CARTON EXCHANGE",
-            }
-        ]
-    },
-    {
-        "type": "paper",
-        "facility": [
-            {
-                "coordinates": [-123.06668623130273, 49.28432306230311],
-                "place": "POWELL STREET RETURN-IT BOTTLE DEPOT",
-            },
-            {
-                "coordinates": [-123.10642038874201, 49.20894031159841],
-                "place": "SOUTH VAN BOTTLE DEPOT",
-            },
-            {
-                "coordinates": [-123.1149743134225, 49.20867115835692],
-                "place": "VANCOUVER ZERO WASTE CENTER",
-            },
-        ]
-    },
-    {
-        "type": "paper",
-        "facility": [
-            {
-                "coordinates": [-123.06668623130273, 49.28432306230311],
-                "place": "POWELL STREET RETURN-IT BOTTLE DEPOT",
-            },
-            {
-                "coordinates": [-123.10642038874201, 49.20894031159841],
-                "place": "SOUTH VAN BOTTLE DEPOT",
-            },
-            {
-                "coordinates": [-123.1149743134225, 49.20867115835692],
-                "place": "VANCOUVER ZERO WASTE CENTER",
-            },
-        ]
-    },
-    {
-        "type": "metal",
-        "facility": [
-            {
-                "coordinates": [-123.08198097141488, 49.27338112280383],
-                "place": "REGIONAL RECYCLING - VANCOUVER",
-            },
-            {
-                "coordinates": [-122.57650130520572, 49.20857510585476],
-                "place": "WESTERN DRUM RECYCLERS",
-            },
-        ]
-    }
-]
-
-const getSelected = () => {
-    var selection = document.getElementById("mySelection").value;
-    if (facilities.length > 0) {
-        facilities.splice(0, facilities.length);
-    }
-    data.forEach(el => {
-        if (el.type === selection) {
-            facilities = el.facility;
-        }
-    });
-
-    removeMarkers();
-
-    // add markers to map
-    for (const feature of facilities) {
-        // console.log(feature)
-        // create a HTML element for each feature
-        const el = document.createElement('div');
-        el.className = 'marker';
-        const popup = new mapboxgl.Popup({ offset: 25 }).setText(feature.place);
-
-
-        // make a marker for each feature and add to the map
-        new mapboxgl.Marker(el).setLngLat(feature.coordinates).addTo(map).setPopup(popup);
-    }
+function getMapResult() {
+    // const mapResult = await fetch(`https://maps.googleapis.com/maps/api/place/details/json
+    //     ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
+    //     &key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ`)
+    // console.log((mapResult));
+    axios.get(`https://maps.googleapis.com/maps/api/place/details/json
+    ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
+    &key=${mapsAPIkey}`)
+        .then(function (response) {
+            // handle success
+            console.log(response.data);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.message);
+        })
 }
+getMapResult();
 
-function removeMarkers() {
-    const markers = document.getElementsByClassName('marker');
-    while (markers.length > 0) {
-        markers[0].parentNode.removeChild(markers[0]);
-    }
-}
 
 // routes
 // Login router
@@ -269,6 +162,10 @@ fs.readFile('tutorial.JSON', 'utf-8', (err, data) => {
     }
 });
 
+app.get('/egg', (req, res) => {
+    res.render("easter_egg", { navLinks: navLinks });
+})
+
 app.get('/tutorial', (req, res) => {
     res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks });
 });
@@ -327,7 +224,8 @@ app.get('/home', (req, res) => {
 });
 
 
-app.get('/recycleCenters', (req, res) => {
+
+app.get('/recycleCenters', async (req, res) => {
     if (!req.session.authenticated) {
         res.redirect('/login');
         return;
@@ -342,8 +240,8 @@ app.get('/scan', (req, res) => {
 
 const upload = multer();
 const predict = require('./predict');
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb'}));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb' }));
 
 app.post('/predict', upload.single('garbage'), async (req, res) => {
     // console.log(req);
