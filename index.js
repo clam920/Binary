@@ -4,9 +4,26 @@ const fs = require(`fs`);
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const path = require('path');
+const webPush = require('web-push');
+const cron = require('node-cron');
+const bodyParser = require('body-parser');
+
+const publicKey = process.env.PUBLIC_KEY;
+const privateKey = process.env.PRIVATE_KEY;
+
+// Web push for notifications
+webPush.setVapidDetails(
+    'mailto:manasesvillalobos80@gmail.com',
+    publicKey, privateKey
+);
+
+app.use(bodyParser.json());
 
 // use scanHistory.js to log user scan history
 const scanHistoryRouter = require('./scanHistory');
+const axios = require('axios');
+const cors = require('cors');
 
 // Authentication with google
 const passport = require('passport');
@@ -17,6 +34,9 @@ require('./routes/googleAuth.js');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 
+// Handles image uploads
+const multer = require('multer')
+
 // Mongo security information
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
@@ -25,6 +45,8 @@ const mongodb_database = process.env.MONGODB_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 
+// google maps and places security information
+const mapsAPIkey = process.env.GOOGLE_MAPS_API_KEY;
 
 var mongoStore = MongoStore.create({
     mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/${mongodb_database}`,
@@ -33,6 +55,8 @@ var mongoStore = MongoStore.create({
     }
 });
 
+app.use(cors());
+
 app.use(session({
     secret: node_session_secret,
     store: mongoStore,
@@ -40,138 +64,8 @@ app.use(session({
     resave: true
 }));
 
-// import data from "./assets/type.json" assert { type: 'json' };
-var facilities = [];
-const data = [
-    {
-        "type": "glass",
-        "facility": [
-            {
-                "place": "NORTH SHORE RECYCLING AND WASTE CENTRE",
-                "coordinates": [-123.01809661781101, 49.30128946964686]
-            },
-            {
-                "place": "POWELL STREET RETURN-IT BOTTLE DEPOT",
-                "coordinates": [-123.06668623130273, 49.28432306230311]
-            }
-        ]
-    },
-    {
-        "type": "plastic",
-        "facility": [
-            {
-                "coordinates": [-122.46152803131277, 9.090931848515034],
-                "place": "BLUE PLANET RECYCLING",
-            },
-            {
-                "coordinates": [-122.81127270247502, 49.118203173139264],
-                "place": "EMTERRA ENVIRONMENTAL - SURREY",
-            },
-            {
-                "coordinates": [-123.10084884294041, 49.25716962771798],
-                "place": "URBAN SOURCE",
-            },
-            {
-                "coordinates": [-122.62682891358655, 49.20014503465938],
-                "place": "WESTCOAST PLASTIC RECYCLING",
-            }
-        ]
-    },
-    {
-        "type": "cardboard",
-        "facility": [
-            {
-                "coordinates": [-123.06668623130273, 49.28432306230311],
-                "place": "POWELL STREET RETURN-IT BOTTLE DEPOT",
-            },
-            {
-                "coordinates": [-123.09190007177935, 49.20640098139237],
-                "place": "BEGG CARTON EXCHANGE",
-            }
-        ]
-    },
-    {
-        "type": "paper",
-        "facility": [
-            {
-                "coordinates": [-123.06668623130273, 49.28432306230311],
-                "place": "POWELL STREET RETURN-IT BOTTLE DEPOT",
-            },
-            {
-                "coordinates": [-123.10642038874201, 49.20894031159841],
-                "place": "SOUTH VAN BOTTLE DEPOT",
-            },
-            {
-                "coordinates": [-123.1149743134225, 49.20867115835692],
-                "place": "VANCOUVER ZERO WASTE CENTER",
-            },
-        ]
-    },
-    {
-        "type": "paper",
-        "facility": [
-            {
-                "coordinates": [-123.06668623130273, 49.28432306230311],
-                "place": "POWELL STREET RETURN-IT BOTTLE DEPOT",
-            },
-            {
-                "coordinates": [-123.10642038874201, 49.20894031159841],
-                "place": "SOUTH VAN BOTTLE DEPOT",
-            },
-            {
-                "coordinates": [-123.1149743134225, 49.20867115835692],
-                "place": "VANCOUVER ZERO WASTE CENTER",
-            },
-        ]
-    },
-    {
-        "type": "metal",
-        "facility": [
-            {
-                "coordinates": [-123.08198097141488, 49.27338112280383],
-                "place": "REGIONAL RECYCLING - VANCOUVER",
-            },
-            {
-                "coordinates": [-122.57650130520572, 49.20857510585476],
-                "place": "WESTERN DRUM RECYCLERS",
-            },
-        ]
-    }
-]
-
-const getSelected = () => {
-    var selection = document.getElementById("mySelection").value;
-    if (facilities.length > 0) {
-        facilities.splice(0, facilities.length);
-    }
-    data.forEach(el => {
-        if (el.type === selection) {
-            facilities = el.facility;
-        }
-    });
-
-    removeMarkers();
-
-    // add markers to map
-    for (const feature of facilities) {
-        // console.log(feature)
-        // create a HTML element for each feature
-        const el = document.createElement('div');
-        el.className = 'marker';
-        const popup = new mapboxgl.Popup({ offset: 25 }).setText(feature.place);
 
 
-        // make a marker for each feature and add to the map
-        new mapboxgl.Marker(el).setLngLat(feature.coordinates).addTo(map).setPopup(popup);
-    }
-}
-
-function removeMarkers() {
-    const markers = document.getElementsByClassName('marker');
-    while (markers.length > 0) {
-        markers[0].parentNode.removeChild(markers[0]);
-    }
-}
 
 // routes
 // Login router
@@ -186,24 +80,34 @@ const confirmEmail = require('./routes/reset_password/confirmEmail.js');
 const resetPassword = require('./routes/reset_password/resetPassword.js');
 const changePassword = require('./routes/reset_password/changePassword.js');
 
+// Notifications route
+const notifications = require('./routes/notifications/notifications.js');
+const createNotification = require('./routes/notifications/createNotification.js');
+const recordNotification = require('./routes/notifications/recordNotification.js');
+const deleteNotification = require('./routes/notifications/deleteNotification.js');
+// const saveSubscription = require('./routes/notifications/saveSubscription.js');
+// const updateNotification = require('./routes/notifications/modifyNotification.js');
+
+
 const port = process.env.PORT || 3000;
 const expireTime = 60 * 60 * 1000;// Hour, minutes, seconds miliseconds
 
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: false })); //to parse the body
 
 var { database } = include('databaseConnection');
 
 // connect the collection of users in the database
 const userCollection = database.db(mongodb_database).collection('users');
+const complaintCollection = database.db(mongodb_database).collection('complaints');
 
 // navigation bar links
 const navLinks = [
-    { name: 'Home', link: '/' },
+    { name: 'Home', link: '/scan' },
     { name: 'Recycle Centers', link: '/recycleCenters' },
-    { name: 'Scan', link: '/' },
+    { name: 'Scan History', link: '/history' },
     { name: 'Tutorial', link: '/tutorial' },
-    { name: 'Profile', link: '/profile' },
 ];
 
 // Passport to use google authentication
@@ -247,6 +151,92 @@ app.use('/confirmEmail', confirmEmail); // gets the email to check if it exist i
 app.use('/resetPassword', resetPassword); // gets the answer and verify if it matches with the one in the database redirect to a form where the user enter the new password
 app.use('/changePassword', changePassword); // gets the new password and verify it with joi and resets the new one in the database
 
+//Notifications
+app.use('/notifications', notifications);
+app.use('/createNotification', createNotification); // form to create notifications
+app.use('/recordNotification', recordNotification); // it is post it will store the notification in database
+app.use('/deleteNotification', deleteNotification); //it will delete a notification
+// app.use('/save-subscription', saveSubscription); // it will save the subscribtion of the user that is necessary to webPush and service worker
+// app.use('/updateNotification', updateNotification); // to update a notification
+
+app.post('/save-subscription', async (req, res) => {
+    const email = req.session.email;
+    const subscription = req.body.subscription;
+
+    await userCollection.updateOne({ email }, { $set: { subscription } });
+    res.json({ status: 'Success', message: 'Subscription saved.' });
+});
+
+// test to merge
+// Schedule notifications check
+cron.schedule('* * * * *', async () => {
+    console.log('Checking for due notifications...');
+    const now = new Date();
+    const users = await userCollection.find({}).toArray();
+
+    for (const user of users) {
+        
+        if (user.notifications && user.subscription) {
+            for (const notification of user.notifications) {
+                // console.log(notification);
+                const today = now.getDay();
+                const day = notification.day;
+
+                // console.log('The day is: ' + day);
+                // console.log('Today is: ' + today);
+                // Check if the notification day is today or earlier in the week
+                if (day == today) {
+                    const hourNow = now.getHours();
+                    const minuteNow = now.getMinutes();
+                    const [hour, minute] = notification.time.split(':').map(Number);
+
+                    
+                        // console.log('The hour: ' + hour);
+                        // console.log('time now is: ' + hourNow);
+                        // console.log('The minute: ' + minute);
+                        // console.log('minute now is: ' + minuteNow);
+
+                    // Check if the current time matches the notification time
+                    if (hourNow === hour && minuteNow === minute) {
+                        const payload = JSON.stringify({
+                            title: notification.title,
+                            body: notification.notes
+                        });
+
+                        
+                        try {
+                            await webPush.sendNotification(user.subscription, payload);
+                            console.log('Push notification sent successfully');
+                        } catch (error) {
+                            console.error('Error sending push notification', error);
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+});
+
+function getMapResult() {
+    // const mapResult = await fetch(`https://maps.googleapis.com/maps/api/place/details/json
+    //     ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
+    //     &key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ`)
+    // console.log((mapResult));
+    axios.get(`https://maps.googleapis.com/maps/api/place/details/json
+    ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
+    &key=${mapsAPIkey}`)
+        .then(function (response) {
+            // handle success
+            console.log(response.data);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.message);
+        })
+}
+getMapResult();
+
 /** Arrays of tutorial articles to be parsed from tutorial.json */
 let tutorialArray;
 
@@ -264,8 +254,12 @@ fs.readFile('tutorial.JSON', 'utf-8', (err, data) => {
     }
 });
 
+app.get('/egg', (req, res) => {
+    res.render("easter_egg", { navLinks: navLinks });
+})
+
 app.get('/tutorial', (req, res) => {
-    res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks });
+    res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks, username: req.session.username });
 });
 
 /** clickable article details. */
@@ -276,6 +270,32 @@ app.post('/articles/:articleId', (req, res) => {
 
 app.use('/', scanHistoryRouter);
 
+app.get('/history', async (req, res) => {
+    try {
+        // Get username from session
+        const username = req.session.username;
+        if (!username) {
+            return res.status(400).send('Username is required.');
+        }
+
+        // Fetch user document from MongoDB
+        const user = await userCollection.findOne({ username: username });
+
+        if (!user) {
+            return res.status(404).send('User not found.');
+        }
+
+        // Get scan history from user document
+        const scanHistory = user.scanHistory || [];
+
+        // Render history.ejs with scan history data
+        res.render('history', { scanHistory: scanHistory, navLinks: navLinks, username: req.session.username });
+    } catch (error) {
+        console.error('Error fetching scan history:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 // Links to the main page
 app.get('/', (req, res) => {
     if (!req.session.authenticated) {
@@ -283,7 +303,7 @@ app.get('/', (req, res) => {
         return;
     }
 
-    res.render('home', { navLinks: navLinks, username: req.session.username });
+    res.render('scan', { navLinks: navLinks, username: req.session.username });
 });
 
 app.get('/home', (req, res) => {
@@ -292,17 +312,81 @@ app.get('/home', (req, res) => {
         return;
     }
 
-    res.render('home', { navLinks: navLinks, username: req.session.username });
+    res.render('scan', { navLinks: navLinks, username: req.session.username });
 });
 
-
-app.get('/recycleCenters', (req, res) => {
+app.get('/recycleCenters', async (req, res) => {
     if (!req.session.authenticated) {
         res.redirect('/login');
         return;
     }
     const email = req.body.email;
-    res.render('recycleCenters', { navLinks });
+    res.render('recycleCenters', { navLinks, username: req.session.username });
+});
+
+app.get('/scan', (req, res) => {
+    res.render('scan', { navLinks, username: req.session.username });
+});
+
+const upload = multer();
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
+const cloudinary = require('cloudinary').v2;
+const { ObjectId } = require('mongodb');
+
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_CLOUD_KEY,
+    api_secret: process.env.CLOUDINARY_CLOUD_SECRET
+});
+
+app.post('/saveImage', async (req, res) => {
+    const username = req.session.username;
+
+    const imageURI = req.body.file;
+    const imageType = req.body.type;
+    const imageID = new ObjectId();
+    const imageDate = new Date();
+
+    // cloudinary
+    await cloudinary.uploader.upload(imageURI, { 
+        public_id: imageID
+    }, async function(error, result) { 
+        console.log(result); 
+
+        // Prepare scan history entry
+        const scanEntry = {
+            scanId: imageID,
+            timestamp: imageDate,
+            scanData: result.secure_url,
+            scanType: imageType
+        };
+
+        // Update user's scan history in MongoDB
+        const updateResult = await userCollection.updateOne(
+            { username: username },
+            { $push: { scanHistory: scanEntry } }
+        );
+    });
+});
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.post('/complaint', async (req, res) => {
+    const type = req.body.type[0] !== 'Other' ? req.body.type[0] : req.body.type[1];
+    const allowForTraining = req.body.allowForTraining === '' ? true : false;
+
+    console.log(type);
+    console.log(allowForTraining);
+
+    await complaintCollection.insertOne({
+        type,
+        allowForTraining,
+    })
+
+    res.redirect('/scan');
 });
 
 // Logout 
@@ -317,7 +401,7 @@ app.use(express.static(__dirname + "/public"));
 // Catches all 404
 app.get('*', (req, res) => {
     res.status(404);
-    res.render('404');
+    res.render('404', {navLinks, username : req.session.username});
 });
 
 app.listen(port, () => {

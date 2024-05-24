@@ -1,0 +1,64 @@
+<%- include('templates/header') %>
+<link rel="stylesheet" href="css/easter_egg.css">
+<script src=/js/easter_egg.js></script>
+
+<div class="game-container">
+    <h3>Sort the waste items into their correct bin!</h3>
+    <div id="message"></div>
+    <div id="mistakes"></div>
+
+    <div class="items"></div>
+
+    <div class="bins">
+        <!-- Green bin -->
+        <div class="bin-container" data-bin="compost-bin">
+            <div class="lid" style="background-color: #45a049;">
+                <div class="handle">
+                    <div class="inHandle"></div>
+                </div>
+            </div>
+            <div id="compost-bin" class="bin" style="background-color: #45a049;">
+                <span class="bin-name">Compost</span>
+            </div>
+        </div>
+
+        <!-- Blue bin -->
+        <div class="bin-container" data-bin="recycle-bin">
+            <div class="lid" style="background-color: rgb(6, 60, 179);">
+                <div class="handle">
+                    <div class="inHandle"></div>
+                </div>
+            </div>
+            <div id="recycle-bin" class="bin" style="background-color: rgb(6, 60, 179);">
+                <span class="bin-name">Recycle</span>
+            </div>
+        </div>
+
+        <!-- Mixed paper bin -->
+        <div class="bin-container" data-bin="mixed-paper-bin">
+            <div class="lid" style="background-color: #f7e463;">
+                <div class="handle">
+                    <div class="inHandle"></div>
+                </div>
+            </div>
+            <div id="mixed-paper-bin" class="bin" style="background-color: #f7e463;">
+                <span class="bin-name">Mixed Paper</span>
+            </div>
+        </div>
+
+        <!-- Black bin -->
+        <div class="bin-container" data-bin="trash-bin">
+            <div class="lid" style="background-color: black;">
+                <div class="handle">
+                    <div class="inHandle"></div>
+                </div>
+            </div>
+            <div id="trash-bin" class="bin" style="background-color: black;">
+                <span class="bin-name">Trash</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<%- include('templates/footer') %>

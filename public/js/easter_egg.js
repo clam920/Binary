@@ -1,32 +1,33 @@
+const trigger = document.getElementById('world');
+    const dialog = document.getElementById('easter');
+    const closeModal = document.getElementById('closeModal');
+
+    trigger.addEventListener('click', () =>{
+        console.log("test for event listener");
+        dialog.showModal();
+    });
+
+    closeModal.addEventListener('click', ()=>{
+        dialog.close();
+    });
+
 document.addEventListener("DOMContentLoaded", sortingGame);
+
+
 
 function sortingGame() {
     const itemsData = [
         { id: "apple", emoji: "🍎", name: "Apple", bin: "compost-bin" },
-        {
-            id: "glass-bottle",
-            emoji: "🍾",
-            name: "Glass Bottle",
-            bin: "recycle-bin",
-        },
-        {
-            id: "cardboard-box",
-            emoji: "📦",
-            name: "Cardboard Box",
-            bin: "mixed-paper-bin",
-        },
+        { id: "glass-bottle", emoji: "🍾", name: "Glass Bottle", bin: "recycle-bin" },
+        { id: "cardboard-box", emoji: "📦", name: "Cardboard Box", bin: "mixed-paper-bin" },
         { id: "grapes", emoji: "🍇", name: "Grapes", bin: "compost-bin" },
-        {
-            id: "newspaper",
-            emoji: "📰",
-            name: "Newspaper",
-            bin: "mixed-paper-bin",
-        },
+        { id: "newspaper", emoji: "📰", name: "Newspaper", bin: "mixed-paper-bin" },
         { id: "razor", emoji: "🪒", name: "Razor", bin: "trash-bin" },
     ];
 
     const itemsContainer = document.querySelector(".items");
     const bins = document.querySelectorAll(".bin");
+    const binContainers = document.querySelectorAll('.bin-container');
     itemsContainer.innerHTML = ""; // Clear previous items
     bins.forEach((bin) => {
         while (bin.firstChild && bin.firstChild.className !== "bin-name") {
@@ -49,8 +50,8 @@ function sortingGame() {
     const messageElement = document.getElementById("message");
     let mistakes = 0; // to track the number of mistakes
 
-    const correctSound = new Audio("./public/audio/correct.mp3"); // Add your correct sound file here
-    const incorrectSound = new Audio("./public/audio/wrong.mp3"); // Add your incorrect sound file here
+    const correctSound = new Audio("/audio/correct.mp3"); // Add your correct sound file here
+    const incorrectSound = new Audio("/audio/wrong.mp3"); // Add your incorrect sound file here
 
     const items = document.querySelectorAll(".item");
     items.forEach((item) => {
@@ -60,6 +61,18 @@ function sortingGame() {
     bins.forEach((bin) => {
         bin.addEventListener("dragover", dragOver);
         bin.addEventListener("drop", drop);
+    });
+
+    binContainers.forEach((container) => {
+        container.addEventListener("dragover", () => {
+            container.classList.add("dragging-over");
+        });
+        container.addEventListener("dragleave", () => {
+            container.classList.remove("dragging-over");
+        });
+        container.addEventListener("drop", () => {
+            container.classList.remove("dragging-over");
+        });
     });
 
     function getRandomItems(arr, num) {
@@ -91,7 +104,7 @@ function sortingGame() {
             returnItemToOriginalPosition(draggableElement);
             mistakes++;
             displayMistakes();
-            displayMessage("Incorrect", "incorrect");
+            displayMessage("Oh no! That's the wrong bin!");
             if (mistakes === 3) {
                 gameOver();
             }
@@ -113,10 +126,7 @@ function sortingGame() {
     function returnItemToOriginalPosition(item) {
         const originalPosition = item.getAttribute("data-original-position");
         const originalParent = itemsContainer;
-        originalParent.insertBefore(
-            item,
-            originalParent.children[originalPosition]
-        );
+        originalParent.insertBefore(item, originalParent.children[originalPosition]);
     }
 
     function displayMistakes() {
@@ -128,7 +138,7 @@ function sortingGame() {
         messageElement.className = type;
         setTimeout(() => {
             messageElement.textContent = "";
-        }, 1000);
+        }, 1500);
     }
 
     function checkCompletion() {
@@ -155,16 +165,35 @@ function sortingGame() {
         });
 
         if (allCorrect) {
-            alert(
-                `Congratulations! You have successfully sorted all the items with ${mistakes} mistakes.`
-            );
+            // alert(`Congratulations! You have successfully sorted all the items with ${mistakes} mistakes.`);
+            Swal.fire({
+                title: `Congratulations! You have successfully sorted all the items with ${mistakes} mistakes.`,
+                width: 600,
+                padding: "3em",
+                color: "#716add",
+                background: "#fff url(/images/trees.png)",
+                backdrop: `
+                  rgba(0,0,123,0.4)
+                  left top
+                  no-repeat
+                `
+              });
             resetGame();
+            // window.location.href("https://www.google.com/")
+            dialog.close();
         }
     }
 
     function gameOver() {
-        alert("Game over");
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Game over!",
+            footer: '<a href="#">You got it wrong three times 😢</a>'
+          });
+        // alert("Game over! You got it wrong three times 😢");
         resetGame();
+        dialog.close();
     }
 
     function resetGame() {

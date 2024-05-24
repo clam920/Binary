@@ -1,11 +1,70 @@
 <%- include('templates/header') %>
-<%- include('templates/navbar', {navLinks: navLinks}) %>
-    <% for(let i = 0; i<tutorialArray.length; i++) { %>
-        <div class="card text-center text-white bg-success mb-3 mx-auto" style="max-width: 18rem;">
-            <div class="card-header"><%= tutorialArray[i].title %></div>
-            <form action="/articles/<%= i %>" method="post">
-                <button type="submit" class="btn btn-primary">Details</button>
-            </form>        
-        </div>
-    <% } %>
-    <%- include('templates/footer') %>
+
+    <link href="/css/tutorial.css" rel="stylesheet" />
+    <%- include('templates/navbar', {navLinks: navLinks}) %>
+
+        <% for(let i=0; i < tutorialArray.length; i++) { %>
+        
+            <div class="tutorial-card">
+                <img src="/images/article<%= i + 1 %>.jpg" class="tutorial-image" alt="Article Image">
+    
+                <div class="tutorial-content">
+                    <h3 class="tutorial-title"><%= tutorialArray[i].title %></h3>
+                    <button type="button" class="btn btn-primary open-modal" data-bs-toggle="modal" data-bs-target="#articleModal<%= i %>">Details</button>
+                </div>
+            </div>
+
+            <!-- Modal for each article -->
+            <div class="modal fade" id="articleModal<%= i %>" tabindex="-1" aria-labelledby="articleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="articleModalLabel">
+                                <%= tutorialArray[i].title %>
+                            </h5>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                <%= tutorialArray[i].content %>
+                            </p>
+                            <!-- Sections -->
+                            <% for(let j=0; j < tutorialArray[i].sections.length; j++) { %>
+                                <h6>
+                                    <%= tutorialArray[i].sections[j].title %>
+                                </h6>
+                                <p>
+                                    <%= tutorialArray[i].sections[j].content %>
+                                </p>
+                                <% } %>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="/tutorial" class="btn btn-primary">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
+            <script>
+                // JavaScript to handle opening modals when "Details" button is clicked
+                const openModalButtons = document.querySelectorAll('.open-modal');
+                openModalButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const targetModalId = button.getAttribute('data-bs-target');
+                        const modal = new bootstrap.Modal(document.querySelector(targetModalId));
+                        modal.show();
+                    });
+                });
+            
+                // Add an event listener to the modal when it is hidden
+                document.getElementById('articleModal').addEventListener('hidden.bs.modal', function () {
+                // Reload the page when the modal is closed
+                    window.location.reload();
+                })
+            </script>
+
+<%- include('templates/footer') %>
+
+
+

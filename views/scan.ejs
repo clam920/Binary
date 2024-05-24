@@ -1,0 +1,211 @@
+<%- include('templates/header') %>
+
+<%- include('templates/navbar', {navLinks: navLinks}) %>
+
+<h3 style="text-align: center; margin: 2vw;">Welcome <%= username%>!</h3>
+
+<h1>Upload an Image</h1>
+
+<div>
+    <div id="inputChoice">
+        <button id="takeAPhoto" class="btn btn-secondary">Take a Photo</button>
+        <span>or</span>
+        <!-- <button id="uploadPhoto">Choose from Library</button> -->
+        <input type="file" name="fileupload" accept="image/*" onchange="displayImage(event)" id="inputGroupFile04" class="btn btn-secondary">
+    </div>
+
+    <video id="video" class="image" autoplay></video>
+    <button id="capture" class="btn btn-secondary">Take Photo</button>
+    <img id="image" class="image">
+    <button id="usePhoto" class="btn btn-secondary">Use Photo</button>
+    <div id="prediction"></div>
+    <button id="save" class="btn btn-secondary">Save to History</button>
+    <a href="./scan"><button id="done" class="btn btn-secondary">Done</button></a>
+
+    <div class="dropdown" id="complaintForm">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Not quite right?
+        </button>
+        <div class="dropdown-menu">
+            <div>
+                We're sorry about that. Our model isn't accurate 100% of the time, but we're working to improve it!
+            </div>
+            <form action="/complaint" method="post">
+                <div class="form-group">
+                    <label for="options">What is this item actually?</label>
+                    <select name="type" class="form-control" id="options" onchange="showOtherInput()">
+                        <option value="Cardboard">Cardboard</option>
+                        <option value="Glass">Glass</option>
+                        <option value="Metal">Metal</option>
+                        <option value="Paper">Paper</option>
+                        <option value="Plastic">Plastic</option>
+                        <option value="Trash">Trash</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group" id="otherOption" style="display: none;">
+                    <label for="other">Please specify:</label>
+                    <input name="type" type="text" class="form-control" id="other">
+                </div>
+                <input name="allowForTraining" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Allow Binary to use this photo for future training.
+                </label>
+                <input type="submit" class="btn btn-primary" value="Submit">
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+
+<script>
+    let imageFile;
+    let type;
+
+    const inputChoice = document.getElementById("inputChoice");
+    const image = document.getElementById("image");
+    const video = document.getElementById("video");
+    const capture = document.getElementById("capture");
+    const usePhoto = document.getElementById("usePhoto")
+    const save = document.getElementById("save");
+    const done = document.getElementById("done");
+    const complaintForm = document.getElementById("complaintForm");
+
+    video.style.display = "None";
+    capture.style.display = "None";
+    usePhoto.style.display = "None";
+    save.style.display = "None";
+    done.style.display = "None";
+    complaintForm.style.display = "None";
+
+    document.getElementById("takeAPhoto").addEventListener("click", () => {
+        inputChoice.style.display = "None";
+
+        loadWebcam();
+
+        video.style.display = "Block";
+        capture.style.display = "Block";
+    });
+    // load video
+    var imageCapture;
+
+    function loadWebcam() {
+        navigator.mediaDevices.getUserMedia({video: true})
+        .then(mediaStream => {
+            video.srcObject = mediaStream;
+
+            const track = mediaStream.getVideoTracks()[0];
+            imageCapture = new ImageCapture(track);
+        });
+    }
+
+    capture.addEventListener("click", takePhoto);
+
+    function takePhoto() {
+        imageCapture.takePhoto()
+        .then(async blob => {
+            imageFile = blob;
+            console.log(imageFile);
+
+            image.src = URL.createObjectURL(blob);
+            image.onload = () => { URL.revokeObjectURL(this.src) };
+
+            video.style.display = "None";
+            capture.style.display = "None";
+
+            usePhoto.style.display = "Block";
+        })
+    }
+
+    function displayImage(event) {
+        inputChoice.style.display = "None";
+
+        imageFile = event.target.files[0];
+        // console.log(imageFile);
+
+        image.src = URL.createObjectURL(event.target.files[0]);
+        console.log(URL.createObjectURL(event.target.files[0]));
+        image.onload = () => { URL.revokeObjectURL(this.src) };
+
+        usePhoto.style.display = "Block";
+    }
+
+    usePhoto.addEventListener("click", predict);
+
+    async function predict() {
+        model = await tf.loadLayersModel('./TrainedModel-15/model.json');
+        const imageTensor = tf.browser.fromPixels(image).resizeNearestNeighbor([224, 224]).toFloat().div(255.0).expandDims(0);
+        
+        let prediction = model.predict(imageTensor);
+        prediction.print();
+        
+        prediction.data()
+        .then(data => {
+            let categories = ['Cardboard', 'Glass', 'Plastic', 'Paper', 'Metal', 'Trash'];
+
+            for (let i = 0; i < categories.length; i++) {
+                console.log(categories[i] + ": " + data[i]);
+            }
+
+            for (let i = 0, max = -1; i < categories.length; i++) {
+                if (data[i] > max) {
+                    max = data[i];
+                    maxIndex = i;
+                }
+            }
+
+            type = categories[maxIndex];
+            document.getElementById("prediction").innerHTML = "This item is most likely " + type + ".";
+
+            usePhoto.style.display = "None";
+
+            save.style.display = "Block";
+            done.style.display = "Block";
+            complaintForm.style.display = "Block";
+        });
+    }
+
+    save.addEventListener("click", () => {
+        console.log(imageFile);
+
+        let reader = new FileReader();
+        reader.readAsDataURL(imageFile);
+        reader.onloadend = function () {
+            let base64String = reader.result;
+            console.log(base64String);
+            console.log(type);
+
+            fetch('saveImage', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                mode: 'cors',
+                cache: 'default',
+                body: JSON.stringify({ file: base64String, type: type }),
+            });
+        } 
+    });
+</script>
+
+<script>
+    function showOtherInput() {
+        var selectBox = document.getElementById('options');
+        var otherOption = document.getElementById('otherOption');
+        if (selectBox.value === 'Other') {
+            otherOption.style.display = 'block';
+        } else {
+            otherOption.style.display = 'none';
+        }
+    }
+</script>
+
+<style>
+    .image {
+        height: 20em;
+        width: auto;
+        border-radius: 30px;
+    }
+</style>
+
+<%- include('templates/footer') %>
