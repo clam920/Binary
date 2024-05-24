@@ -298,7 +298,7 @@ app.use(express.static(__dirname + "/public"));
 // Catches all 404
 app.get('*', (req, res) => {
     res.status(404);
-    res.render('404', {navLinks});
+    res.render('404', {navLinks, username : req.session.username});
 });
 
 app.listen(port, () => {
