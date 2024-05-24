@@ -4,6 +4,9 @@ const fs = require(`fs`);
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const webPush = require('web-push');
+const cron = require('node-cron');
+const bodyParser = require('body-parser');
 
 // use scanHistory.js to log user scan history
 const scanHistoryRouter = require('./scanHistory');
@@ -11,6 +14,15 @@ const scanHistoryRouter = require('./scanHistory');
 // Authentication with google
 const passport = require('passport');
 require('./routes/googleAuth.js');
+
+const publicKey = process.env.PUBLIC_KEY;
+const privateKey = process.env.PRIVATE_KEY;
+
+// Web push for notifications
+webPush.setVapidDetails(
+    'mailto:manasesvillalobos80@gmail.com',
+    publicKey, privateKey
+);
 
 // Mongo db information necessary
 // to create a session 
@@ -191,6 +203,7 @@ const expireTime = 60 * 60 * 1000;// Hour, minutes, seconds miliseconds
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false })); //to parse the body
+app.use(bodyParser.json());
 
 var { database } = include('databaseConnection');
 
@@ -255,9 +268,9 @@ app.get('/notifications', async (req, res) => {
 
     const email = req.session.email;
 
-    const notifications = await userCollection.find({ email:email }).project({ notifications: 1}).toArray();
+    const notifications = await userCollection.find({ email: email }).project({ notifications: 1 }).toArray();
 
-    res.render('notifications', { navLinks, username: req.session.username, notifications: notifications[0].notifications})
+    res.render('notifications', { navLinks, username: req.session.username, notifications: notifications[0].notifications })
 });
 
 app.get('/createNotification', (req, res) => {
@@ -276,11 +289,12 @@ app.post('/recordNotification', async (req, res) => {
     const day = req.body.day;
     const time = req.body.time;
 
+
     const reminder = {
         title: title,
         notes: notes,
-        day: day,
-        time: time
+        day,
+        time
     };
 
 
@@ -289,6 +303,53 @@ app.post('/recordNotification', async (req, res) => {
 
     res.redirect('/notifications');
 });
+
+app.post('/save-subscription', async (req, res) => {
+    const email = req.session.email;
+    const subscription = req.body.subscription;
+
+    await userCollection.updateOne({ email }, { $set: { subscription } });
+    res.json({ status: 'Success', message: 'Subscription saved.' });
+});
+
+// Schedule notifications check
+cron.schedule('* * * * *', async () => {
+    console.log('Checking for due notifications...');
+    const now = new Date();
+    const users = await userCollection.find({}).toArray();
+
+    for (const user of users) {
+        if (user.notifications && user.subscription) {
+            for (const notification of user.notifications) {
+                const today = now.getDay();
+                const day = notification.day;
+
+                // Check if the notification day is today or earlier in the week
+                if (day == today) {
+                    const hourNow = now.getHours();
+                    const minuteNow = now.getMinutes();
+                    const [hour, minute] = notification.time.split(':').map(Number);
+
+                    // Check if the current time matches the notification time
+                    if (hourNow === hour && minuteNow === minute) {
+                        const payload = JSON.stringify({
+                            title: notification.title,
+                            body: notification.notes
+                        });
+                        try {
+                            await webPush.sendNotification(user.subscription, payload);
+                            console.log('Push notification sent successfully');
+                        } catch (error) {
+                            console.error('Error sending push notification', error);
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+});
+
 
 /** Arrays of tutorial articles to be parsed from tutorial.json */
 let tutorialArray;
