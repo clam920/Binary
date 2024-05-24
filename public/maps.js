@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             filteredSuggestions.forEach(suggestion => {
                 const suggestionElement = document.createElement('div');
+                suggestionElement.className = 'container';
                 suggestionElement.textContent = suggestion.type;
                 suggestionElement.addEventListener('click', () => {
                     input.value = suggestion.type;
