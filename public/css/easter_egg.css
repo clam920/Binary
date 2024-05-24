@@ -1,13 +1,12 @@
-body {
+/* body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
     margin: 0;
     overflow: scroll;
-}
+} */
 
 .game-container {
     display: flex;
@@ -51,7 +50,8 @@ body {
 }
 
 .bins {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
     justify-content: center;
     gap: 20px;
     height: auto;
@@ -190,13 +190,15 @@ body {
 @media (max-width: 1000px) {
     .bins {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: auto auto;
+        grid-template-rows:  auto auto;
         grid-row-gap: 100px;
         justify-items: center;
     }
 
     .bin {
-        height: 10vh;
+        height: 15vh;
+        width: 20vw;
     }
 
     .lid {
@@ -213,4 +215,11 @@ body {
     font-weight: bold;
     font-size: 1em;
     }
+}
+
+@media (max-width: 600px){
+    .bin {
+        width: 30vw;
+    }
+    
 }

@@ -1,0 +1,61 @@
+#content{
+    display: grid;
+    place-items: center;
+}
+#div404{
+    font-size: "M PLUS Rounded 1c", sans-serif;
+    display: grid;
+    grid-template-columns:  auto auto auto auto;
+    color: white;
+    font-size: 30vh;
+    text-align: center;
+    /* margin-left: 8vw; */
+    cursor: pointer;
+}
+#world{
+    margin-top: 2vh;
+    font-size: 28vh;
+}
+
+#easter{
+    border-radius: 30px;
+    width: 60vw;
+    height: 80vh;
+}
+
+#close{
+    text-align: center;
+    margin-top: 4vh;
+}
+
+@media (max-width: 1250px){
+    #easter{
+        width: 75vw;
+        height: 93vh;
+    }
+
+}
+
+
+@media (max-width: 800px){
+    #easter{
+        width: 80vw;
+        height: 93vh;
+    }
+
+}
+
+@media (max-width: 600px){
+    #easter{
+        width: 90vw;
+        height: 100vh;
+    }
+    #close{
+        text-align: center;
+        margin-top: 2vh;
+    }
+    h3{
+        font-size: 3vh;
+    }
+
+}

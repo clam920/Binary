@@ -1,4 +1,19 @@
+const trigger = document.getElementById('world');
+    const dialog = document.getElementById('easter');
+    const closeModal = document.getElementById('closeModal');
+
+    trigger.addEventListener('click', () =>{
+        console.log("test for event listener");
+        dialog.showModal();
+    });
+
+    closeModal.addEventListener('click', ()=>{
+        dialog.close();
+    });
+
 document.addEventListener("DOMContentLoaded", sortingGame);
+
+
 
 function sortingGame() {
     const itemsData = [
@@ -35,8 +50,8 @@ function sortingGame() {
     const messageElement = document.getElementById("message");
     let mistakes = 0; // to track the number of mistakes
 
-    const correctSound = new Audio("./public/audio/correct.mp3"); // Add your correct sound file here
-    const incorrectSound = new Audio("./public/audio/wrong.mp3"); // Add your incorrect sound file here
+    const correctSound = new Audio("/audio/correct.mp3"); // Add your correct sound file here
+    const incorrectSound = new Audio("/audio/wrong.mp3"); // Add your incorrect sound file here
 
     const items = document.querySelectorAll(".item");
     items.forEach((item) => {
@@ -150,17 +165,35 @@ function sortingGame() {
         });
 
         if (allCorrect) {
-            alert(`Congratulations! You have successfully sorted all the items with ${mistakes} mistakes.`);
+            // alert(`Congratulations! You have successfully sorted all the items with ${mistakes} mistakes.`);
+            Swal.fire({
+                title: `Congratulations! You have successfully sorted all the items with ${mistakes} mistakes.`,
+                width: 600,
+                padding: "3em",
+                color: "#716add",
+                background: "#fff url(/images/trees.png)",
+                backdrop: `
+                  rgba(0,0,123,0.4)
+                  left top
+                  no-repeat
+                `
+              });
             resetGame();
             // window.location.href("https://www.google.com/")
-            location.assign("/")
+            dialog.close();
         }
     }
 
     function gameOver() {
-        alert("Game over! You got it wrong three times 😢");
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Game over!",
+            footer: '<a href="#">You got it wrong three times 😢</a>'
+          });
+        // alert("Game over! You got it wrong three times 😢");
         resetGame();
-        location.assign("/")
+        dialog.close();
     }
 
     function resetGame() {
