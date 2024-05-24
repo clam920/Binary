@@ -3,7 +3,7 @@
 <%- include('templates/navbar', {navLinks: navLinks, username}) %>
 
 <div style="display: grid; place-items: center;">
-  <h2 style="margin: 2vw;"><a href="/notifications">←</a> Notifications</h2>
+  <h2 style="margin: 2vw;"><a href="/notifications">←</a> Update Notification</h2>
   <form action='/recordNotification' method='post' style="width: auto;">
     <!-- title -->
       <div class="row mb-3">
@@ -36,7 +36,7 @@
       </div>
 
       <div style="display: grid; place-items: center;">
-          <button type="submit" class="btn btn-primary" id="notificationButton">Create</button>
+          <button type="submit" class="btn btn-primary" id="notificationButton">Update</button>
       </div>
   </form>
 </div>

@@ -198,6 +198,15 @@ const confirmEmail = require('./routes/reset_password/confirmEmail.js');
 const resetPassword = require('./routes/reset_password/resetPassword.js');
 const changePassword = require('./routes/reset_password/changePassword.js');
 
+// Notifications route
+const notifications = require('./routes/notifications/notifications.js');
+const createNotification = require('./routes/notifications/createNotification.js');
+const recordNotification = require('./routes/notifications/recordNotification.js');
+const deleteNotification = require('./routes/notifications/deleteNotification.js');
+const saveSubscription = require('./routes/notifications/saveSubscription.js');
+const updateNotification = require('./routes/notifications/modifyNotification.js');
+
+
 const port = process.env.PORT || 3000;
 const expireTime = 60 * 60 * 1000;// Hour, minutes, seconds miliseconds
 
@@ -259,58 +268,13 @@ app.use('/confirmEmail', confirmEmail); // gets the email to check if it exist i
 app.use('/resetPassword', resetPassword); // gets the answer and verify if it matches with the one in the database redirect to a form where the user enter the new password
 app.use('/changePassword', changePassword); // gets the new password and verify it with joi and resets the new one in the database
 
-// goes to the notification link
-app.get('/notifications', async (req, res) => {
-    if (!req.session.authenticated) {
-        res.redirect('/login');
-        return;
-    }
-
-    const email = req.session.email;
-
-    const notifications = await userCollection.find({ email: email }).project({ notifications: 1 }).toArray();
-
-    res.render('notifications', { navLinks, username: req.session.username, notifications: notifications[0].notifications })
-});
-
-app.get('/createNotification', (req, res) => {
-    if (!req.session.authenticated) {
-        res.redirect('/login');
-        return;
-    }
-
-    res.render('createNotification', { navLinks, username: req.session.username })
-});
-
-app.post('/recordNotification', async (req, res) => {
-    const email = req.session.email;
-    const title = req.body.title;
-    const notes = req.body.notes;
-    const day = req.body.day;
-    const time = req.body.time;
-
-
-    const reminder = {
-        title: title,
-        notes: notes,
-        day,
-        time
-    };
-
-
-    await userCollection.updateOne({ email }, { $push: { notifications: reminder } });
-    console.log("Notification stored succesfully");
-
-    res.redirect('/notifications');
-});
-
-app.post('/save-subscription', async (req, res) => {
-    const email = req.session.email;
-    const subscription = req.body.subscription;
-
-    await userCollection.updateOne({ email }, { $set: { subscription } });
-    res.json({ status: 'Success', message: 'Subscription saved.' });
-});
+//Notifications
+app.use('/notifications', notifications);
+app.use('/createNotification', createNotification); // form to create notifications
+app.use('/recordNotification', recordNotification); // it is post it will store the notification in database
+app.use('/deleteNotification', deleteNotification); //it will delete a notification
+app.use('/save-subscription', saveSubscription); // it will save the subscribtion of the user that is necessary to webPush and service worker
+app.use('/updateNotification', updateNotification); // to update a notification
 
 // Schedule notifications check
 cron.schedule('* * * * *', async () => {
@@ -336,6 +300,13 @@ cron.schedule('* * * * *', async () => {
                             title: notification.title,
                             body: notification.notes
                         });
+
+                        // console.log('The day is: ' + day);
+                        // console.log('Today is: ' + today);
+                        // console.log('The hour: ' + hour);
+                        // console.log('time now is: ' + hourNow);
+                        // console.log('The minute: ' + minute);
+                        // console.log('minute now is: ' + minuteNow);
                         try {
                             await webPush.sendNotification(user.subscription, payload);
                             console.log('Push notification sent successfully');

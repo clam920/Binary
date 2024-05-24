@@ -4,6 +4,7 @@
 
 <div style="display: grid; place-items: center;">
   <h2 style="margin: 2vw;"><a href="/notifications">←</a> Notifications</h2>
+    <h5>Invalid title taken! (title must be unique)</h5>
   <form action='/recordNotification' method='post' style="width: auto;">
     <!-- title -->
       <div class="row mb-3">
@@ -13,7 +14,7 @@
       <!-- notes -->
       <div class="row mb-3">
           <label for="inputPassword3" class="col-sm-2 col-form-label">Notes</label>
-          <textarea type="text" class="form-control" id="inputPassword3" name='notes' required></textarea>
+          <textarea type="text" class="form-control" id="inputPassword3" name='notes'></textarea>
       </div>
       <!-- Day -->
       <div class="row mb-3">
@@ -41,4 +42,7 @@
   </form>
 </div>
 
+<script>
+  
+</script>
 <%- include('templates/footer') %>
