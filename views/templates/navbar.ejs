@@ -12,11 +12,24 @@
               <a class="nav-link active" aria-current="page" href="<%= navLinks[i].link%>"><%= navLinks[i].name%></a> 
             </li>
           <% } %>
-          <!-- to logout-->
-          <li class="nav-item">
-            <form action="/logout" method="post">
-              <button class="nav-link btn-outline-danger" aria-current="page" style="color: rgb(226, 81, 81);">Logout</button>
-            </form>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <% if (username !== undefined) { %>
+                <%= username %>
+                <% } else {%>
+                    Guest
+                  <% } %>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/profile">Profile</a></li>
+              <li><a class="dropdown-item" href="/notifications">Notifications</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form action="/logout" method="post" id="logoutForm">
+                <button class="nav-link btn-outline-danger" aria-current="page" style="color: rgb(226, 81, 81); margin-left: 2vw;">Logout</button>
+              </form>
+            </li>
+            </ul>
           </li>
         </ul>
       </div>

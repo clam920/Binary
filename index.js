@@ -97,11 +97,10 @@ const userCollection = database.db(mongodb_database).collection('users');
 
 // navigation bar links
 const navLinks = [
-    { name: 'Home', link: '/' },
+    { name: 'Home', link: '/scan' },
     { name: 'Recycle Centers', link: '/recycleCenters' },
     { name: 'Scan History', link: '/history' },
     { name: 'Tutorial', link: '/tutorial' },
-    { name: 'Profile', link: '/profile' },
 ];
 
 // Passport to use google authentication
@@ -167,7 +166,7 @@ app.get('/egg', (req, res) => {
 })
 
 app.get('/tutorial', (req, res) => {
-    res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks });
+    res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks, username: req.session.username });
 });
 
 /** clickable article details. */
@@ -197,7 +196,7 @@ app.get('/history', async (req, res) => {
         const scanHistory = user.scanHistory || [];
 
         // Render history.ejs with scan history data
-        res.render('history', { scanHistory: scanHistory, navLinks: navLinks });
+        res.render('history', { scanHistory: scanHistory, navLinks: navLinks, username: req.session.username });
     } catch (error) {
         console.error('Error fetching scan history:', error);
         res.status(500).send('Internal Server Error');
@@ -211,7 +210,7 @@ app.get('/', (req, res) => {
         return;
     }
 
-    res.render('home', { navLinks: navLinks, username: req.session.username });
+    res.render('scan', { navLinks: navLinks, username: req.session.username });
 });
 
 app.get('/home', (req, res) => {
@@ -220,10 +219,8 @@ app.get('/home', (req, res) => {
         return;
     }
 
-    res.render('home', { navLinks: navLinks, username: req.session.username });
+    res.render('scan', { navLinks: navLinks, username: req.session.username });
 });
-
-
 
 app.get('/recycleCenters', async (req, res) => {
     if (!req.session.authenticated) {
@@ -231,46 +228,54 @@ app.get('/recycleCenters', async (req, res) => {
         return;
     }
     const email = req.body.email;
-    res.render('recycleCenters', { navLinks });
+    res.render('recycleCenters', { navLinks, username: req.session.username });
 });
 
 app.get('/scan', (req, res) => {
-    res.render('scan', { navLinks });
+    res.render('scan', { navLinks, username: req.session.username });
 });
 
 const upload = multer();
-const predict = require('./predict');
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb' }));
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
+const cloudinary = require('cloudinary').v2;
+const { ObjectId } = require('mongodb');
 
-app.post('/predict', upload.single('garbage'), async (req, res) => {
-    // console.log(req);
-    // console.log(req.body.buffer);
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_CLOUD_KEY,
+    api_secret: process.env.CLOUDINARY_CLOUD_SECRET
+});
 
-    let image;
+app.post('/saveImage', async (req, res) => {
+    const username = req.session.username;
 
-    // convert to correct format
-    if (req.file) {
-        // image upload
-        image = req.file.buffer;
-    } else {
-        // webcam capture
-        const base64String = req.body.file.replace('data:image/png;base64,', '');
-        const binString = atob(base64String);
-        image = Uint8Array.from(binString, (m) => m.codePointAt(0));
-    }
+    const imageURI = req.body.file;
+    const imageType = req.body.type;
+    const imageID = new ObjectId();
+    const imageDate = new Date();
 
-    // predict bin based on image
-    const prediction = await predict(image);
+    // cloudinary
+    await cloudinary.uploader.upload(imageURI, { 
+        public_id: imageID
+    }, async function(error, result) { 
+        console.log(result); 
 
+        // Prepare scan history entry
+        const scanEntry = {
+            scanId: imageID,
+            timestamp: imageDate,
+            scanData: result.secure_url,
+            scanType: imageType
+        };
 
-    console.log(`This trash is most likely ${prediction}.`);
-
-    res.render('prediction', { navLinks, prediction, image });
-
-    console.log('after redirecting');
-    // res.send(prediction);
-    // res.redirect('/scan');
+        // Update user's scan history in MongoDB
+        const updateResult = await userCollection.updateOne(
+            { username: username },
+            { $push: { scanHistory: scanEntry } }
+        );
+    });
 });
 
 app.get('/camera', (req, res) => {
@@ -293,7 +298,7 @@ app.use(express.static(__dirname + "/public"));
 // Catches all 404
 app.get('*', (req, res) => {
     res.status(404);
-    res.render('404');
+    res.render('404', {navLinks, username : req.session.username});
 });
 
 app.listen(port, () => {
