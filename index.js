@@ -123,7 +123,6 @@ const navLinks = [
     { name: 'Recycle Centers', link: '/recycleCenters' },
     { name: 'Scan History', link: '/history' },
     { name: 'Tutorial', link: '/tutorial' },
-    { name: 'Profile', link: '/profile' },
 ];
 
 // Passport to use google authentication
@@ -273,7 +272,7 @@ app.get('/history', async (req, res) => {
         const scanHistory = user.scanHistory || [];
 
         // Render history.ejs with scan history data
-        res.render('history', { scanHistory: scanHistory, navLinks: navLinks });
+        res.render('history', { scanHistory: scanHistory, navLinks: navLinks, username });
     } catch (error) {
         console.error('Error fetching scan history:', error);
         res.status(500).send('Internal Server Error');
