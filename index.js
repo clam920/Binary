@@ -65,8 +65,6 @@ app.use(session({
 }));
 
 
-
-
 // routes
 // Login router
 const loginRouter = require('./routes/login.js');
@@ -371,7 +369,7 @@ app.post('/saveImage', async (req, res) => {
     });
 });
 
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/complaint', async (req, res) => {
