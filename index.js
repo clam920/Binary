@@ -5,6 +5,20 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path');
+const webPush = require('web-push');
+const cron = require('node-cron');
+const bodyParser = require('body-parser');
+
+const publicKey = process.env.PUBLIC_KEY;
+const privateKey = process.env.PRIVATE_KEY;
+
+// Web push for notifications
+webPush.setVapidDetails(
+    'mailto:manasesvillalobos80@gmail.com',
+    publicKey, privateKey
+);
+
+app.use(bodyParser.json());
 
 // use scanHistory.js to log user scan history
 const scanHistoryRouter = require('./scanHistory');
@@ -50,24 +64,7 @@ app.use(session({
     resave: true
 }));
 
-function getMapResult() {
-    // const mapResult = await fetch(`https://maps.googleapis.com/maps/api/place/details/json
-    //     ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
-    //     &key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ`)
-    // console.log((mapResult));
-    axios.get(`https://maps.googleapis.com/maps/api/place/details/json
-    ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
-    &key=${mapsAPIkey}`)
-        .then(function (response) {
-            // handle success
-            console.log(response.data);
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error.message);
-        })
-}
-getMapResult();
+
 
 
 // routes
@@ -82,6 +79,15 @@ const confirmUser = require('./routes/reset_password/confirmUser.js');
 const confirmEmail = require('./routes/reset_password/confirmEmail.js');
 const resetPassword = require('./routes/reset_password/resetPassword.js');
 const changePassword = require('./routes/reset_password/changePassword.js');
+
+// Notifications route
+const notifications = require('./routes/notifications/notifications.js');
+const createNotification = require('./routes/notifications/createNotification.js');
+const recordNotification = require('./routes/notifications/recordNotification.js');
+const deleteNotification = require('./routes/notifications/deleteNotification.js');
+// const saveSubscription = require('./routes/notifications/saveSubscription.js');
+// const updateNotification = require('./routes/notifications/modifyNotification.js');
+
 
 const port = process.env.PORT || 3000;
 const expireTime = 60 * 60 * 1000;// Hour, minutes, seconds miliseconds
@@ -149,8 +155,18 @@ app.use('/notifications', notifications);
 app.use('/createNotification', createNotification); // form to create notifications
 app.use('/recordNotification', recordNotification); // it is post it will store the notification in database
 app.use('/deleteNotification', deleteNotification); //it will delete a notification
-app.use('/save-subscription', saveSubscription); // it will save the subscribtion of the user that is necessary to webPush and service worker
-app.use('/updateNotification', updateNotification); // to update a notification
+// app.use('/save-subscription', saveSubscription); // it will save the subscribtion of the user that is necessary to webPush and service worker
+// app.use('/updateNotification', updateNotification); // to update a notification
+
+app.post('/save-subscription', async (req, res) => {
+    const email = req.session.email;
+    const subscription = req.body.subscription;
+
+    console.log(subscription);
+
+    await userCollection.updateOne({ email }, { $set: { subscription } });
+    res.json({ status: 'Success', message: 'Subscription saved.' });
+});
 
 // test to merge
 // Schedule notifications check
@@ -160,16 +176,26 @@ cron.schedule('* * * * *', async () => {
     const users = await userCollection.find({}).toArray();
 
     for (const user of users) {
+        
         if (user.notifications && user.subscription) {
             for (const notification of user.notifications) {
+                console.log(notification);
                 const today = now.getDay();
                 const day = notification.day;
 
+                console.log('The day is: ' + day);
+                console.log('Today is: ' + today);
                 // Check if the notification day is today or earlier in the week
                 if (day == today) {
                     const hourNow = now.getHours();
                     const minuteNow = now.getMinutes();
                     const [hour, minute] = notification.time.split(':').map(Number);
+
+                    
+                        console.log('The hour: ' + hour);
+                        console.log('time now is: ' + hourNow);
+                        console.log('The minute: ' + minute);
+                        console.log('minute now is: ' + minuteNow);
 
                     // Check if the current time matches the notification time
                     if (hourNow === hour && minuteNow === minute) {
@@ -178,12 +204,7 @@ cron.schedule('* * * * *', async () => {
                             body: notification.notes
                         });
 
-                        // console.log('The day is: ' + day);
-                        // console.log('Today is: ' + today);
-                        // console.log('The hour: ' + hour);
-                        // console.log('time now is: ' + hourNow);
-                        // console.log('The minute: ' + minute);
-                        // console.log('minute now is: ' + minuteNow);
+                        
                         try {
                             await webPush.sendNotification(user.subscription, payload);
                             console.log('Push notification sent successfully');
@@ -198,6 +219,24 @@ cron.schedule('* * * * *', async () => {
     }
 });
 
+function getMapResult() {
+    // const mapResult = await fetch(`https://maps.googleapis.com/maps/api/place/details/json
+    //     ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
+    //     &key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ`)
+    // console.log((mapResult));
+    axios.get(`https://maps.googleapis.com/maps/api/place/details/json
+    ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
+    &key=${mapsAPIkey}`)
+        .then(function (response) {
+            // handle success
+            console.log(response.data);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.message);
+        })
+}
+getMapResult();
 
 /** Arrays of tutorial articles to be parsed from tutorial.json */
 let tutorialArray;
