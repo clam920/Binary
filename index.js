@@ -166,7 +166,7 @@ app.get('/egg', (req, res) => {
 })
 
 app.get('/tutorial', (req, res) => {
-    res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks });
+    res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks, username: req.session.username });
 });
 
 /** clickable article details. */
