@@ -144,6 +144,61 @@ app.use('/confirmEmail', confirmEmail); // gets the email to check if it exist i
 app.use('/resetPassword', resetPassword); // gets the answer and verify if it matches with the one in the database redirect to a form where the user enter the new password
 app.use('/changePassword', changePassword); // gets the new password and verify it with joi and resets the new one in the database
 
+//Notifications
+app.use('/notifications', notifications);
+app.use('/createNotification', createNotification); // form to create notifications
+app.use('/recordNotification', recordNotification); // it is post it will store the notification in database
+app.use('/deleteNotification', deleteNotification); //it will delete a notification
+app.use('/save-subscription', saveSubscription); // it will save the subscribtion of the user that is necessary to webPush and service worker
+app.use('/updateNotification', updateNotification); // to update a notification
+
+// test to merge
+// Schedule notifications check
+cron.schedule('* * * * *', async () => {
+    console.log('Checking for due notifications...');
+    const now = new Date();
+    const users = await userCollection.find({}).toArray();
+
+    for (const user of users) {
+        if (user.notifications && user.subscription) {
+            for (const notification of user.notifications) {
+                const today = now.getDay();
+                const day = notification.day;
+
+                // Check if the notification day is today or earlier in the week
+                if (day == today) {
+                    const hourNow = now.getHours();
+                    const minuteNow = now.getMinutes();
+                    const [hour, minute] = notification.time.split(':').map(Number);
+
+                    // Check if the current time matches the notification time
+                    if (hourNow === hour && minuteNow === minute) {
+                        const payload = JSON.stringify({
+                            title: notification.title,
+                            body: notification.notes
+                        });
+
+                        // console.log('The day is: ' + day);
+                        // console.log('Today is: ' + today);
+                        // console.log('The hour: ' + hour);
+                        // console.log('time now is: ' + hourNow);
+                        // console.log('The minute: ' + minute);
+                        // console.log('minute now is: ' + minuteNow);
+                        try {
+                            await webPush.sendNotification(user.subscription, payload);
+                            console.log('Push notification sent successfully');
+                        } catch (error) {
+                            console.error('Error sending push notification', error);
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+});
+
+
 /** Arrays of tutorial articles to be parsed from tutorial.json */
 let tutorialArray;
 
