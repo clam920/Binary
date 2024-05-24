@@ -46,23 +46,25 @@
             </div>
             <% } %>
 
+            <script>
+                // JavaScript to handle opening modals when "Details" button is clicked
+                const openModalButtons = document.querySelectorAll('.open-modal');
+                openModalButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const targetModalId = button.getAttribute('data-bs-target');
+                        const modal = new bootstrap.Modal(document.querySelector(targetModalId));
+                        modal.show();
+                    });
+                });
+            
+                // Add an event listener to the modal when it is hidden
+                document.getElementById('articleModal').addEventListener('hidden.bs.modal', function () {
+                // Reload the page when the modal is closed
+                    window.location.reload();
+                })
+            </script>
+
 <%- include('templates/footer') %>
 
 
-<script>
-    // JavaScript to handle opening modals when "Details" button is clicked
-    const openModalButtons = document.querySelectorAll('.open-modal');
-    openModalButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const targetModalId = button.getAttribute('data-bs-target');
-            const modal = new bootstrap.Modal(document.querySelector(targetModalId));
-            modal.show();
-        });
-    });
 
-    // Add an event listener to the modal when it is hidden
-    document.getElementById('articleModal').addEventListener('hidden.bs.modal', function () {
-    // Reload the page when the modal is closed
-        window.location.reload();
-    })
-</script>
