@@ -162,8 +162,6 @@ app.post('/save-subscription', async (req, res) => {
     const email = req.session.email;
     const subscription = req.body.subscription;
 
-    console.log(subscription);
-
     await userCollection.updateOne({ email }, { $set: { subscription } });
     res.json({ status: 'Success', message: 'Subscription saved.' });
 });
@@ -179,12 +177,12 @@ cron.schedule('* * * * *', async () => {
         
         if (user.notifications && user.subscription) {
             for (const notification of user.notifications) {
-                console.log(notification);
+                // console.log(notification);
                 const today = now.getDay();
                 const day = notification.day;
 
-                console.log('The day is: ' + day);
-                console.log('Today is: ' + today);
+                // console.log('The day is: ' + day);
+                // console.log('Today is: ' + today);
                 // Check if the notification day is today or earlier in the week
                 if (day == today) {
                     const hourNow = now.getHours();
@@ -192,10 +190,10 @@ cron.schedule('* * * * *', async () => {
                     const [hour, minute] = notification.time.split(':').map(Number);
 
                     
-                        console.log('The hour: ' + hour);
-                        console.log('time now is: ' + hourNow);
-                        console.log('The minute: ' + minute);
-                        console.log('minute now is: ' + minuteNow);
+                        // console.log('The hour: ' + hour);
+                        // console.log('time now is: ' + hourNow);
+                        // console.log('The minute: ' + minute);
+                        // console.log('minute now is: ' + minuteNow);
 
                     // Check if the current time matches the notification time
                     if (hourNow === hour && minuteNow === minute) {
