@@ -1,11 +1,11 @@
 <%- include('templates/header') %>
-    <%- include('templates/navbar', {navLinks: navLinks}) %>
+    <%- include('templates/navbar', {navLinks: navLinks, username}) %>
         <div class="pt-5">
             <div id="map" class="container text-center"></div>
             <div class="container input-group mt-3 mb-3">
                 <input type="text" id="auto-suggest" autocomplete="off" class="form-control" placeholder="Start typing..." aria-label="Recipient's username"
                     aria-describedby="button-addon2">
-                <button class="btn btn-outline-primary" type="button" id="button-addon2" onclick="getSelected2()">Find Location</button>
+                <button class="btn btn-primary" type="button" id="button-addon2" onclick="getSelected2()">Find Location</button>
             </div>
             <div id="suggestions"></div>
 
