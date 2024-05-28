@@ -1,11 +1,13 @@
 <%- include('templates/header') %>
 <%- include('templates/navbar', {navLinks: navLinks}) %>
 
+<link rel="stylesheet" href="/css/history.css">
+
 <div class="scan-history-container">
     <h1>Scan History</h1>
 
-   <!-- Filter Form -->
-   <form id="filterForm" method="GET" action="/history">
+    <!-- Filter Form -->
+    <form id="filterForm" method="GET" action="/history">
         <div>
             <label for="timeFilter">Time:</label>
             <select name="timeFilter" id="timeFilter">
@@ -16,7 +18,7 @@
             </select>
         </div>
         <div>
-        <label for="typeFilter">Type:</label>
+            <label for="typeFilter">Type:</label>
             <select name="typeFilter" id="typeFilter">
                 <option value="" <%= (!typeFilter ? 'selected' : '') %>>All</option>
                 <option value="Battery" <%= (typeFilter == 'Battery' ? 'selected' : '') %>>Battery</option>
@@ -45,43 +47,18 @@
 <button id="showStatistics" class="btn btn-secondary">Show Statistics</button>
 
 <!-- Pie Chart Container -->
-<div id="chartContainer">
+<div id="chartContainer" style="width: 80%; height: 400px; margin: 50px auto; display: none;">
     <canvas id="myChart"></canvas>
 </div>
 
-<!-- Chart.js -->
+<!-- Pass chartData to the global scope using a hidden div -->
+<div id="chartData" style="display: none;"><%= JSON.stringify(chartData) %></div>
+
+<!-- Include Chart.js and Chart.js DataLabels Plugin -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () =>{
-        const chartData = JSON.stringify(chartData);
-        const chartContainer = document.getElementById('chartContainer');
-        const ctx = document.getElementById('myChart').getContext('2d');
-
-        const myChart = new Chart(ctx, {
-            type: 'pie',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                    position: 'right',
-                },
-                title: {
-                    display: true,
-                    text: 'Waste Distribution',
-                },
-            },
-        });
-
-        // Show chart when button is clicked
-        const showStatisticsButton = document.getElementById('showStatistics');
-        showStatisticsButton.addEventListener('click', () => {
-            chartContainer.style.display = 'block';
-            // Update chart if needed
-            myChart.update();
-        });
-    });
-</script>
+<!-- Include the separate JavaScript file -->
+<script src="/js/chart.js"></script>
 
 <%- include('templates/footer') %>
