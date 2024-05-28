@@ -19,7 +19,8 @@ webPush.setVapidDetails(
     publicKey, privateKey
 );
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
 
 // use scanHistory.js to log user scan history
 const scanHistoryRouter = require('./scanHistory');
@@ -99,7 +100,7 @@ var { database } = include('databaseConnection');
 
 // connect the collection of users in the database
 const userCollection = database.db(mongodb_database).collection('users');
-const complaintCollection = database.db(mongodb_database).collection('complaints');
+const feedbackCollection = database.db(mongodb_database).collection('feedback');
 
 // navigation bar links
 const navLinks = [
@@ -375,6 +376,7 @@ app.get('/scan', (req, res) => {
 });
 
 const upload = multer();
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb' }));
 const cloudinary = require('cloudinary').v2;
@@ -395,17 +397,20 @@ app.post('/saveImage', async (req, res) => {
     const imageID = new ObjectId();
     const imageDate = new Date();
 
+    let url;
+
     // cloudinary
     await cloudinary.uploader.upload(imageURI, {
         public_id: imageID
     }, async function (error, result) {
         console.log(result);
+        url = result.secure_url;
 
         // Prepare scan history entry
         const scanEntry = {
             scanId: imageID,
             timestamp: imageDate,
-            scanData: result.secure_url,
+            scanData: url,
             scanType: imageType
         };
 
@@ -415,21 +420,22 @@ app.post('/saveImage', async (req, res) => {
             { $push: { scanHistory: scanEntry } }
         );
     });
+
+    res.send({ url });
 });
 
 // const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/complaint', async (req, res) => {
-    const type = req.body.type[0] !== 'Other' ? req.body.type[0] : req.body.type[1];
-    const allowForTraining = req.body.allowForTraining === '' ? true : false;
+app.post('/feedback', async (req, res) => {
+    const url = req.body.url;
+    const correct = req.body.correct === 'true' ? true : false;
 
-    console.log(type);
-    console.log(allowForTraining);
+    console.log(url);
+    console.log(correct);
 
-    await complaintCollection.insertOne({
-        type,
-        allowForTraining,
+    await feedbackCollection.insertOne({
+        url,
+        correct,
     })
 
     res.redirect('/scan');

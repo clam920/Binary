@@ -13,13 +13,17 @@
 }
 
 .card img{
-    height: 35vh;
     width: auto;
+    height: 30vh;
 }
 
 .card{
     text-align: center; 
     width: 24vw;
+    height: auto;
+    background-color: #5e9b55;
+    color: #f5ece5;
+    border: 1px solid #45523e;
 }
 
 
@@ -32,60 +36,48 @@
     margin-top: 0;
 }
 
-
-/* Responsive Design */
-@media (max-width: 1250px){
-   
+@media (max-width: 900px){
     #tutorialCards{
         grid-template-columns: auto auto auto;
     }
-    .card{
-        width: 21rem;
+    .card img{
+        width: auto;
+        height: 32vh;
     }
-}
-
-@media (max-width: 1050px){
+    
     .card{
-        width: 19rem;
-    }
-}
-
-@media (max-width: 950px){
-   
-    .card{
-        width: 18rem;
-    }
-}
-
-@media (max-width: 850px){
-   
-    #tutorialCards{
-        grid-template-columns:  auto auto;
-    }
-    .card{
-        width: 21rem;
+        width: 30vw;
+        height: auto;
     }
 }
 
 @media (max-width: 700px){
-    .card{
-        width: 19rem;
+    #tutorialCards{
+        grid-template-columns: auto auto;
     }
-}
-
-@media (max-width: 650px){
+    /* .card img{
+        width: auto;
+        height: 30vh;
+    } */
+    
     .card{
-        width: 18rem;
+        width: 45vw;
+        height: auto;
     }
 }
 
 @media (max-width: 550px){
     #tutorialCards{
-        grid-template-columns:  auto;
+        grid-template-columns: auto;
         place-items: center;
     }
-
+    .card img{
+        width: auto;
+        height: 30vh;
+    }
+    
     .card{
-        width: 24rem;
+        width: 80vw;
+        height: auto;
     }
 }
