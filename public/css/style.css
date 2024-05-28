@@ -6,7 +6,7 @@ body {
     color: #f5ece5
 }
 
-.btn-primary {
+.btn {
     background-color: #b0aca2;
     color: #45523e;
     border: none;
@@ -15,6 +15,16 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.btn-primary:hover {
+.btn:hover {
     background-color: #45523e;
+    color: #f5ece5;
+}
+
+.cancel {
+    background-color: #ad5d50;
+    color: #f5ece5;
+}
+
+.cancel:hover {
+    background-color: #a40406;
 }

@@ -1,3 +1,13 @@
+#nav {
+    background-color: #345830 !important;
+    color: #f5ece5 !important;
+    /* border: 2px solid #f5ece5;
+    border-radius: 1em;
+    width: 98vw;
+    margin: 1em;
+    justify-content: center; */
+}
+
 @media (max-width: 991px){
     .dropdown-menu{
         width: 10vw;

@@ -1,3 +1,4 @@
+
 <%- include('templates/header') %>
 
 <%- include('templates/navbar', {navLinks: navLinks}) %>
@@ -135,7 +136,7 @@
     usePhoto.addEventListener("click", predict);
 
     async function predict() {
-        model = await tf.loadLayersModel('./TrainedModel-15/model.json');
+        model = await tf.loadLayersModel('./FinalModel/model.json');
         const imageTensor = tf.browser.fromPixels(image).resizeNearestNeighbor([224, 224]).toFloat().div(255.0).expandDims(0);
         
         let prediction = model.predict(imageTensor);
@@ -143,7 +144,7 @@
         
         prediction.data()
         .then(data => {
-            let categories = ['Cardboard', 'Glass', 'Plastic', 'Paper', 'Metal', 'Trash'];
+            let categories = ['Battery', 'Cardboard', 'Glass', 'Organic', 'Plastic', 'Paper', 'Metal', 'Trash'];
 
             for (let i = 0; i < categories.length; i++) {
                 console.log(categories[i] + ": " + data[i]);
