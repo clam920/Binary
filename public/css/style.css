@@ -6,6 +6,8 @@ body {
     /* color: #f5ece5 */
     background: #f5ece5;
     color: #5e9b55;
+    height: 100vh;
+    width: 100vw;
 }
 
 .btn {
