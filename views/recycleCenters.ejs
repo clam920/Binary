@@ -3,7 +3,7 @@
     <%- include('templates/navbar', {navLinks: navLinks}) %>
         <div class="pt-5">
             <div class="container input-group mt-3 mb-3">
-                <input type="text" id="auto-suggest" autocomplete="off" class="form-control" placeholder="Start typing..." aria-label="Searchbar"
+                <input type="text" id="auto-suggest" autocomplete="off" class="form-control" placeholder="Search type of waste..." aria-label="Searchbar"
                     aria-describedby="button-addon2">
                 <button class="btn btn-outline-primary btn-green" type="button" id="button-addon2" onclick="getSelected2()">Find Location</button>
             </div>
@@ -12,7 +12,7 @@
 
             <div id="infoCard" class="container d-flex flex-row justify-content-evenly mt-5 text-center"></div>
 
-            <div id="place-details"></div>
+            <!-- <div id="place-details"></div> -->
 
             <!-- <script>
                 mapboxgl.accessToken = 'pk.eyJ1IjoiZGFycmVsZ2lvIiwiYSI6ImNsdzhoMDRibjJjc2EybnF6a2FhdWs2YTgifQ.11mCPzXcuXT20hmypmw50w';
