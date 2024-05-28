@@ -5,16 +5,19 @@
     /* justify-content: center; Center the cards horizontally */
 }
 
+#tutorialCards{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+}
+
 .tutorial-card {
-    display: flex;
-    background-color: #5e9b55;
+    /* display: flex; */
+    background-color: #f5ece5;
     color: black;
     border-radius: 5px;
-    overflow: hidden;
-    width: calc(100% - 40px); /* Full width minus the gap for small screens */
-    max-width: 400px; /* Maximum width to keep cards a reasonable size */
-    height: auto; /* Let height adjust based on content */
-    flex-direction: column; /* Stack image and content vertically for smaller screens */
+    width: auto; /* Full width minus the gap for small screens */
+    /* max-width: 400px; Maximum width to keep cards a reasonable size */
+    height: 40vh; /* Let height adjust based on content */
 }
 
 .tutorial-image {

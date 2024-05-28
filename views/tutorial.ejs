@@ -4,16 +4,19 @@
     <link href="/css/style.css" rel="stylesheet"/>
     <%- include('templates/navbar', {navLinks: navLinks}) %>
 
+    <div id="tutorialCards">
+
         <% for(let i=0; i < tutorialArray.length; i++) { %>
-        
-            <div class="tutorial-card">
-                <img src="/images/article<%= i + 1 %>.jpg" class="tutorial-image" alt="Article Image">
-                <div class="tutorial-content">
-                    <h3 class="tutorial-title"><%= tutorialArray[i].title %></h3>
+
+            <div class="card" style="width: 18rem;">
+                <img src="/images/article<%= i + 1 %>.jpg" class="card-img-top" alt="Article Image">
+                <div class="card-body">
+                    <h5 class="card-title"><%= tutorialArray[i].title %></h5>
                     <button type="button" class="btn btn-primary open-modal" data-bs-toggle="modal" data-bs-target="#articleModal<%= i %>">Details</button>
                 </div>
             </div>
-
+            
+            
             <!-- Modal for each article -->
             <div class="modal fade" id="articleModal<%= i %>" tabindex="-1" aria-labelledby="articleModalLabel"
                 aria-hidden="true">
@@ -37,17 +40,18 @@
                                     <%= tutorialArray[i].sections[j].content %>
                                 </p>
                                 <% } %>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="/tutorial" class="btn btn-primary">Back</a>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="/tutorial" class="btn btn-primary">Back</a>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <% } %>
             </div>
-            <% } %>
-
-            <script>
-                // JavaScript to handle opening modals when "Details" button is clicked
+                
+                <script>
+                    // JavaScript to handle opening modals when "Details" button is clicked
                 const openModalButtons = document.querySelectorAll('.open-modal');
                 openModalButtons.forEach(button => {
                     button.addEventListener('click', () => {
