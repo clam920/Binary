@@ -1,4 +1,5 @@
 require('./utils.js');
+console.log("in index.js");
 
 const fs = require(`fs`);
 require('dotenv').config();
@@ -42,25 +43,6 @@ app.use(session({
     saveUninitialized: false,
     resave: true
 }));
-
-function getMapResult() {
-    // const mapResult = await fetch(`https://maps.googleapis.com/maps/api/place/details/json
-    //     ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
-    //     &key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ`)
-    // console.log((mapResult));
-    axios.get(`https://maps.googleapis.com/maps/api/place/details/json
-    ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
-    &key=${mapsAPIkey}`)
-        .then(function (response) {
-            // handle success
-            console.log(response.data);
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error.message);
-        })
-}
-getMapResult();
 
 
 // routes
