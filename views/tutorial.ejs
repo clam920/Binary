@@ -8,7 +8,7 @@
 
         <% for(let i=0; i < tutorialArray.length; i++) { %>
 
-            <div class="card" style="width: 18rem;">
+            <div class="card">
                 <img src="/images/article<%= i + 1 %>.jpg" class="card-img-top" alt="Article Image">
                 <div class="card-body">
                     <h5 class="card-title"><%= tutorialArray[i].title %></h5>
@@ -61,11 +61,11 @@
                     });
                 });
             
-                // Add an event listener to the modal when it is hidden
-                document.getElementById('articleModal').addEventListener('hidden.bs.modal', function () {
-                // Reload the page when the modal is closed
-                    window.location.reload();
-                })
+                // // Add an event listener to the modal when it is hidden
+                // document.getElementById('articleModal').addEventListener('hidden.bs.modal', function () {
+                // // Reload the page when the modal is closed
+                //     window.location.reload();
+                // })
             </script>
 
 <%- include('templates/footer') %>

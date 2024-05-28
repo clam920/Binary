@@ -8,23 +8,20 @@
 #tutorialCards{
     display: grid;
     grid-template-columns: auto auto auto auto;
+    grid-row-gap: 2vh;
+    margin-left: 1vw;
 }
 
-.tutorial-card {
-    /* display: flex; */
-    background-color: #f5ece5;
-    color: black;
-    border-radius: 5px;
-    width: auto; /* Full width minus the gap for small screens */
-    /* max-width: 400px; Maximum width to keep cards a reasonable size */
-    height: 40vh; /* Let height adjust based on content */
+.card img{
+    height: 35vh;
+    width: auto;
 }
 
-.tutorial-image {
-    width: 100%; /* Full width of the card */
-    height: auto; /* Maintain aspect ratio */
-    object-fit: cover; /* Cover the image container */
+.card{
+    text-align: center; 
+    width: 24vw;
 }
+
 
 .tutorial-content {
     padding: 10px;
@@ -37,20 +34,58 @@
 
 
 /* Responsive Design */
-@media (min-width: 576px) {
-    .tutorial-card {
-        width: calc(50% - 20px); /* Two cards per row */
+@media (max-width: 1250px){
+   
+    #tutorialCards{
+        grid-template-columns: auto auto auto;
+    }
+    .card{
+        width: 21rem;
     }
 }
 
-@media (min-width: 768px) {
-    .tutorial-card {
-        width: calc(33.333% - 20px); /* Three cards per row */
+@media (max-width: 1050px){
+    .card{
+        width: 19rem;
     }
 }
 
-@media (min-width: 1024px) {
-    .tutorial-card {
-        width: calc(25% - 20px); /* Four cards per row */
+@media (max-width: 950px){
+   
+    .card{
+        width: 18rem;
+    }
+}
+
+@media (max-width: 850px){
+   
+    #tutorialCards{
+        grid-template-columns:  auto auto;
+    }
+    .card{
+        width: 21rem;
+    }
+}
+
+@media (max-width: 700px){
+    .card{
+        width: 19rem;
+    }
+}
+
+@media (max-width: 650px){
+    .card{
+        width: 18rem;
+    }
+}
+
+@media (max-width: 550px){
+    #tutorialCards{
+        grid-template-columns:  auto;
+        place-items: center;
+    }
+
+    .card{
+        width: 24rem;
     }
 }
