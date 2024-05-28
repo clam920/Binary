@@ -54,7 +54,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () =>{
-        const chartData = <%- JSON.stringify(chartData) %>;
+        const chartData = JSON.stringify(chartData);
         const chartContainer = document.getElementById('chartContainer');
         const ctx = document.getElementById('myChart').getContext('2d');
 
