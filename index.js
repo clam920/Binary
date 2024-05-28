@@ -1,4 +1,4 @@
-require('./utils.js');
+require('./public/js/utils.js');
 console.log("in index.js");
 
 const fs = require(`fs`);
