@@ -23,7 +23,7 @@ webPush.setVapidDetails(
 app.use(bodyParser.json({ limit: "50mb" }));
 
 // use scanHistory.js to log user scan history
-const scanHistoryRouter = require('./scanHistory');
+const scanHistoryRouter = require('./routes/scanHistory.js');
 const axios = require('axios');
 const cors = require('cors');
 
@@ -299,7 +299,7 @@ app.get('/history', async (req, res) => {
         });
 
         // Prepare data for the pie chart
-        const chartData = {
+        let chartData = {
             labels: Object.keys(wasteDistribution),
             datasets: [{
                 label: 'Waste Distribution',
@@ -336,7 +336,6 @@ app.get('/history', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
 
 
 // Links to the main page
