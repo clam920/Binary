@@ -10,6 +10,7 @@ body {
 
 .container {
     width: 80%;
+    
 }
 
 
@@ -20,5 +21,16 @@ body {
     height: 50px;
     border-radius: 50%;
     cursor: pointer;
+}
+
+.card {
+    background-color: #5e9b55;
+    color: #f5ece5;
+    border: 2px solid #45523e;
+    padding: 1em;
+}
+
+.card-title, .card-subtitle {
+    color: #f5ece5;
 }
 

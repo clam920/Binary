@@ -5,7 +5,7 @@
             <div class="container input-group mt-3 mb-3">
                 <input type="text" id="auto-suggest" autocomplete="off" class="form-control" placeholder="Start typing..." aria-label="Searchbar"
                     aria-describedby="button-addon2">
-                <button class="btn btn-outline-primary" type="button" id="button-addon2" onclick="getSelected2()">Find Location</button>
+                <button class="btn btn-outline-primary btn-green" type="button" id="button-addon2" onclick="getSelected2()">Find Location</button>
             </div>
             <div id="suggestions"></div>
             <div id="map" class="container text-center"></div>
@@ -33,20 +33,48 @@
                     border-radius: 10%;
                     cursor: pointer;
                 }
+
+                /* .card-subtitle-open {
+                    color: green;
+                }
+
+                .card-subtitle-close {
+                    color: red;
+                } */
             </style>
         </div>
+
+        <!-- <script>
+            function initMap() {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 49.27338997146067, lng: -123.10381254479422 },
+                    zoom: 10,
+                });
+
+                var request = {
+                    placeId: 'ChIJw5MD3ZNwhlQRvstXN3AeLXk',
+                    fields: ['name', 'formatted_address', 'place_id', 'geometry']
+                };
+
+                var service = new google.maps.places.PlacesService(map);
+
+                service.getDetails(request, function (place, status) {
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        var content = '<h1>' + place.name + '</h1>' +
+                            '<p>' + place.formatted_address + '</p>' +
+                            '<p>Place ID: ' + place.place_id + '</p>' +
+                            '<p>Location: ' + place.geometry.location + '</p>';
+                        document.getElementById('place-details').innerHTML = content;
+
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            position: place.geometry.location
+                        });
+                        map.setCenter(place.geometry.location);
+                    }
+                });
+            }
+        </script> -->
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ&callback=initMap&libraries=places">
         </script>
-
-        <style>
-            body {
-                margin: 0;
-                padding: 0;
-            }
-
-            #map {
-                width: 80%;
-                height: 400px;
-            }
-        </style>
         <%- include('templates/footer') %>
