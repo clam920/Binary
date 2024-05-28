@@ -70,12 +70,11 @@
     width: 100%;
     max-width: 200px;
     margin-bottom: 10px; /* Add gap between the elements */
-}
 
-#chartContainer {
+/* #chartContainer {
     width: 80%;
     max-width: 600px;
     height: 400px;
     margin: 50px auto;
     display: none;
-  } */
+  } */ 
