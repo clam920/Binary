@@ -16,7 +16,7 @@ window.initMap = initMap;
 document.addEventListener('DOMContentLoaded', async () => {
     const input = document.getElementById('auto-suggest');
     const suggestionsBox = document.getElementById('suggestions');
-    suggestionsBox.classList.add('container', 'mb-2');
+    // suggestionsBox.classList.add('container', 'mb-2');
     // suggestionsBox.style.color = 'blue';
     // suggestionsBox.style.border = '1px solid #ccc';
     // suggestionsBox.style.borderRadius = '10px';
@@ -40,8 +40,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             filteredSuggestions.forEach(suggestion => {
                 const suggestionElement = document.createElement('div');
                 suggestionElement.className = 'container';
-                suggestionElement.style.border = '1px solid #F5F5F5';
-                suggestionElement.style.borderRadius = '5px';
+                // suggestionElement.style.border = '1px solid #F5F5F5';
+                // suggestionElement.style.borderRadius = '5px';
                 suggestionElement.style.cursor = 'pointer';
                 suggestionElement.textContent = suggestion.type;
                 suggestionElement.addEventListener('click', () => {
