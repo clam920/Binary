@@ -6,17 +6,20 @@
                 <%- include('templates/navbarGuest') %>
                     <% }%>
                         <div class="pt-5">
-                            <div class="container input-group mt-3 mb-3">
-
-                                <input type="text" id="auto-suggest" autocomplete="off" class="form-control" placeholder="Search type of waste..."
+                            <div id="seachDiv">
+                                <div class="container input-group mt-3 mb-3">
+                                    
+                                    <input type="text" id="auto-suggest" autocomplete="off" class="form-control" placeholder="Search type of waste..."
                                     aria-label="Searchbar" aria-describedby="button-addon2">
-                                <button class="btn btn-green" onclick="getSelected2()">Find Location</button>
+                                    <button class="btn btn-green" onclick="getSelected2()">Find Location</button>
+                                </div>
+                                <div id="suggestions"></div>
                             </div>
-                            <div id="suggestions"></div>
-                            <div id="map" class="container text-center"></div>
-
-                            <div id="infoCard" class="container d-flex flex-row justify-content-evenly mt-5 text-center"></div>
-
+                                
+                                <div id="map" class="container text-center"></div>
+                                
+                                <div id="infoCard" class="container d-flex flex-row justify-content-evenly mt-5 text-center"></div>
+                                
                             <!-- <div id="place-details"></div> -->
 
                             <!-- <script>
@@ -29,16 +32,6 @@
                     zoom: 9.5
                 });
             </script> -->
-                            <style>
-                                .marker {
-                                    background-image: url('/images/location-pin.png');
-                                    background-size: cover;
-                                    width: 50px;
-                                    height: 50px;
-                                    border-radius: 10%;
-                                    cursor: pointer;
-                                }
-                            </style>
                         </div>
                         <script async defer
                             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ&callback=initMap&libraries=places">

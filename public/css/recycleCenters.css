@@ -42,3 +42,16 @@ body {
     color: #f5ece5;
     font-size: 10pt;
 }
+
+#suggestions {
+    width: 90%;
+    /* background-color: yellow; */
+    margin-left: 2vw;
+    margin-bottom: 2vh;
+}
+
+@media (max-width: 1000px) {
+    #suggestions {
+        margin-left: 4vw;
+    }
+}
