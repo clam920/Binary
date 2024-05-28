@@ -1,19 +1,20 @@
 <%- include('templates/header') %>
-    <link rel="stylesheet" href="css/recycleCenters.css">
-    <%- include('templates/navbar', {navLinks: navLinks, username}) %>
+    <link href="/css/recycleCenters.css" rel="stylesheet">
+    <%- include('templates/navbar', {navLinks: navLinks}) %>
         <div class="pt-5">
-            
-            <div id="map" class="container text-center"></div>
             <div class="container input-group mt-3 mb-3">
-                <input type="text" id="auto-suggest" autocomplete="off" class="form-control" placeholder="Start typing..." aria-label="Recipient's username"
+                <input type="text" id="auto-suggest" autocomplete="off" class="form-control" placeholder="Start typing..." aria-label="Searchbar"
                     aria-describedby="button-addon2">
-                <button class="btn btn-primary" type="button" id="button-addon2" onclick="getSelected2()">Find Location</button>
+                <button class="btn btn-outline-primary btn-green" type="button" id="button-addon2" onclick="getSelected2()">Find Location</button>
             </div>
             <div id="suggestions"></div>
+            <div id="map" class="container text-center"></div>
 
             <div id="infoCard" class="container d-flex flex-row justify-content-evenly mt-5 text-center"></div>
 
-            <script>
+            <div id="place-details"></div>
+
+            <!-- <script>
                 mapboxgl.accessToken = 'pk.eyJ1IjoiZGFycmVsZ2lvIiwiYSI6ImNsdzhoMDRibjJjc2EybnF6a2FhdWs2YTgifQ.11mCPzXcuXT20hmypmw50w';
 
                 const map = new mapboxgl.Map({
@@ -22,6 +23,58 @@
                     center: [-123.06925252771276, 49.26264182277888,],
                     zoom: 9.5
                 });
-            </script>
-            
+            </script> -->
+            <style>
+                .marker {
+                    background-image: url('/images/location-pin.png');
+                    background-size: cover;
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 10%;
+                    cursor: pointer;
+                }
+
+                /* .card-subtitle-open {
+                    color: green;
+                }
+
+                .card-subtitle-close {
+                    color: red;
+                } */
+            </style>
+        </div>
+
+        <!-- <script>
+            function initMap() {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 49.27338997146067, lng: -123.10381254479422 },
+                    zoom: 10,
+                });
+
+                var request = {
+                    placeId: 'ChIJw5MD3ZNwhlQRvstXN3AeLXk',
+                    fields: ['name', 'formatted_address', 'place_id', 'geometry']
+                };
+
+                var service = new google.maps.places.PlacesService(map);
+
+                service.getDetails(request, function (place, status) {
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        var content = '<h1>' + place.name + '</h1>' +
+                            '<p>' + place.formatted_address + '</p>' +
+                            '<p>Place ID: ' + place.place_id + '</p>' +
+                            '<p>Location: ' + place.geometry.location + '</p>';
+                        document.getElementById('place-details').innerHTML = content;
+
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            position: place.geometry.location
+                        });
+                        map.setCenter(place.geometry.location);
+                    }
+                });
+            }
+        </script> -->
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ&callback=initMap&libraries=places">
+        </script>
         <%- include('templates/footer') %>

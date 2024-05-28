@@ -5,7 +5,9 @@
     margin-bottom: 2vh;
     background-color: #5e9b55;
     color: #f5ece5;
+    border: 2px solid #45523e;
 }
+
 #notifications{
     display: grid;
     grid-template-columns: auto auto auto auto;

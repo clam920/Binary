@@ -15,18 +15,31 @@ body {
     padding: 5px 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    border: 1px solid #45523e;
 }
 
 .btn:hover {
-    background-color: #45523e;
+    background-color: #4F7942;
     color: #f5ece5;
+    border: 1px solid #45523e;
+}
+
+.btn-green {
+    background-color: #5e9b55;
+    color: #f5ece5;
+}
+
+.btn-green:hover {
+    background-color: #4F7942;
 }
 
 .cancel {
-    background-color: #ad5d50;
-    color: #f5ece5;
+    background-color: #f5ece5;
+    color: #ad5d50;
 }
 
 .cancel:hover {
-    background-color: #a40406;
+    /* background-color: #a40406; */
+    background-color: #ad5d50;
+    color: #f5ece5;
 }

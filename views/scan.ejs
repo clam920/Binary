@@ -1,30 +1,31 @@
-
 <%- include('templates/header') %>
-
+<link href="/css/scan.css" rel="stylesheet">
 <%- include('templates/navbar', {navLinks: navLinks}) %>
 
 <h3 style="text-align: center; margin: 2vw;">Welcome <%= username%>!</h3>
 
-<h1>Upload an Image</h1>
+<h1 style="text-align: center; margin: 2vw;">Upload an Image</h1>
 
-<div>
+<div id="container">
     <div id="inputChoice">
-        <button id="takeAPhoto" class="btn btn-secondary">Take a Photo</button>
+        <button id="takeAPhoto" class="btn btn-green">Take a Photo</button>
         <span>or</span>
-        <!-- <button id="uploadPhoto">Choose from Library</button> -->
-        <input type="file" name="fileupload" accept="image/*" onchange="displayImage(event)" id="inputGroupFile04" class="btn btn-secondary">
+        <input type="file" name="fileupload" accept="image/*" onchange="displayImage(event)" id="inputGroupFile04" class="btn btn-green file-btn">
     </div>
 
-    <video id="video" class="image" autoplay></video>
-    <button id="capture" class="btn btn-secondary">Take Photo</button>
+    <div id="videoContainer">
+        <video id="video" class="image" autoplay></video>
+        <button id="capture" class="btn btn-green">Take Photo</button>
+    </div>
+
     <img id="image" class="image">
-    <button id="usePhoto" class="btn btn-secondary">Use Photo</button>
+    <button id="usePhoto" class="btn btn-green">Use Photo</button>
     <div id="prediction"></div>
-    <button id="save" class="btn btn-secondary">Save to History</button>
-    <a href="./scan"><button id="done" class="btn btn-secondary">Done</button></a>
+    <button id="save" class="btn btn-green">Save to History</button>
+    <a href="./scan"><button id="done" class="btn btn-green">Done</button></a>
 
     <div class="dropdown" id="complaintForm">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-green dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Not quite right?
         </button>
         <div class="dropdown-menu">
@@ -200,13 +201,5 @@
         }
     }
 </script>
-
-<style>
-    .image {
-        height: 20em;
-        width: auto;
-        border-radius: 30px;
-    }
-</style>
 
 <%- include('templates/footer') %>

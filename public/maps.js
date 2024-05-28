@@ -1,15 +1,93 @@
-console.log("in script js")
+console.log("in maps js")
 
 var facilities = [];
 let suggestions = [];
 
+
+// async function getMapResult() {
+//     // const mapResult = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk&key=AIzaSyAcvQ5KvHzy62ujKTFT7b1OzPazsqfhn3E`)
+//     // console.log(((mapResult)));
+//     axios.get(`https://maps.googleapis.com/maps/api/place/details/json
+//     ?fields=name%2Crating%2Cformatted_phone_number
+//     &place_id=ChIJN1t_tDeuEmsRUsoyG83frY4
+//     &key=${mapsAPIkey}`)
+//         .then(function (response) {
+//             // handle success
+//             console.log(response.data);
+//         })
+//         .catch(function (error) {
+//             // handle error
+//             console.log(error.message);
+//         })
+// }
+// getMapResult();
+
+// function initMap() {
+//     // Your code using google.maps object goes here
+//     // ... (place details retrieval logic from previous response)
+//     var map = new google.maps.Map(document.getElementById("map-container")); // Replace "map-container" with your map element's ID
+//     var service = new google.maps.places.PlacesService(map);
+
+//     var request = {
+//         placeId: "ChIJw5MD3ZNwhlQRvstXN3AeLXk"
+//     };
+
+//     service.getDetails(request, function (place, status) {
+//         if (status === google.maps.places.PlacesServiceStatus.OK) {
+//             // Place details successfully retrieved!
+//             console.log(place);
+//             // Access place properties like name, address, rating, etc.
+//             // For example:
+//             var name = place.name;
+//             var address = place.formatted_address;
+//             // Use this data to display place information or perform other actions
+//         } else {
+//             console.error("Place details request failed:", status);
+//         }
+//     });
+// }
+
+// function getPlaceDetails(placeId) {
+//     console.log("in getPlaceDetails")
+
+//     // var map = new google.maps.Map(document.getElementById("map-container")); // Replace "map-container" with your map element's ID
+//     // var service = new google.maps.places.PlacesService(map);
+
+//     // var request = {
+//     //     placeId: placeId
+//     // };
+
+//     // service.getDetails(request, function (place, status) {
+//     //     if (status === google.maps.places.PlacesServiceStatus.OK) {
+//     //         // Place details successfully retrieved!
+//     //         console.log(place);
+//     //         // Access place properties like name, address, rating, etc.
+//     //         // For example:
+//     //         var name = place.name;
+//     //         var address = place.formatted_address;
+//     //         // Use this data to display place information or perform other actions
+//     //     } else {
+//     //         console.error("Place details request failed:", status);
+//     //     }
+//     // });
+// }
+
+// getPlaceDetails('ChIJw5MD3ZNwhlQRvstXN3AeLXk');
+// initMap();
+
+function initMap() {
+    const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 49.26264182277888, lng: -123.06925252771276 },
+        zoom: 12,
+    });
+}
+
+window.initMap = initMap;
+
+
 document.addEventListener('DOMContentLoaded', async () => {
     const input = document.getElementById('auto-suggest');
     const suggestionsBox = document.getElementById('suggestions');
-
-
-
-    // let suggestions = [];
 
     try {
         const response = await fetch('type.json');
@@ -66,34 +144,91 @@ const getSelected2 = () => {
             facilities = el.facility;
         }
     });
-    console.log(facilities + " facilities after loop");
+    // console.log(facilities + " facilities after loop");
 
     removeMarkers();
+    const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 49.26264182277888, lng: -123.06925252771276 },
+        zoom: 7,
+    });
 
     document.getElementById("infoCard").innerHTML = "";
     // add markers to map
     for (const feature of facilities) {
         // create a HTML element for each feature
-        const el = document.createElement('div');
-        el.className = 'marker';
-        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(feature.place + "\n\n" + `<a href="${feature.directions}" target="_blank">${feature.directions}</a>`);
+        new google.maps.Marker({
+            position: { lat: feature.coordinates[1], lng: feature.coordinates[0] },
+            map: map,
+            title: feature.place,
+            draggable: false,
+            animation: google.maps.Animation.DROP,
+        });
 
-        // make a marker for each feature and add to the map
-        new mapboxgl.Marker(el).setLngLat(feature.coordinates).addTo(map).setPopup(popup);
+        var request = {
+            placeId: feature.placeID,
+            fields: ['name', 'rating', 'opening_hours']
+        };
 
-        // info card for features
-        const elCard = document.createElement('div');
-        elCard.className = 'card';
-        elCard.style = 'width: 18rem;';
-        elCard.innerHTML = `<div class="card-body">
-<h5 class="card-title">${feature.place}</h5>
-<h6 class="card-subtitle mb-2 text-muted">09.00 - 16.30</h6>
-<a href="${feature.directions}" target="_blank" class="card-link">Get directions..</a>
-</div>`;
+        service = new google.maps.places.PlacesService(map);
+        service.getDetails(request, (place, status) => {
+            // console.log(place)
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                const elCard = document.createElement('div');
+                elCard.className = 'card';
+                elCard.style = 'width: 18rem;';
+                elCard.innerHTML = `<div class="card-body">
+            <h5 class="card-title">${feature.place}</h5>
+            <h6 class="card-subtitle mb-1">Open</h6>`
+                if (place.opening_hours.open_now) {
+                    for (let i = 0; i < place.opening_hours.weekday_text.length; i++) {
+                        // console.log(place.opening_hours.weekday_text[i])
+                        elCard.innerHTML += `<h6 class="card-subtitle mb-2">${place.opening_hours.weekday_text[i]}</h6>`
+                    }
 
-        document.getElementById("infoCard").appendChild(elCard);
+                    elCard.innerHTML += `<button href="${feature.directions}" target="_blank" class="card-link btn">Get directions..</button>
+                </div>`;
+                } else {
+                    elCard.className = 'card';
+                    elCard.style = 'width: 18rem;';
+                    elCard.innerHTML = `<div class="card-body">
+                <h5 class="card-title">${feature.place}</h5>
+                <h6 class="card-subtitle mb-2">Close</h6>
+                <a href="${feature.directions}" target="_blank" class="card-link">Get directions..</a>
+                </div>`;
+                }
 
+                document.getElementById("infoCard").appendChild(elCard);
+            }
+        });
+
+        // function callback(place, status) {
+        //     console.log(place)
+        //     if (status == google.maps.places.PlacesServiceStatus.OK) {
+        //         createMarker(place);
+        //     }
+
+        /** info card for features */
+        // const elCard = document.createElement('div');
+        // elCard.className = 'card';
+        // elCard.style = 'width: 18rem;';
+        // elCard.innerHTML = `<div class="card-body">
+        //         <h5 class="card-title">${feature.place}</h5>
+        //         <h6 class="card-subtitle mb-2 text-muted">09.00</h6>
+        //         <a href="${feature.directions}" target="_blank" class="card-link">Get directions..</a>
+        //         </div>`;
+        // document.getElementById("infoCard").appendChild(elCard);
     }
+
+
+
+    /** mapbox marker */
+    // const el = document.createElement('div');
+    // el.className = 'marker';
+    // const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(feature.place + "\n\n" + `<a href="${feature.directions}" target="_blank">${feature.directions}</a>`);
+
+    // // make a marker for each feature and add to the map
+    // new mapboxgl.Marker(el).setLngLat(feature.coordinates).addTo(map).setPopup(popup);
+    // }
 }
 function removeMarkers() {
     const markers = document.getElementsByClassName('marker');

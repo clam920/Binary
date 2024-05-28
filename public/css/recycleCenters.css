@@ -8,6 +8,11 @@ body {
     height: 400px;
 }
 
+.container {
+    width: 80%;
+    
+}
+
 .marker {
     background-image: url('/images/location-pin.png');
     background-size: cover;
@@ -16,4 +21,25 @@ body {
     border-radius: 50%;
     cursor: pointer;
 }
+
+.infoCard {
+    gap: 1em;
+}
+
+.card {
+    background-color: #5e9b55;
+    color: #f5ece5;
+    border: 2px solid #45523e;
+    padding: 1em;
+}
+
+.card-title {
+    color: #f5ece5;
+}
+
+.card-subtitle {
+    color: #f5ece5;
+    font-size: 10pt;
+}
+
 
