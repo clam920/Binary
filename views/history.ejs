@@ -38,10 +38,15 @@
     <div class="scan-container">
     <% scanHistory.forEach(scan => { %>
         <div class="scan-item">
-            <p>Time: <%= new Date(scan.timestamp).toLocaleString() %></p>
-            <p>Type: <%= scan.scanType %></p>
+            <div id="discription-group">
+                <div id="item-discription">
+                    <p>Time: <%= new Date(scan.timestamp).toLocaleString() %></p>
+                    <p>Type: <%= scan.scanType %></p>            
+                </div>
+                <button type="submit" class="btn btn-green" id="delete">Delete</button>
+            </div>
             <img src="<%= scan.scanData %>" alt="Scan Image">
-        </div>
+        </div>        
     <% }) %>
     </div>
 </div>

@@ -1,7 +1,8 @@
-#container {
+.container {
     justify-content: center;
     align-items: center;
     text-align: center;
+    /* margin-left: 0px; */
 }
 
 .scan-container {
@@ -13,14 +14,28 @@
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
+    max-width: 550px;
+    height:600px;
     width: 100%;
     display: inline-block;
 }
 
+#item-discription {
+    text-align: left;
+}
+
+#discription-group{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#delete {
+    height: 60%;
+}
 .scan-item img {
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    height: 80%;
     display: block;
     margin-top: 10px;
     border-radius: 5px;
