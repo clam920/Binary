@@ -4,49 +4,26 @@
 
         <link rel="stylesheet" href="/css/history.css">
 
-        <div id="container">
-            <h1>Scan History</h1>
-
-            <!-- Filter Form -->
-            <form id="filterForm" method="GET" action="/history">
-                <div>
-                    <label for="timeFilter">Time:</label>
-                    <select name="timeFilter" id="timeFilter">
-                        <option value="7" <%=(timeFilter==7 ? 'selected' : '' ) %>>Past 7 days</option>
-                        <option value="14" <%=(timeFilter==14 ? 'selected' : '' ) %>>Past 14 days</option>
-                        <option value="30" <%=(timeFilter==30 ? 'selected' : '' ) %>>Past 30 days</option>
-                        <option value="90" <%=(timeFilter==90 ? 'selected' : '' ) %>>Past 90 days</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="typeFilter">Type:</label>
-                    <select name="typeFilter" id="typeFilter">
-                        <option value="" <%=(!typeFilter ? 'selected' : '' ) %>>All</option>
-                        <option value="Battery" <%=(typeFilter=='Battery' ? 'selected' : '' ) %>>Battery</option>
-                        <option value="Cardboard" <%=(typeFilter=='Cardboard' ? 'selected' : '' ) %>>Cardboard</option>
-                        <option value="Glass" <%=(typeFilter=='Glass' ? 'selected' : '' ) %>>Glass</option>
-                        <option value="Organic" <%=(typeFilter=='Organic' ? 'selected' : '' ) %>>Organic</option>
-                        <option value="Plastic" <%=(typeFilter=='Plastic' ? 'selected' : '' ) %>>Plastic</option>
-                        <option value="Paper" <%=(typeFilter=='Paper' ? 'selected' : '' ) %>>Paper</option>
-                        <option value="Metal" <%=(typeFilter=='Metal' ? 'selected' : '' ) %>>Metal</option>
-                        <option value="Trash" <%=(typeFilter=='Trash' ? 'selected' : '' ) %>>Trash</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-green">Apply Filters</button>
-            </form>
-
-            <div class="scan-container">
-                <% scanHistory.forEach(scan=> { %>
-                    <div class="scan-item">
-                        <p>Time: <%= new Date(scan.timestamp).toLocaleString() %>
-                        </p>
-                        <p>Type: <%= scan.scanType %>
-                        </p>
-                        <img src="<%= scan.scanData %>" alt="Scan Image">
+        <div class="scan-container">
+            <% scanHistory.forEach(scan => { %>
+                <div class="scan-item">
+                    <div id="discription-group">
+                        <div id="item-discription">
+                            <p>Time: <%= new Date(scan.timestamp).toLocaleString() %></p>
+                            <p>Type: <%= scan.scanType %></p>            
+                        </div>
+                        <button type="submit" class="btn btn-green" id="delete">Delete</button>
                     </div>
-                    <% }) %>
+                    <img src="<%= scan.scanData %>" alt="Scan Image">
+                </div>        
+            <% }) %>
             </div>
         </div>
+                <!-- Pass chartData to the global scope using a hidden div -->
+                <div id="chartData" style="display: none;">
+                    <%= JSON.stringify(chartData) %>
+                </div>
+        
 
         <!-- Show Statistics Button -->
         <button id="showStatistics" class="btn btn-green">Show Statistics</button>
@@ -56,28 +33,6 @@
             <canvas id="myChart"></canvas>
         </div>
 
-<<<<<<< HEAD
-    <div class="scan-container">
-    <% scanHistory.forEach(scan => { %>
-        <div class="scan-item">
-            <div id="discription-group">
-                <div id="item-discription">
-                    <p>Time: <%= new Date(scan.timestamp).toLocaleString() %></p>
-                    <p>Type: <%= scan.scanType %></p>            
-                </div>
-                <button type="submit" class="btn btn-green" id="delete">Delete</button>
-            </div>
-            <img src="<%= scan.scanData %>" alt="Scan Image">
-        </div>        
-    <% }) %>
-    </div>
-</div>
-=======
-        <!-- Pass chartData to the global scope using a hidden div -->
-        <div id="chartData" style="display: none;">
-            <%= JSON.stringify(chartData) %>
-        </div>
->>>>>>> da1ae2d571d9448da337c7e1f11389cd0e6fe12c
 
         <!-- Include Chart.js and Chart.js DataLabels Plugin -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -86,4 +41,4 @@
         <!-- Include the separate JavaScript file -->
         <script src="/js/chart.js"></script>
 
-        <%- include('templates/footer') %>
+<%- include('templates/footer') %>
