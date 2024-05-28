@@ -80,46 +80,6 @@ function initMap() {
         center: { lat: 49.26264182277888, lng: -123.06925252771276 },
         zoom: 12,
     });
-    const request = {
-        placeId: "ChIJw5MD3ZNwhlQRvstXN3AeLXk",
-        fields: ["name", "formatted_address", "place_id", "geometry"],
-    };
-    const infowindow = new google.maps.InfoWindow();
-    const service = new google.maps.places.PlacesService(map);
-
-    service.getDetails(request, (place, status) => {
-        if (
-            status === google.maps.places.PlacesServiceStatus.OK &&
-            place &&
-            place.geometry &&
-            place.geometry.location
-        ) {
-            const marker = new google.maps.Marker({
-                map,
-                position: place.geometry.location,
-            });
-
-            google.maps.event.addListener(marker, "click", () => {
-                const content = document.createElement("div");
-                const nameElement = document.createElement("h2");
-
-                nameElement.textContent = place.name;
-                content.appendChild(nameElement);
-
-                const placeIdElement = document.createElement("p");
-
-                placeIdElement.textContent = place.place_id;
-                content.appendChild(placeIdElement);
-
-                const placeAddressElement = document.createElement("p");
-
-                placeAddressElement.textContent = place.formatted_address;
-                content.appendChild(placeAddressElement);
-                infowindow.setContent(content);
-                infowindow.open(map, marker);
-            });
-        }
-    });
 }
 
 window.initMap = initMap;
@@ -199,11 +159,9 @@ const getSelected2 = () => {
         new google.maps.Marker({
             position: { lat: feature.coordinates[1], lng: feature.coordinates[0] },
             map: map,
-            label: 'A',
             title: feature.place,
             draggable: false,
             animation: google.maps.Animation.DROP,
-            icon: 'images/location-pin.png'
         });
 
         var request = {
@@ -213,17 +171,21 @@ const getSelected2 = () => {
 
         service = new google.maps.places.PlacesService(map);
         service.getDetails(request, (place, status) => {
-            console.log(place)
+            // console.log(place)
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 const elCard = document.createElement('div');
+                elCard.className = 'card';
+                elCard.style = 'width: 18rem;';
+                elCard.innerHTML = `<div class="card-body">
+            <h5 class="card-title">${feature.place}</h5>
+            <h6 class="card-subtitle mb-1 text-success">Open</h6>`
                 if (place.opening_hours.open_now) {
-                    elCard.className = 'card';
-                    elCard.style = 'width: 18rem;';
-                    elCard.innerHTML = `<div class="card-body">
-                <h5 class="card-title">${feature.place}</h5>
-                <h6 class="card-subtitle mb-2 text-success">Open</h6>
-                <h6 class="card-subtitle mb-2 text-success"></h6>
-                <a href="${feature.directions}" target="_blank" class="card-link">Get directions..</a>
+                    for (let i = 0; i < place.opening_hours.weekday_text.length; i++) {
+                        // console.log(place.opening_hours.weekday_text[i])
+                        elCard.innerHTML += `<h6 class="card-subtitle mb-2 text-muted">${place.opening_hours.weekday_text[i]}</h6>`
+                    }
+
+                    elCard.innerHTML += `<a href="${feature.directions}" target="_blank" class="card-link">Get directions..</a>
                 </div>`;
                 } else {
                     elCard.className = 'card';
