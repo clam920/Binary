@@ -16,6 +16,11 @@ window.initMap = initMap;
 document.addEventListener('DOMContentLoaded', async () => {
     const input = document.getElementById('auto-suggest');
     const suggestionsBox = document.getElementById('suggestions');
+    // suggestionsBox.classList.add('container', 'mb-2');
+    // suggestionsBox.style.color = 'blue';
+    // suggestionsBox.style.border = '1px solid #ccc';
+    // suggestionsBox.style.borderRadius = '10px';
+    // suggestionsBox.style.boxSizing = 'border-box';
 
     try {
         const response = await fetch('type.json');
@@ -34,6 +39,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             filteredSuggestions.forEach(suggestion => {
                 const suggestionElement = document.createElement('div');
+                suggestionElement.className = 'container';
+                // suggestionElement.style.border = '1px solid #F5F5F5';
+                // suggestionElement.style.borderRadius = '5px';
                 suggestionElement.style.cursor = 'pointer';
                 suggestionElement.textContent = suggestion.type;
                 suggestionElement.addEventListener('click', () => {
@@ -129,17 +137,17 @@ const getSelected2 = () => {
             <h6 class="card-subtitle mb-1">Open</h6>`
                 if (place.opening_hours.open_now) {
                     for (let i = 0; i < place.opening_hours.weekday_text.length; i++) {
-                        elCard.innerHTML += `<h6 class="card-subtitle mb-2 text-muted">${place.opening_hours.weekday_text[i]}</h6>`
+                        elCard.innerHTML += `<h6 class="card-subtitle mb-2">${place.opening_hours.weekday_text[i]}</h6>`
                     }
 
-                    elCard.innerHTML += `<a href="${feature.directions}" <button class="btn btn-primary" href="${feature.directions}" target="_blank">Get directions..</button>
+                    elCard.innerHTML += `<a href="${feature.directions}" <button class="btn" href="${feature.directions}" target="_blank">Get directions..</button>
                 </div>`;
                 } else {
                     elCard.className = 'card';
                     elCard.style = 'width: 18rem;';
                     elCard.innerHTML = `<div class="card-body">
                 <h5 class="card-title">${feature.place}</h5>
-                <h6 class="card-subtitle mb-2 text-danger">Close</h6>
+                <h6 class="card-subtitle mb-2">Close</h6>
                 <button class="btn btn-primary rounded-pill " href="${feature.directions}" target="_blank">Get directions..</button>
                 </div>`;
                 }
