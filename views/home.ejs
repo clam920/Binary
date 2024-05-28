@@ -1,14 +1,18 @@
 <%- include('templates/header') %>
 
-    <%- include('templates/navbar', {navLinks: navLinks, username}) %>
+    <% if(username) {%>
+        <%- include('templates/navbar', {navLinks: navLinks}) %>
+            <% }else {%>
+                <%- include('templates/navbarGuest') %>
+                    <% }%>
 
-        <h3 style="text-align: center; margin: 2vw;">Welcome <%= username%>!</h3>
+                        <h3 style="text-align: center; margin: 2vw;">Welcome <%= username%>!</h3>
 
-        <h1>Upload an Image</h1>
-        <form action="/picUpload" method="POST" enctype="multipart/form-data">
-            <input type="file" name="image">
-            <button type="submit">Upload Image</button>
-        </form>
+                        <h1>Upload an Image</h1>
+                        <form action="/picUpload" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="image">
+                            <button type="submit">Upload Image</button>
+                        </form>
 
 
-<%- include('templates/footer') %>
+                        <%- include('templates/footer') %>

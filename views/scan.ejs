@@ -1,6 +1,10 @@
 <%- include('templates/header') %>
 <link href="/css/scan.css" rel="stylesheet">
-<%- include('templates/navbar', {navLinks: navLinks}) %>
+<% if(username) {%>
+    <%- include('templates/navbar', {navLinks: navLinks}) %>
+        <% }else {%>
+            <%- include('templates/navbarGuest') %>
+                <% }%>
 
 <h3 style="text-align: center; margin: 2vw;">Welcome <%= username%>!</h3>
 

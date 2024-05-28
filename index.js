@@ -244,10 +244,6 @@ fs.readFile('tutorial.JSON', 'utf-8', (err, data) => {
     }
 });
 
-app.get('/egg', (req, res) => {
-    res.render("easter_egg", { navLinks: navLinks });
-})
-
 app.get('/tutorial', (req, res) => {
     res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks, username: req.session.username });
 });
@@ -345,28 +341,16 @@ app.get('/history', async (req, res) => {
 
 // Links to the main page
 app.get('/', (req, res) => {
-    if (!req.session.authenticated) {
-        res.redirect('/login');
-        return;
-    }
 
     res.render('scan', { navLinks: navLinks, username: req.session.username });
 });
 
 app.get('/home', (req, res) => {
-    if (!req.session.authenticated) {
-        res.redirect('/login');
-        return;
-    }
 
     res.render('scan', { navLinks: navLinks, username: req.session.username });
 });
 
 app.get('/recycleCenters', async (req, res) => {
-    if (!req.session.authenticated) {
-        res.redirect('/login');
-        return;
-    }
     const email = req.body.email;
     res.render('recycleCenters', { navLinks, username: req.session.username });
 });
