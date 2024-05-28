@@ -1,5 +1,7 @@
 <%- include('templates/header', {pageTitle: "Sign Up" }) %>
 
+<%- include('templates/navbarGuest') %>
+
   <!-- Div wraps evreything and centers it -->
   <div style="display: grid; place-items: center;">
     <h2 style="margin: 4vw;">Create User</h2>
@@ -21,18 +23,22 @@
         <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
         <input type="password" class="form-control" id="inputPassword3" name='password' required>
       </div>
+      <br>
+      <br>
+
+      <h4>Security info</h4>
       <!-- Security question -->
       <div class="row mb-3" >
-        <label for="inputPassword3" class="col-form-label" >Security Question</label><br>
+        <!-- <label for="inputPassword3" class="col-sm-2 col-form-label" >Security Question</label> -->
+        <label for="inputPassword3" class="col-sm-2 col-form-label">question</label>
 
         <select class="form-select" aria-label="Default select example" name="sec_question">
           <option selected>Open this select menu</option>
           <option value="Favorite color" name="color">Favorite color</option>
-          <option value="Name of your Favorite school teacher" name="teacher">Name of your Favorite school teacher</option>
+          <option value="Name of your Favorite school teacher" name="teacher">Favorite school teacher</option>
           <option value="Favorite song" name="song">Favorite song</option>
           <option value="Favorite sport" name="sport">Favorite sport</option>
         </select>
-        
       </div>
       <!-- Answer -->
       <div class="row mb-3">
