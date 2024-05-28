@@ -293,15 +293,72 @@ app.get('/history', async (req, res) => {
         }
 
         // Get scan history from user document
-        const scanHistory = user.scanHistory || [];
+        let scanHistory = user.scanHistory || [];
 
-        // Render history.ejs with scan history data
-        res.render('history', { scanHistory: scanHistory, navLinks: navLinks, username: req.session.username });
+        // Apply filters
+        const timeFilter = parseInt(req.query.timeFilter, 10);
+        const typeFilter = req.query.typeFilter;
+
+        const now = new Date();
+        if (timeFilter) {
+            const pastDate = new Date(now - timeFilter * 24 * 60 * 60 * 1000);
+            scanHistory = scanHistory.filter(scan => new Date(scan.timestamp) >= pastDate);
+        }
+
+        if (typeFilter && typeFilter !== "") {
+            scanHistory = scanHistory.filter(scan => scan.scanType === typeFilter);
+        }
+
+        // Calculate waste distribution statistics
+        const wasteDistribution = {};
+        scanHistory.forEach(scan => {
+            if (wasteDistribution[scan.scanType]) {
+                wasteDistribution[scan.scanType]++;
+            } else {
+                wasteDistribution[scan.scanType] = 1;
+            }
+        });
+
+        // Prepare data for the pie chart
+        const chartData = {
+            labels: Object.keys(wasteDistribution),
+            datasets: [{
+                label: 'Waste Distribution',
+                data: Object.values(wasteDistribution),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Render history.ejs with filtered scan history data and filter values
+        res.render('history', { scanHistory, navLinks, username: req.session.username, timeFilter, typeFilter, chartData });
+
     } catch (error) {
         console.error('Error fetching scan history:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 // Links to the main page
 app.get('/', (req, res) => {
