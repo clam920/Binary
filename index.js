@@ -1,4 +1,5 @@
-require('./public/js/utils.js');
+require('./utils.js');
+console.log("in index.js");
 
 const fs = require(`fs`);
 require('dotenv').config();
