@@ -83,7 +83,7 @@ const getSelected2 = () => {
     removeMarkers();
     const map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: 49.26264182277888, lng: -123.06925252771276 },
-        zoom: 7,
+        zoom: 9,
     });
 
     document.getElementById("infoCard").innerHTML = "";
@@ -98,14 +98,36 @@ const getSelected2 = () => {
             animation: google.maps.Animation.DROP,
         });
 
+
+
         var request = {
             placeId: feature.placeID,
-            fields: ['name', 'rating', 'opening_hours']
+            fields: ['name', 'rating', 'opening_hours', 'place_id', 'formatted_address', 'geometry']
         };
 
+        const infowindow = new google.maps.InfoWindow();
         service = new google.maps.places.PlacesService(map);
         service.getDetails(request, (place, status) => {
             // console.log(place)
+            const marker = new google.maps.Marker({
+                map,
+                position: place.geometry.location,
+            });
+
+            google.maps.event.addListener(marker, "click", () => {
+                const content = document.createElement("div");
+                const nameElement = document.createElement("h2");
+
+                nameElement.textContent = place.name;
+                content.appendChild(nameElement);
+
+                const placeAddressElement = document.createElement("p");
+
+                placeAddressElement.textContent = place.formatted_address;
+                content.appendChild(placeAddressElement);
+                infowindow.setContent(content);
+                infowindow.open(map, marker);
+            });
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 const elCard = document.createElement('div');
                 elCard.className = 'card';

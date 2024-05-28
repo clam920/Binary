@@ -174,16 +174,16 @@ cron.schedule('* * * * *', async () => {
     const users = await userCollection.find({}).toArray();
 
     for (const user of users) {
-        
+
         if (user.notifications && user.subscription) {
             for (const notification of user.notifications) {
-                 //console.log(notification);
+                //console.log(notification);
                 const today = now.getDay();
                 const day = notification.day;
 
                 console.log('The day is: ' + day);
                 console.log('Today is: ' + today);
-                
+
                 alert('The day is: ' + day);
                 alert('Today is: ' + today);
                 // Check if the notification day is today or earlier in the week
@@ -192,16 +192,16 @@ cron.schedule('* * * * *', async () => {
                     const minuteNow = now.getMinutes();
                     const [hour, minute] = notification.time.split(':').map(Number);
 
-                    
-                        console.log('The hour: ' + hour);
-                        console.log('time now is: ' + hourNow);
-                        console.log('The minute: ' + minute);
-                        console.log('minute now is: ' + minuteNow);
 
-                        alert('The hour: ' + hour);
-                        alert('time now is: ' + hourNow);
-                        alert('The minute: ' + minute);
-                        alert('minute now is: ' + minuteNow);
+                    console.log('The hour: ' + hour);
+                    console.log('time now is: ' + hourNow);
+                    console.log('The minute: ' + minute);
+                    console.log('minute now is: ' + minuteNow);
+
+                    alert('The hour: ' + hour);
+                    alert('time now is: ' + hourNow);
+                    alert('The minute: ' + minute);
+                    alert('minute now is: ' + minuteNow);
 
                     // Check if the current time matches the notification time
                     if (hourNow === hour && minuteNow === minute) {
@@ -210,7 +210,7 @@ cron.schedule('* * * * *', async () => {
                             body: notification.notes
                         });
 
-                        
+
                         try {
                             await webPush.sendNotification(user.subscription, payload);
                             console.log('Push notification sent successfully');
@@ -225,24 +225,6 @@ cron.schedule('* * * * *', async () => {
     }
 });
 
-function getMapResult() {
-    // const mapResult = await fetch(`https://maps.googleapis.com/maps/api/place/details/json
-    //     ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
-    //     &key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ`)
-    // console.log((mapResult));
-    axios.get(`https://maps.googleapis.com/maps/api/place/details/json
-    ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
-    &key=${mapsAPIkey}`)
-        .then(function (response) {
-            // handle success
-            console.log(response.data);
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error.message);
-        })
-}
-getMapResult();
 
 /** Arrays of tutorial articles to be parsed from tutorial.json */
 let tutorialArray;
@@ -393,8 +375,8 @@ app.get('/scan', (req, res) => {
 });
 
 const upload = multer();
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb'}));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb' }));
 const cloudinary = require('cloudinary').v2;
 const { ObjectId } = require('mongodb');
 
@@ -414,10 +396,10 @@ app.post('/saveImage', async (req, res) => {
     const imageDate = new Date();
 
     // cloudinary
-    await cloudinary.uploader.upload(imageURI, { 
+    await cloudinary.uploader.upload(imageURI, {
         public_id: imageID
-    }, async function(error, result) { 
-        console.log(result); 
+    }, async function (error, result) {
+        console.log(result);
 
         // Prepare scan history entry
         const scanEntry = {
@@ -465,7 +447,7 @@ app.use(express.static(__dirname + "/public"));
 // Catches all 404
 app.get('*', (req, res) => {
     res.status(404);
-    res.render('404', {navLinks, username : req.session.username});
+    res.render('404', { navLinks, username: req.session.username });
 });
 
 app.listen(port, () => {
