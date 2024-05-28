@@ -1,4 +1,5 @@
 <%- include('templates/header') %>
+<link href="/css/history.css" rel="stylesheet">
 <%- include('templates/navbar', {navLinks: navLinks}) %>
 
 <link rel="stylesheet" href="/css/history.css">
@@ -31,7 +32,7 @@
                 <option value="Trash" <%= (typeFilter == 'Trash' ? 'selected' : '') %>>Trash</option>
             </select>
         </div>
-        <button type="submit">Apply Filters</button>
+        <button type="submit" class="btn btn-green">Apply Filters</button>
     </form>
 
     <% scanHistory.forEach(scan => { %>
@@ -44,7 +45,7 @@
 </div>
 
 <!-- Show Statistics Button -->
-<button id="showStatistics" class="btn btn-secondary">Show Statistics</button>
+<button id="showStatistics" class="btn btn-green">Show Statistics</button>
 
 <!-- Pie Chart Container -->
 <div id="chartContainer" style="width: 80%; height: 400px; margin: 50px auto; display: none;">
