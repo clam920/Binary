@@ -1,14 +1,16 @@
 body {
     margin: 0px;
     padding: 0px;
-    background: #345830;
+    /* background: #345830; */
     font-family: "Comfortaa" sans-serif;
-    color: #f5ece5
+    /* color: #f5ece5 */
+    background: #f5ece5;
+    color: #5e9b55;
 }
 
 .btn {
-    background-color: #b0aca2;
-    color: #45523e;
+    background-color: #f5ece5;
+    color: #5e9b55;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
