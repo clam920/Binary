@@ -1,6 +1,20 @@
 body {
     margin: 0px;
     padding: 0px;
-    background: #4F7942;
+    background: #345830;
     font-family: "Comfortaa" sans-serif;
+    color: #f5ece5
+}
+
+.btn-primary {
+    background-color: #b0aca2;
+    color: #45523e;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #45523e;
 }

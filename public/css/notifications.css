@@ -3,6 +3,8 @@
     width: 22vw;
     text-align: center;
     margin-bottom: 2vh;
+    background-color: #f5ece5;
+    color: black
 }
 #notifications{
     display: grid;
