@@ -8,6 +8,11 @@ body {
     height: 400px;
 }
 
+.container {
+    width: 80%;
+}
+
+
 .marker {
     background-image: url('/images/location-pin.png');
     background-size: cover;
