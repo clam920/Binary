@@ -405,8 +405,6 @@ cloudinary.config({
 });
 
 app.post('/saveImage', async (req, res) => {
-    const username = req.session.username;
-
     const imageURI = req.body.file;
     const imageType = req.body.type;
     const imageID = new ObjectId();
@@ -430,10 +428,14 @@ app.post('/saveImage', async (req, res) => {
         };
 
         // Update user's scan history in MongoDB
-        const updateResult = await userCollection.updateOne(
-            { username: username },
-            { $push: { scanHistory: scanEntry } }
-        );
+        const username = req.session.username;
+
+        if (username) {
+            const updateResult = await userCollection.updateOne(
+                { username: username },
+                { $push: { scanHistory: scanEntry } }
+            );
+        }
     });
 
     res.send({ url });
