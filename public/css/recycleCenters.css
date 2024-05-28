@@ -6,6 +6,7 @@ body {
 #map {
     width: 80%;
     height: 400px;
+    border-radius: 1em;
 }
 
 .container {
@@ -42,4 +43,6 @@ body {
     font-size: 10pt;
 }
 
-
+#suggestion {
+    background-color: #45523e;
+}
