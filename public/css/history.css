@@ -48,6 +48,25 @@
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
+}
+
+#filterForm button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+#filterForm button:hover {
+    background-color: #0056b3;
+}
+
+/* Modal styles
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
     width: 100%;
     max-width: 200px;
     margin-bottom: 10px; /* Add gap between the elements */
@@ -59,8 +78,4 @@
     height: 400px;
     margin: 50px auto;
     display: none;
-    background-color: #FFF;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
+  } */
