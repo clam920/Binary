@@ -1,6 +1,10 @@
 <%- include('templates/header') %>
     <link href="/css/recycleCenters.css" rel="stylesheet">
-    <%- include('templates/navbar', {navLinks: navLinks}) %>
+    <% if(username) {%>
+        <%- include('templates/navbar', {navLinks: navLinks}) %>
+            <% }else {%>
+                <%- include('templates/navbarGuest') %>
+                    <% }%>
         <div class="pt-5">
             <div class="container input-group mt-3 mb-3">
                 <input type="text" id="auto-suggest" autocomplete="off" class="form-control" placeholder="Start typing..." aria-label="Searchbar"
