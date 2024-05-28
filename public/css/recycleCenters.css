@@ -44,6 +44,14 @@ body {
 }
 
 #suggestions {
-    width: 80%;
+    width: 90%;
     /* background-color: yellow; */
+    margin-left: 2vw;
+    margin-bottom: 2vh;
+}
+
+@media (max-width: 1000px) {
+    #suggestions {
+        margin-left: 4vw;
+    }
 }
