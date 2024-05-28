@@ -16,11 +16,6 @@ window.initMap = initMap;
 document.addEventListener('DOMContentLoaded', async () => {
     const input = document.getElementById('auto-suggest');
     const suggestionsBox = document.getElementById('suggestions');
-    suggestionsBox.classList.add('container', 'mb-2');
-    // suggestionsBox.style.color = 'blue';
-    // suggestionsBox.style.border = '1px solid #ccc';
-    // suggestionsBox.style.borderRadius = '10px';
-    // suggestionsBox.style.boxSizing = 'border-box';
 
     try {
         const response = await fetch('type.json');
@@ -39,9 +34,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             filteredSuggestions.forEach(suggestion => {
                 const suggestionElement = document.createElement('div');
-                suggestionElement.className = 'container';
-                suggestionElement.style.border = '1px solid #F5F5F5';
-                suggestionElement.style.borderRadius = '5px';
                 suggestionElement.style.cursor = 'pointer';
                 suggestionElement.textContent = suggestion.type;
                 suggestionElement.addEventListener('click', () => {
@@ -52,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 suggestionsBox.appendChild(suggestionElement);
             });
 
-            suggestionsBox.style.display = 'block';
+            suggestionsBox.style.display = 'inline-block';
         } else {
             suggestionsBox.style.display = 'none';
         }
