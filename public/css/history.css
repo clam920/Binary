@@ -2,7 +2,6 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    background-color: black;
 }
 
 .scan-item {
@@ -54,16 +53,6 @@
     margin-bottom: 10px; /* Add gap between the elements */
 }
 
-#filterForm button {
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-}
-
-#filterForm button:hover {
-    background-color: #0056b3;
-}
-
 #chartContainer {
     width: 80%;
     max-width: 600px;
@@ -75,15 +64,3 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.btn-secondary {
-    background-color: #6c757d;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.btn-secondary:hover {
-    background-color: #5a6268;
-}
