@@ -4,7 +4,7 @@
 
 <link rel="stylesheet" href="/css/history.css">
 
-<div class="scan-history-container">
+<div class="container">
     <h1>Scan History</h1>
 
     <!-- Filter Form -->
@@ -35,6 +35,7 @@
         <button type="submit" class="btn btn-green">Apply Filters</button>
     </form>
 
+    <div class="scan-container">
     <% scanHistory.forEach(scan => { %>
         <div class="scan-item">
             <p>Time: <%= new Date(scan.timestamp).toLocaleString() %></p>
@@ -42,6 +43,7 @@
             <img src="<%= scan.scanData %>" alt="Scan Image">
         </div>
     <% }) %>
+    </div>
 </div>
 
 <!-- Show Statistics Button -->
