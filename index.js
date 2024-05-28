@@ -284,15 +284,30 @@ app.get('/history', async (req, res) => {
         }
 
         // Get scan history from user document
-        const scanHistory = user.scanHistory || [];
+        let scanHistory = user.scanHistory || [];
 
-        // Render history.ejs with scan history data
-        res.render('history', { scanHistory: scanHistory, navLinks: navLinks, username: req.session.username });
+        // Apply filters
+        const timeFilter = parseInt(req.query.timeFilter, 10);
+        const typeFilter = req.query.typeFilter;
+
+        const now = new Date();
+        if (timeFilter) {
+            const pastDate = new Date(now - timeFilter * 24 * 60 * 60 * 1000);
+            scanHistory = scanHistory.filter(scan => new Date(scan.timestamp) >= pastDate);
+        }
+
+        if (typeFilter && typeFilter !== "") {
+            scanHistory = scanHistory.filter(scan => scan.scanType === typeFilter);
+        }
+
+        // Render history.ejs with filtered scan history data and filter values
+        res.render('history', { scanHistory, navLinks, username: req.session.username, timeFilter, typeFilter });
     } catch (error) {
         console.error('Error fetching scan history:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 // Links to the main page
 app.get('/', (req, res) => {
