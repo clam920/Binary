@@ -130,7 +130,36 @@
             }
 
             type = categories[maxIndex];
-            document.getElementById("prediction").innerHTML = "This item is most likely " + type + ".";
+
+            let message;
+
+            switch (type) {
+                case 'Battery':
+                    message = "Please drop this off at your nearest recycling centre.";
+                    break;
+                case 'Cardboard':
+                    message = "Put this in Mixed Paper (yellow bag).";
+                    break;
+                case 'Glass':
+                    message = "Put this in Glass bottles & Jars (gray bin).";
+                    break;
+                case 'Organic':
+                    message = "Put this in the green bin.";
+                    break;
+                case 'Plastic':
+                    message = "Put this in the garbage bin.";
+                    break;
+                case 'Paper':
+                    message = "Put this in Mixed Paper (yellow bag).";
+                    break;
+                case 'Metal':
+                    message = "Please drop this off at your nearest waste centre.";
+                    break;
+                case 'Trash':
+                    message = "Put this in the garbage bin."
+                    break;
+            }
+            document.getElementById("prediction").innerHTML = "This item is most likely " + type + ". " + message;
 
             return;
         })
