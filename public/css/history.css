@@ -29,7 +29,7 @@
     align-items: center;
 }
 
-#delete {
+.delete-button {
     height: 60%;
 }
 .scan-item img {
