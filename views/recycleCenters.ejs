@@ -7,19 +7,19 @@
 <% } %>
 
 <div class="containerSize">
-
     <div class="pt-5">
         <div id="seachDiv">
             <div class="container input-group mt-3 mb-3">
                 <input type="text" id="auto-suggest" autocomplete="off" class="form-control" placeholder="Search type of waste..." aria-label="Searchbar" aria-describedby="button-addon2">
                 <button class="btn btn-green" onclick="getSelected2()">Find Location</button>
-                <div id="suggestions"></div> 
+                <div id="suggestions"></div>
             </div>
         </div>
         <div id="map" class="container text-center"></div>
         <div id="infoCard" class="container d-flex flex-row justify-content-evenly mt-5 text-center"></div>
     </div>
 </div>
+
 
 <%- include('templates/navbarMobile') %>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ&callback=initMap&libraries=places"></script>
