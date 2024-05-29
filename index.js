@@ -348,11 +348,12 @@ app.get('/history', async (req, res) => {
 // Links to the main page
 app.get('/', (req, res) => {
 
-    res.render('scan', { navLinks: navLinks, username: req.session.username, terms: req.session.termsConditions });
+    console.log(req.session.username);
+    res.render('scan', { navLinks: navLinks, username: req.session.username, terms: req.session.termsConditions});
 });
 
 app.get('/home', (req, res) => {
-
+    console.log(req.session.username);
     res.render('scan', { navLinks: navLinks, username: req.session.username, terms: req.session.termsConditions  });
 });
 
