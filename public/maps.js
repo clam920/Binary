@@ -133,7 +133,7 @@ const getSelected2 = () => {
                 elCard.style = 'width: 18rem;';
                 elCard.innerHTML = `<div class="card-body">
             <h5 class="card-title">${feature.place}</h5>
-            <h6 class="card-subtitle mb-1">Open</h6>`
+            <h6 class="card-subtitle mb-1" id="open">Open</h6>`
                 if (place.opening_hours.open_now) {
                     for (let i = 0; i < place.opening_hours.weekday_text.length; i++) {
                         elCard.innerHTML += `<h6 class="card-subtitle mb-2">${place.opening_hours.weekday_text[i]}</h6>`
@@ -146,7 +146,7 @@ const getSelected2 = () => {
                     elCard.style = 'width: 18rem;';
                     elCard.innerHTML = `<div class="card-body">
                 <h5 class="card-title">${feature.place}</h5>
-                <h6 class="card-subtitle mb-2">Closed</h6>`
+                <h6 class="card-subtitle mb-2" id="closed">Closed</h6>`
 
                 for (let i = 0; i < place.opening_hours.weekday_text.length; i++) {
                     elCard.innerHTML += `<h6 class="card-subtitle mb-2">${place.opening_hours.weekday_text[i]}</h6>`
