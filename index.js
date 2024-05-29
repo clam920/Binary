@@ -107,8 +107,8 @@ const feedbackCollection = database.db(mongodb_database).collection('feedback');
 // navigation bar links
 const navLinks = [
     { name: 'Home', link: '/scan' },
-    { name: 'Recycle Centers', link: '/recycleCenters' },
-    { name: 'Scan History', link: '/history' },
+    { name: 'Search', link: '/recycleCenters' },
+    { name: 'Dashboard', link: '/history' },
     { name: 'Tutorial', link: '/tutorial' },
 ];
 
