@@ -107,8 +107,8 @@ const feedbackCollection = database.db(mongodb_database).collection('feedback');
 // navigation bar links
 const navLinks = [
     { name: 'Home', link: '/scan' },
-    { name: 'Recycle Centers', link: '/recycleCenters' },
-    { name: 'Scan History', link: '/history' },
+    { name: 'Search', link: '/recycleCenters' },
+    { name: 'Dashboard', link: '/history' },
     { name: 'Tutorial', link: '/tutorial' },
 ];
 
@@ -119,7 +119,6 @@ app.use(passport.session());    // initialize the session
 // Will do the login with google 
 app.get('/auth/google',
     passport.authenticate('google', { scope: ['email', 'profile'] }));
-
 // Callback than handles the response after sign in with google
 app.get('/auth/google/callback',
     passport.authenticate('google', {
@@ -258,7 +257,7 @@ app.post('/articles/:articleId', (req, res) => {
 
 app.use('/', scanHistoryRouter);
 
-app.use("/", (req, res, next) => {
+app.use("/", (req, res, next)=> {
     app.locals.navLinks = navLinks;
     app.locals.currentURL = url.parse(req.url).pathname;
     next();
@@ -313,14 +312,14 @@ app.get('/history', async (req, res) => {
                 label: 'Waste Distribution',
                 data: Object.values(wasteDistribution),
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.5)',
-                    'rgba(255, 206, 86, 0.5)',
-                    'rgba(75, 192, 192, 0.5)',
-                    'rgba(153, 102, 255, 0.5)',
-                    'rgba(255, 159, 64, 0.5)',
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.5)'
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(201, 203, 207, 0.6)',
+                    'rgba(102, 255, 102, 0.6)'
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
@@ -329,8 +328,8 @@ app.get('/history', async (req, res) => {
                     'rgba(75, 192, 192, 1)',
                     'rgba(153, 102, 255, 1)',
                     'rgba(255, 159, 64, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)'
+                    'rgba(201, 203, 207, 1)',
+                    'rgba(102, 255, 102, 1)'
                 ],
                 borderWidth: 1
             }]
@@ -436,6 +435,8 @@ cloudinary.config({
 });
 
 app.post('/saveImage', async (req, res) => {
+    const username = req.session.username;
+
     const imageURI = req.body.file;
     const imageType = req.body.type;
     const imageID = new ObjectId();
@@ -459,14 +460,10 @@ app.post('/saveImage', async (req, res) => {
         };
 
         // Update user's scan history in MongoDB
-        const username = req.session.username;
-
-        if (username) {
-            const updateResult = await userCollection.updateOne(
-                { username: username },
-                { $push: { scanHistory: scanEntry } }
-            );
-        }
+        const updateResult = await userCollection.updateOne(
+            { username: username },
+            { $push: { scanHistory: scanEntry } }
+        );
     });
 
     res.send({ url });
@@ -476,7 +473,6 @@ app.post('/saveImage', async (req, res) => {
 
 app.post('/feedback', async (req, res) => {
     const url = req.body.url;
-    const type = req.body.type;
     const correct = req.body.correct === 'true' ? true : false;
 
     console.log(url);
@@ -484,7 +480,6 @@ app.post('/feedback', async (req, res) => {
 
     await feedbackCollection.insertOne({
         url,
-        type,
         correct,
     })
 
