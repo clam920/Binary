@@ -9,9 +9,9 @@
     color: white;
     font-size: 30vh;
     text-align: center;
-    /* margin-left: 8vw; */
     cursor: pointer;
 }
+
 #world{
     margin-top: 2vh;
     font-size: 28vh;
@@ -46,6 +46,13 @@
 }
 
 @media (max-width: 600px){
+    #div404{
+        font-size: 18vh;
+    }
+    #world{
+        margin-top: 2vh;
+        font-size: 16vh;
+    }
     #easter{
         width: 90vw;
         height: 100vh;

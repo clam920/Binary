@@ -1,22 +1,21 @@
 <%- include('templates/header') %>
-<link rel="stylesheet" href="/css/404.css">
-<link rel="stylesheet" href="/css/easter_egg.css">
+    <link rel="stylesheet" href="/css/404.css">
+    <link rel="stylesheet" href="/css/easter_egg.css">
 
-<%- include('templates/navbar', {navLinks: navLinks}) %>
-<div id="content">
-<div>
-    <!-- <img src="/images/binary2.png" alt=""> -->
-    <div id="div404">
-        <div>4</div>
-        <div id="world">🌍</div>
-        <div>4</div>
-        <div></div>
-    </div>
-    <h3>Sorry, but we can't find what you are looking for.</h3>
-</div>
-</div>
+    <%- include('templates/navbar', {navLinks: navLinks}) %>
 
-<%- include('templates/easterDialog') %>
+        
+            <div id="content">
+                <!-- <img src="/images/binary2.png" alt=""> -->
+                <div id="div404">
+                    <div>4</div>
+                    <div id="world">🌍</div>
+                    <div>4</div>
+                </div>
+                <h3>Sorry, but we can't find what you are looking for.</h3>
+            </div>
 
-<script src=/js/easter_egg.js></script>
-<%- include('templates/footer') %>
+        <%- include('templates/easterDialog') %>
+
+            <script src=/js/easter_egg.js></script>
+            <%- include('templates/footer') %>

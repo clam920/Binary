@@ -5,6 +5,21 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path');
+const webPush = require('web-push');
+const cron = require('node-cron');
+const bodyParser = require('body-parser');
+
+const publicKey = process.env.PUBLIC_KEY;
+const privateKey = process.env.PRIVATE_KEY;
+
+// Web push for notifications
+webPush.setVapidDetails(
+    'mailto:manasesvillalobos80@gmail.com',
+    publicKey, privateKey
+);
+
+// app.use(bodyParser.json());
+app.use(bodyParser.json({limit: "50mb"}));
 
 // use scanHistory.js to log user scan history
 const scanHistoryRouter = require('./scanHistory');
@@ -50,25 +65,6 @@ app.use(session({
     resave: true
 }));
 
-function getMapResult() {
-    // const mapResult = await fetch(`https://maps.googleapis.com/maps/api/place/details/json
-    //     ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
-    //     &key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ`)
-    // console.log((mapResult));
-    axios.get(`https://maps.googleapis.com/maps/api/place/details/json
-    ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
-    &key=${mapsAPIkey}`)
-        .then(function (response) {
-            // handle success
-            console.log(response.data);
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error.message);
-        })
-}
-getMapResult();
-
 
 // routes
 // Login router
@@ -83,6 +79,15 @@ const confirmEmail = require('./routes/reset_password/confirmEmail.js');
 const resetPassword = require('./routes/reset_password/resetPassword.js');
 const changePassword = require('./routes/reset_password/changePassword.js');
 
+// Notifications route
+const notifications = require('./routes/notifications/notifications.js');
+const createNotification = require('./routes/notifications/createNotification.js');
+const recordNotification = require('./routes/notifications/recordNotification.js');
+const deleteNotification = require('./routes/notifications/deleteNotification.js');
+// const saveSubscription = require('./routes/notifications/saveSubscription.js');
+// const updateNotification = require('./routes/notifications/modifyNotification.js');
+
+
 const port = process.env.PORT || 3000;
 const expireTime = 60 * 60 * 1000;// Hour, minutes, seconds miliseconds
 
@@ -94,6 +99,7 @@ var { database } = include('databaseConnection');
 
 // connect the collection of users in the database
 const userCollection = database.db(mongodb_database).collection('users');
+const feedbackCollection = database.db(mongodb_database).collection('feedback');
 
 // navigation bar links
 const navLinks = [
@@ -144,6 +150,100 @@ app.use('/confirmEmail', confirmEmail); // gets the email to check if it exist i
 app.use('/resetPassword', resetPassword); // gets the answer and verify if it matches with the one in the database redirect to a form where the user enter the new password
 app.use('/changePassword', changePassword); // gets the new password and verify it with joi and resets the new one in the database
 
+//Notifications
+app.use('/notifications', notifications);
+app.use('/createNotification', createNotification); // form to create notifications
+app.use('/recordNotification', recordNotification); // it is post it will store the notification in database
+app.use('/deleteNotification', deleteNotification); //it will delete a notification
+// app.use('/save-subscription', saveSubscription); // it will save the subscribtion of the user that is necessary to webPush and service worker
+// app.use('/updateNotification', updateNotification); // to update a notification
+
+app.post('/save-subscription', async (req, res) => {
+    const email = req.session.email;
+    const subscription = req.body.subscription;
+
+    await userCollection.updateOne({ email }, { $set: { subscription } });
+    res.json({ status: 'Success', message: 'Subscription saved.' });
+});
+
+// test to merge
+// Schedule notifications check
+cron.schedule('* * * * *', async () => {
+    console.log('Checking for due notifications...');
+    const now = new Date();
+    const users = await userCollection.find({}).toArray();
+
+    for (const user of users) {
+        
+        if (user.notifications && user.subscription) {
+            for (const notification of user.notifications) {
+                 //console.log(notification);
+                const today = now.getDay();
+                const day = notification.day;
+
+                console.log('The day is: ' + day);
+                console.log('Today is: ' + today);
+                
+                alert('The day is: ' + day);
+                alert('Today is: ' + today);
+                // Check if the notification day is today or earlier in the week
+                if (day == today) {
+                    const hourNow = now.getHours();
+                    const minuteNow = now.getMinutes();
+                    const [hour, minute] = notification.time.split(':').map(Number);
+
+                    
+                        console.log('The hour: ' + hour);
+                        console.log('time now is: ' + hourNow);
+                        console.log('The minute: ' + minute);
+                        console.log('minute now is: ' + minuteNow);
+
+                        alert('The hour: ' + hour);
+                        alert('time now is: ' + hourNow);
+                        alert('The minute: ' + minute);
+                        alert('minute now is: ' + minuteNow);
+
+                    // Check if the current time matches the notification time
+                    if (hourNow === hour && minuteNow === minute) {
+                        const payload = JSON.stringify({
+                            title: notification.title,
+                            body: notification.notes
+                        });
+
+                        
+                        try {
+                            await webPush.sendNotification(user.subscription, payload);
+                            console.log('Push notification sent successfully');
+                        } catch (error) {
+                            console.error('Error sending push notification', error);
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+});
+
+function getMapResult() {
+    // const mapResult = await fetch(`https://maps.googleapis.com/maps/api/place/details/json
+    //     ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
+    //     &key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ`)
+    // console.log((mapResult));
+    axios.get(`https://maps.googleapis.com/maps/api/place/details/json
+    ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
+    &key=${mapsAPIkey}`)
+        .then(function (response) {
+            // handle success
+            console.log(response.data);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.message);
+        })
+}
+getMapResult();
+
 /** Arrays of tutorial articles to be parsed from tutorial.json */
 let tutorialArray;
 
@@ -193,15 +293,72 @@ app.get('/history', async (req, res) => {
         }
 
         // Get scan history from user document
-        const scanHistory = user.scanHistory || [];
+        let scanHistory = user.scanHistory || [];
 
-        // Render history.ejs with scan history data
-        res.render('history', { scanHistory: scanHistory, navLinks: navLinks, username: req.session.username });
+        // Apply filters
+        const timeFilter = parseInt(req.query.timeFilter, 10);
+        const typeFilter = req.query.typeFilter;
+
+        const now = new Date();
+        if (timeFilter) {
+            const pastDate = new Date(now - timeFilter * 24 * 60 * 60 * 1000);
+            scanHistory = scanHistory.filter(scan => new Date(scan.timestamp) >= pastDate);
+        }
+
+        if (typeFilter && typeFilter !== "") {
+            scanHistory = scanHistory.filter(scan => scan.scanType === typeFilter);
+        }
+
+        // Calculate waste distribution statistics
+        const wasteDistribution = {};
+        scanHistory.forEach(scan => {
+            if (wasteDistribution[scan.scanType]) {
+                wasteDistribution[scan.scanType]++;
+            } else {
+                wasteDistribution[scan.scanType] = 1;
+            }
+        });
+
+        // Prepare data for the pie chart
+        const chartData = {
+            labels: Object.keys(wasteDistribution),
+            datasets: [{
+                label: 'Waste Distribution',
+                data: Object.values(wasteDistribution),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Render history.ejs with filtered scan history data and filter values
+        res.render('history', { scanHistory, navLinks, username: req.session.username, timeFilter, typeFilter, chartData });
+
     } catch (error) {
         console.error('Error fetching scan history:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 // Links to the main page
 app.get('/', (req, res) => {
@@ -236,8 +393,7 @@ app.get('/scan', (req, res) => {
 });
 
 const upload = multer();
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 const cloudinary = require('cloudinary').v2;
 const { ObjectId } = require('mongodb');
 
@@ -249,42 +405,60 @@ cloudinary.config({
 });
 
 app.post('/saveImage', async (req, res) => {
-    const username = req.session.username;
-
     const imageURI = req.body.file;
     const imageType = req.body.type;
     const imageID = new ObjectId();
     const imageDate = new Date();
+
+    let url;
 
     // cloudinary
     await cloudinary.uploader.upload(imageURI, { 
         public_id: imageID
     }, async function(error, result) { 
         console.log(result); 
+        url = result.secure_url;
 
         // Prepare scan history entry
         const scanEntry = {
             scanId: imageID,
             timestamp: imageDate,
-            scanData: result.secure_url,
+            scanData: url,
             scanType: imageType
         };
 
         // Update user's scan history in MongoDB
-        const updateResult = await userCollection.updateOne(
-            { username: username },
-            { $push: { scanHistory: scanEntry } }
-        );
+        const username = req.session.username;
+
+        if (username) {
+            const updateResult = await userCollection.updateOne(
+                { username: username },
+                { $push: { scanHistory: scanEntry } }
+            );
+        }
     });
+
+    res.send({ url });
 });
 
-app.get('/camera', (req, res) => {
-    res.render('camera', { navLinks });
-})
+// const bodyParser = require('body-parser');
 
-app.get('/prediction', (req, res) => {
-    res.render('prediction', { navLinks });
-})
+app.post('/feedback', async (req, res) => {
+    const url = req.body.url;
+    const type = req.body.type;
+    const correct = req.body.correct === 'true' ? true : false;
+
+    console.log(url);
+    console.log(correct);
+
+    await feedbackCollection.insertOne({
+        url,
+        type,
+        correct,
+    })
+
+    res.redirect('/scan');
+});
 
 // Logout 
 app.post('/logout', (req, res) => {
