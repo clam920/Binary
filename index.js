@@ -9,6 +9,7 @@ const path = require('path');
 const webPush = require('web-push');
 const cron = require('node-cron');
 const bodyParser = require('body-parser');
+const url = require('url');
 
 const publicKey = process.env.PUBLIC_KEY;
 const privateKey = process.env.PRIVATE_KEY;
@@ -255,6 +256,12 @@ app.post('/articles/:articleId', (req, res) => {
 });
 
 app.use('/', scanHistoryRouter);
+
+app.use("/", (req, res, next)=> {
+    app.locals.navLinks = navLinks;
+    app.locals.currentURL = url.parse(req.url).pathname;
+    next();
+});
 
 app.get('/history', async (req, res) => {
     try {

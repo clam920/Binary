@@ -10,7 +10,7 @@
 
           <% for(let i = 0; i < navLinks.length; i++){%>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="<%= navLinks[i].link%>"><%= navLinks[i].name%></a> 
+              <a class="nav-link <% if(locals.navLinks[i].link == locals.currentURL) { %>active<% } %>" aria-current="page" href="<%= navLinks[i].link%>" ><%= navLinks[i].name%></a> 
             </li>
           <% } %>
           <li class="nav-item dropdown">
