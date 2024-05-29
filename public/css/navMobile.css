@@ -56,12 +56,28 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* #linkNav div img .active .homeLinkWhite{
+    background-color: black;
+} */
+
 .dropItem a{
     color: #5e9b55;
 }
 
 a {
     text-decoration: none;
+}
+
+.linkNavItem {
+    margin: auto;
+}
+
+.homeLinkWhite {
+    display:block
+}
+
+.homeLinkBlack {
+    display: none;
 }
 
 @media (max-width: 600px) {
