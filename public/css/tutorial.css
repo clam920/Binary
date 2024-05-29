@@ -7,10 +7,10 @@
 }
 
 .card {
-    background-color: #5e9b55;
-    color: #f5ece5;
-    border: 1px solid #45523e;
-    border-radius: 8px;
+    background-color: #f5ece5;
+    color: #5e9b55;
+    border: 0.5px solid #45523e;
+    border-radius: 2px;
     overflow: hidden;
     width: calc(25% - 2rem);
     max-width: 300px;
@@ -32,6 +32,7 @@
 }
 
 .card-img {
+    border-radius: 0px;
     width: 100%;
     height: 100%;
     object-fit: cover; /* Ensure images cover the container, cropping if necessary */
@@ -56,14 +57,18 @@
     width: 50%;
     max-height: 3em;
     margin-top: 1rem;
-    background-color: #f5ece5;
-    color: #5e9b55;
+    background-color: #5e9b55;
+    color: #f5ece5;
     border: 1px solid #45523e;
 }
 
 #details:hover {
-    background-color: #45523e;
+    background-color: #4F7942;
     color: #f5ece5;
+}
+
+.modal-body {
+    color: #45523e;
 }
 
 @media (max-width: 1200px) {
