@@ -60,6 +60,10 @@
     color: #5e9b55;
 }
 
+a {
+    text-decoration: none;
+}
+
 @media (max-width: 600px) {
     #navMobile {
         display: block;
