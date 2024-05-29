@@ -257,7 +257,7 @@ app.post('/articles/:articleId', (req, res) => {
 
 app.use('/', scanHistoryRouter);
 
-app.use("/", (req, res, next)=> {
+app.use("/", (req, res, next) => {
     app.locals.navLinks = navLinks;
     app.locals.currentURL = url.parse(req.url).pathname;
     next();
@@ -363,7 +363,7 @@ app.get('/recycleCenters', async (req, res) => {
 });
 
 app.get('/scan', (req, res) => {
-    res.render('scan', { navLinks, username: req.session, terms: req.session.termsConditions  });
+    res.render('scan', { navLinks, username: req.session.username, terms: req.session.termsConditions  });
 });
 
 const upload = multer();
