@@ -44,3 +44,20 @@ a {
         height: 35vh;
     }
 }
+
+@media (max-width: 450px) {
+    #inputChoice {
+        display: grid;
+    }
+
+    #inputChoice #takeAPhoto {
+        width: 150px;
+        margin: auto;
+        margin-top: 5%;
+        margin-bottom: 10%;
+    }
+
+    #inputChoice .file-btn {
+        margin-top: 10%;
+    }
+}

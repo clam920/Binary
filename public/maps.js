@@ -12,11 +12,10 @@ function initMap() {
 
 window.initMap = initMap;
 
-
 document.addEventListener('DOMContentLoaded', async () => {
     const input = document.getElementById('auto-suggest');
     const suggestionsBox = document.getElementById('suggestions');
-    // suggestionsBox.classList.add('container', 'mb-2');
+    suggestionsBox.classList.add('suggestion-container', 'mb-2');
     // suggestionsBox.style.color = 'blue';
     // suggestionsBox.style.border = '1px solid #ccc';
     // suggestionsBox.style.borderRadius = '10px';
@@ -39,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             filteredSuggestions.forEach(suggestion => {
                 const suggestionElement = document.createElement('div');
-                suggestionElement.className = 'container';
+                suggestionElement.className = 'suggestion-container';
                 // suggestionElement.style.border = '1px solid #F5F5F5';
                 // suggestionElement.style.borderRadius = '5px';
                 suggestionElement.style.cursor = 'pointer';
@@ -147,9 +146,13 @@ const getSelected2 = () => {
                     elCard.style = 'width: 18rem;';
                     elCard.innerHTML = `<div class="card-body">
                 <h5 class="card-title">${feature.place}</h5>
-                <h6 class="card-subtitle mb-2">Close</h6>
-                <button class="btn btn-primary rounded-pill " href="${feature.directions}" target="_blank">Get directions..</button>
-                </div>`;
+                <h6 class="card-subtitle mb-2">Closed</h6>`
+
+                for (let i = 0; i < place.opening_hours.weekday_text.length; i++) {
+                    elCard.innerHTML += `<h6 class="card-subtitle mb-2">${place.opening_hours.weekday_text[i]}</h6>`
+                }
+                    elCard.innerHTML += `<button class="btn" href="${feature.directions}" target="_blank">Get directions..</button>
+                    </div>`;
                 }
 
                 document.getElementById("infoCard").appendChild(elCard);
