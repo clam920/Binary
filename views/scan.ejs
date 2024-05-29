@@ -209,18 +209,17 @@
                                                     reader.onloadend = async function () {
                                                         let base64String = reader.result;
 
-                                                        await fetch('feedback', {
-                                                            method: 'POST',
-                                                            headers: { "Content-Type": "application/json" },
-                                                            mode: 'cors',
-                                                            cache: 'default',
-                                                            body: JSON.stringify({ url: imageCloudURL, correct: "true" }),
-                                                        });
-
-                                                        feedback.style.display = "None";
-                                                        feedbackResponse.style.display = "Block";
-                                                    }
-                                                });
+                                        await fetch('feedback', {
+                                            method: 'POST',
+                                            headers: { "Content-Type": "application/json" },
+                                            mode: 'cors',
+                                            cache: 'default',
+                                            body: JSON.stringify({ url: imageCloudURL, correct: "true" }),
+                                        });
+                                        feedback.style.display = "None";
+                                        feedbackResponse.style.display = "Block";
+                                    }
+                                });
 
                                                 document.getElementById("thumbs-down").addEventListener("click", () => {
                                                     let reader = new FileReader();
