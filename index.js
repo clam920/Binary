@@ -257,7 +257,7 @@ app.post('/articles/:articleId', (req, res) => {
 
 app.use('/', scanHistoryRouter);
 
-app.use("/", (req, res, next) => {
+app.use("/", (req, res, next)=> {
     app.locals.navLinks = navLinks;
     app.locals.currentURL = url.parse(req.url).pathname;
     next();
@@ -347,23 +347,20 @@ app.get('/history', async (req, res) => {
 
 // Links to the main page
 app.get('/', (req, res) => {
-
-    console.log(req.session.username);
-    res.render('scan', { navLinks: navLinks, username: req.session.username, terms: req.session.termsConditions});
+    res.render('scan', { navLinks: navLinks, username: req.session.username, terms: req.session.termsConditions });
 });
 
 app.get('/home', (req, res) => {
-    console.log(req.session.username);
+
     res.render('scan', { navLinks: navLinks, username: req.session.username, terms: req.session.termsConditions  });
 });
 
 app.get('/recycleCenters', async (req, res) => {
-    const email = req.body.email;
     res.render('recycleCenters', { navLinks, username: req.session.username });
 });
 
 app.get('/scan', (req, res) => {
-    res.render('scan', { navLinks, username: req.session.username, terms: req.session.termsConditions  });
+    res.render('scan', { navLinks, username: req.session, terms: req.session.termsConditions  });
 });
 
 const upload = multer();
