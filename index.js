@@ -257,7 +257,7 @@ app.post('/articles/:articleId', (req, res) => {
 
 app.use('/', scanHistoryRouter);
 
-app.use("/", (req, res, next)=> {
+app.use("/", (req, res, next) => {
     app.locals.navLinks = navLinks;
     app.locals.currentURL = url.parse(req.url).pathname;
     next();
