@@ -1,6 +1,6 @@
 
-document.addEventListener('DOMContentLoaded', () =>{
-    
+document.addEventListener('DOMContentLoaded', () => {
+
     const chartDataElement = document.getElementById('chartData');
     const chartData = JSON.parse(chartDataElement.textContent);
     const chartContainer = document.getElementById('chartContainer');
@@ -29,4 +29,42 @@ document.addEventListener('DOMContentLoaded', () =>{
         // Update chart if needed
         myChart.update();
     });
+
+    // Function to delete scan item
+    async function deleteScan(scanId, scanItemElement) {
+        try {
+            console.log(`Deleting scan item with ID: ${scanId}`);
+            const response = await fetch('history_delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors',
+                cache: 'default',
+                body: JSON.stringify({ scanId: scanId })
+            });
+
+            if (response.ok) {
+                // Remove the scan item from the DOM
+                console.log('Scan entry deleted successfully.');
+                scanItemElement.remove();
+            } else {
+                const errorMessage = await response.text();
+                console.error('Failed to delete scan entry:', errorMessage);
+            }
+        } catch (error) {
+            console.error('Error deleting scan entry:', error);
+        }
+    }
+
+    // Add event listeners to delete buttons
+    document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const scanItemElement = event.target.closest('.scan-item');
+            const scanId = scanItemElement.getAttribute('data-id');
+            console.log(`Button clicked for scan ID: ${scanId}`); 
+            deleteScan(scanId, scanItemElement);
+        });
+    });
+
 });

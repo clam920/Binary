@@ -37,16 +37,16 @@
 
             <div class="scan-container">
                 <% scanHistory.forEach(scan => { %>
-                    <div class="scan-item">
+                    <div class="scan-item" data-id="<%= scan.scanId %>">
                         <div id="description-group">
                             <div id="item-description">
                                 <p>Time: <%= new Date(scan.timestamp).toLocaleString() %></p>
                                 <p>Type: <%= scan.scanType %></p>            
                             </div>
-                            <button type="submit" class="btn btn-green" id="delete">Delete</button>
+                            <button type="button" class="btn btn-green delete-button">Delete</button>
                         </div>
                         <img src="<%= scan.scanData %>" alt="Scan Image">
-                    </div>        
+                    </div>  
                 <% }) %>
                 </div>
             </div>

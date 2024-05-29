@@ -11,6 +11,7 @@ const cron = require('node-cron');
 const bodyParser = require('body-parser');
 const url = require('url');
 
+const { ObjectId } = require('mongodb');
 const publicKey = process.env.PUBLIC_KEY;
 const privateKey = process.env.PRIVATE_KEY;
 
@@ -345,6 +346,63 @@ app.get('/history', async (req, res) => {
 });
 
 
+app.post('/history_delete', async (req, res) => {
+    console.log("received");
+    try {
+        const username = req.session.username;
+        if (!username) {
+            return res.status(400).send('Username is required.');
+        }
+
+        const scanId = req.body.scanId;
+        console.log(`Received request to delete scan item with ID: ${scanId}`);
+
+        // Validate scanId format if needed
+        if (!scanId || scanId.length !== 24) { 
+            return res.status(400).send('Invalid scan ID format.');
+        }
+
+        // Update the user document to remove the scan entry based on scanId
+        const updateResult = await userCollection.updateOne(
+            { username: username },
+            { $pull: { scanHistory: { scanId: new ObjectId(scanId) } } }
+        );
+
+        console.log(updateResult);
+        if (updateResult.modifiedCount === 0) {
+            console.log('Scan entry not found or already deleted');
+            return res.status(404).send('Scan entry not found.');
+        }
+
+        console.log('Scan entry deleted successfully.');
+        res.status(200).send('Scan entry deleted successfully.');
+    } catch (error) {
+        console.error('Error deleting scan entry:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// // Add logging middleware before defining the route handlers
+// app.use((req, res, next) => {
+//     console.log(`Incoming ${req.method} request to ${req.url}`);
+//     next();
+// });
+
+// // Define the route handler for POST /history/delete
+// app.post('/history/delete', async (req, res) => {
+//     try {
+//         // Log request body if needed
+//         console.log('Request body:', req.body);
+
+//         const username = req.session.username;
+//         // Remaining code for handling the request...
+//     } catch (error) {
+//         console.error('Error handling request:', error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// });
+
+
 // Links to the main page
 app.get('/', (req, res) => {
 
@@ -370,7 +428,7 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 5
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb' }));
 const cloudinary = require('cloudinary').v2;
-const { ObjectId } = require('mongodb');
+
 
 // Configure Cloudinary
 cloudinary.config({
