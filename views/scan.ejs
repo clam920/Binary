@@ -17,6 +17,7 @@
     <video id="video" class="image" autoplay></video>
     <button id="capture" class="btn btn-secondary">Take Photo</button>
     <img id="image" class="image">
+    <button id="retakePhoto" class="btn btn-secondary">Use Another Photo</button>
     <button id="usePhoto" class="btn btn-secondary">Use Photo</button>
     <div id="prediction"></div>
     <a href="./scan"><button id="done" class="btn btn-secondary">Done</button></a>
@@ -39,6 +40,7 @@
     const image = document.getElementById("image");
     const video = document.getElementById("video");
     const capture = document.getElementById("capture");
+    const retakePhoto = document.getElementById("retakePhoto");
     const usePhoto = document.getElementById("usePhoto")
     const done = document.getElementById("done");
     const feedback = document.getElementById("feedback");
@@ -46,6 +48,7 @@
 
     video.style.display = "None";
     capture.style.display = "None";
+    retakePhoto.style.display = "None";
     usePhoto.style.display = "None";
     done.style.display = "None";
     feedback.style.display = "None";
@@ -63,6 +66,8 @@
     var imageCapture;
 
     function loadWebcam() {
+        console.log("hello");
+
         navigator.mediaDevices.getUserMedia({video: true})
         .then(mediaStream => {
             video.srcObject = mediaStream;
@@ -86,6 +91,7 @@
             video.style.display = "None";
             capture.style.display = "None";
 
+            retakePhoto.style.display = "Block";
             usePhoto.style.display = "Block";
         })
     }
@@ -100,8 +106,13 @@
         console.log(URL.createObjectURL(event.target.files[0]));
         image.onload = () => { URL.revokeObjectURL(this.src) };
 
+        retakePhoto.style.display = "Block";
         usePhoto.style.display = "Block";
     }
+
+    retakePhoto.addEventListener("click", () => {
+        window.location.href = './scan';
+    });
 
     usePhoto.addEventListener("click", predict);
 
@@ -159,7 +170,14 @@
                     message = "Put this in the garbage bin."
                     break;
             }
+
+            usePhoto.style.display = "None";
+            retakePhoto.style.display = "None";
+    
             document.getElementById("prediction").innerHTML = "This item is most likely " + type + ". " + message;
+
+            done.style.display = "Block";
+            feedback.style.display = "Block";
 
             return;
         })
@@ -181,10 +199,6 @@
                 response = await response.json();
                 imageCloudURL = response.url;
                 console.log("Saved to cloud: " + imageCloudURL);
-
-                usePhoto.style.display = "None";
-                done.style.display = "Block";
-                feedback.style.display = "Block";
             } 
         })
     }
