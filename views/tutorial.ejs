@@ -6,43 +6,46 @@
     <% }else {%> <%- include('templates/navbarGuest') %>
 <% }%>
 
-<div id="tutorialCards">
-    <% for(let i=0; i < tutorialArray.length; i++) { %>
-        <div class="card">
-            <div class="card-img-container">
-                <img src="/images/article<%= i + 1 %>.jpg" class="card-img" alt="Article Image" />
-            </div>
-            <div class="card-body">
-                <h5 class="card-title"><%= tutorialArray[i].title %></h5>
-                <button type="button" class="btn open-modal" id="details" data-bs-toggle="modal" data-bs-target="#articleModal<%= i %>">Details</button>
-            </div>
-        </div>
+<div class="containerSize">
 
-        <!-- Modal for each article -->
-        <div class="modal fade" id="articleModal<%= i %>" tabindex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="articleModalLabel"><%= tutorialArray[i].title %></h5>
-                    </div>
-                    <div class="modal-body">
-                        <p><%= tutorialArray[i].content %></p>
-                        <!-- Sections -->
-                        <% for(let j=0; j < tutorialArray[i].sections.length; j++) { %>
-                            <h6><%= tutorialArray[i].sections[j].title %></h6>
-                            <p><%= tutorialArray[i].sections[j].content %></p>
-                        <% } %>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="/tutorial" class="btn btn-green">Back</a>
-                    </div>
+    <div id="tutorialCards">
+        <% for(let i=0; i < tutorialArray.length; i++) { %>
+            <div class="card">
+                <div class="card-img-container">
+                    <img src="/images/article<%= i + 1 %>.jpg" class="card-img" alt="Article Image" />
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title"><%= tutorialArray[i].title %></h5>
+                    <button type="button" class="btn open-modal" id="details" data-bs-toggle="modal" data-bs-target="#articleModal<%= i %>">Details</button>
                 </div>
             </div>
-        </div>
-    <% } %>
-</div>
-
-<script>
+            
+            <!-- Modal for each article -->
+            <div class="modal fade" id="articleModal<%= i %>" tabindex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="articleModalLabel"><%= tutorialArray[i].title %></h5>
+                        </div>
+                        <div class="modal-body">
+                            <p><%= tutorialArray[i].content %></p>
+                            <!-- Sections -->
+                            <% for(let j=0; j < tutorialArray[i].sections.length; j++) { %>
+                                <h6><%= tutorialArray[i].sections[j].title %></h6>
+                                <p><%= tutorialArray[i].sections[j].content %></p>
+                                <% } %>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="/tutorial" class="btn btn-green">Back</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+            
+            </div>
+            <script>
     // JavaScript to handle opening modals when "Details" button is clicked
     const openModalButtons = document.querySelectorAll(".open-modal");
     openModalButtons.forEach((button) => {

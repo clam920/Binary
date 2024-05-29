@@ -54,3 +54,8 @@ body {
 .links {
     color: #45523e;
 }
+
+.containerSize{
+    max-height: 92vh;
+    overflow: auto;
+}

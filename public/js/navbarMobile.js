@@ -1,17 +1,12 @@
 document.getElementById('aProfile').addEventListener('click', ()=>{
     const dropDown = document.getElementById('dropOpt');
 
-    if (dropOpt.style.display === 'block') {
-        dropOpt.style.display = 'none';
+    if (dropDown.style.display === 'block') {
+        dropDown.style.display = 'none';
       } else {
-        dropOpt.style.display = 'block';
+        dropDown.style.display = 'block';
       }
 
-       // Highlight the profile link when it's clicked
-     document.querySelectorAll('#linkNav a').forEach(link => {
-      link.classList.remove('active');
-    });
-    this.classList.add('active');
 });
 
 document.addEventListener('click', function(event) {
