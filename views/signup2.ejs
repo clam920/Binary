@@ -1,71 +1,81 @@
 <%- include('templates/header') %>
 
-<%- include('templates/navbarGuest') %>
+  <%- include('templates/navbarGuest') %>
 
-<!-- Div wraps evreything and centers it -->
-<div style="display: grid; place-items: center;">
-    <h2 style="margin: 1vw;">Create User</h2><br>
-    <% if(problem == 1){ %>
+    <!-- Div wraps evreything and centers it -->
+    <div style="display: grid; place-items: center;">
+      <h2 style="margin: 1vw;">Create User</h2><br>
+      <% if(problem==1){ %>
         <h4 style="text-align: center;">Email is already link to an account</h4>
-        <%} else if(problem == 2) {%>
-            <h4 style="text-align: center;">Invalid username or password</h4>
-            <% } else if(problem == 3) { %>
-                <h4 style="text-align: center;">Username taken</h4>
-                <% } %>
-                <form action='/createUser' method='post'>
-                  <!-- Email div -->
-                  <div class="row mb-3">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-                    <input type="email" class="form-control" id="inputEmail31" name='email' required=true>
-                  </div>
-            
-                  <!-- Username div -->
-                  <div class="row mb-3">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Username</label>
-                    <input type="text" class="form-control" id="inputEmail3" name='username' required=true>
-                  </div>
-            
-                  <!-- Password Div -->
-                  <div class="row mb-3">
-                    <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
-                    <input type="password" class="form-control" id="inputPassword3" name='password' required>
-                  </div>
-                  <br>
-                  <br>
-            
-                  <h4>Security info</h4>
-                  <!-- Security question -->
-                  <div class="row mb-3" >
-                    <!-- <label for="inputPassword3" class="col-sm-2 col-form-label" >Security Question</label> -->
-                    <label for="inputPassword3" class="col-sm-2 col-form-label">question</label>
-            
-                    <select class="form-select" aria-label="Default select example" name="sec_question">
-                      <option selected>Open this select menu</option>
-                      <option value="Favorite color" name="color">Favorite color</option>
-                      <option value="Name of your Favorite school teacher" name="teacher">Favorite school teacher</option>
-                      <option value="Favorite song" name="song">Favorite song</option>
-                      <option value="Favorite sport" name="sport">Favorite sport</option>
-                    </select>
-                  </div>
-                  <!-- Answer -->
-                  <div class="row mb-3">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Answer</label>
-                    <input type="text" class="form-control" id="inputEmail35" name='sec_Answer' required=true>
-                  </div>
-                  <div style="display: grid; place-items: center;">
-                    <button type="submit" class="btn btn-green col-sm-2" style="width: auto;">Sign up</button>
-                  </div>
-                </form><br>
-            
-                <!-- redirect to the login -->
-                <p style="text-align: center;">already have an account? <a href='/login' class="links">Login</a></p><br>
-                <p style="text-align: center;"><b>or</b></p>
-            
-                <form method="get" action="/auth/google">
-                  <button type="submit" class="btn btn-green">Sign Up with google</button>
-                </form>
+        <%} else if(problem==2) {%>
+          <h4 style="text-align: center;">Invalid username or password</h4>
+          <% } else if(problem==3) { %>
+            <h4 style="text-align: center;">Username taken</h4>
+            <% } %>
+              <form action='/createUser' method='post'>
+                <!-- Email div -->
+                <div class="row mb-3">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                  <input type="email" class="form-control" id="inputEmail31" name='email' required=true>
+                </div>
 
-    
-  </div>
-  <%- include('templates/navbarMobile') %>
-<%- include('templates/footer') %>
+                <!-- Username div -->
+                <div class="row mb-3">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Username</label>
+                  <input type="text" class="form-control" id="inputEmail3" name='username' required=true>
+                </div>
+
+                <!-- Password Div -->
+                <div class="row mb-3">
+                  <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+                  <input type="password" class="form-control" id="inputPassword3" name='password' required>
+                </div>
+                <br>
+                <br>
+
+                <h4>Security info</h4>
+                <!-- Security question -->
+                <div class="row mb-3">
+                  <!-- <label for="inputPassword3" class="col-sm-2 col-form-label" >Security Question</label> -->
+                  <label for="inputPassword3" class="col-sm-2 col-form-label">question</label>
+
+                  <select class="form-select" aria-label="Default select example" name="sec_question">
+                    <option selected>Open this select menu</option>
+                    <option value="Favorite color" name="color">Favorite color</option>
+                    <option value="Name of your Favorite school teacher" name="teacher">Favorite school teacher</option>
+                    <option value="Favorite song" name="song">Favorite song</option>
+                    <option value="Favorite sport" name="sport">Favorite sport</option>
+                  </select>
+                </div>
+                <!-- Answer -->
+                <div class="row mb-3">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Answer</label>
+                  <input type="text" class="form-control" id="inputEmail35" name='sec_Answer' required=true>
+                </div>
+
+                <br>
+                
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="termsCondition" value="true" id="flexCheckDefault" required="true">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    Accept <a id="openTermC">terms and conditions</a>
+                  </label>
+                </div>
+                <br>
+                <div style="display: grid; place-items: center;">
+                  <button type="submit" class="btn btn-green col-sm-2" style="width: auto;">Sign up</button>
+                </div>
+              </form><br>
+
+              <!-- redirect to the login -->
+              <p style="text-align: center;">already have an account? <a href='/login' class="links">Login</a></p><br>
+              <p style="text-align: center;"><b>or</b></p>
+
+              <form method="get" action="/auth/google">
+                <button type="submit" class="btn btn-green">Sign Up with google</button>
+              </form>
+
+              <%- include('templates/termsDialog') %>
+    </div>
+    <%- include('templates/navbarMobile') %>
+      <%- include('templates/footer') %>
