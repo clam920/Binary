@@ -18,8 +18,8 @@ const urlBase64toUint8Array = (base64String) => {
     return outputArray;
 }
 
-const registerPushSubscription = async () =>{
-    if ('serviceWorker' in navigator){
+const registerPushSubscription = async () => {
+    if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.register('/js/sw.js');
         const subscription = await registration.pushManager.subscribe({
             userVisibleOnly: true,
@@ -28,7 +28,7 @@ const registerPushSubscription = async () =>{
 
         const response = await fetch('/save-subscription', {
             method: 'POST',
-            body: JSON.stringify({subscription}),
+            body: JSON.stringify({ subscription }),
             headers: {
                 'content-type': 'application/json'
             }
@@ -40,7 +40,7 @@ const registerPushSubscription = async () =>{
         } else {
             console.error('Failed to save subscription:', response.statusText);
         }
-    
+
     } else {
         console.error('Service Worker is not supported in this browser');
     }
@@ -48,3 +48,18 @@ const registerPushSubscription = async () =>{
 
 registerPushSubscription()
 
+const modalDeleteNotif = document.getElementById('modalDeleteNotif');
+const cancelDeleteNotif = document.getElementById('cancelDeleteNotif');
+
+document.getElementById('deleteNotif').addEventListener('click', function () {
+    modalDeleteNotif.showModal();
+})
+
+document.getElementById('cancelDeleteNotif').addEventListener('click', function () {
+    modalDeleteNotif.close();
+});
+
+
+document.getElementById('yesDeleteNotif').addEventListener('click', function () {
+    modalDeleteNotif.close();
+})
