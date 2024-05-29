@@ -1,6 +1,8 @@
+const confirmationMsg = document.getElementById('confirmation');
+// const close = document.getElementById('close');
 
 document.addEventListener('DOMContentLoaded', () => {
-
+    
     const chartDataElement = document.getElementById('chartData');
     const chartData = JSON.parse(chartDataElement.textContent);
     const chartContainer = document.getElementById('chartContainer');
@@ -48,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Remove the scan item from the DOM
                 console.log('Scan entry deleted successfully.');
                 scanItemElement.remove();
+                confirmationMsg.showModal();
             } else {
                 const errorMessage = await response.text();
                 console.error('Failed to delete scan entry:', errorMessage);
@@ -68,3 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+document.getElementById('closeDeleteMsg').addEventListener('click', function () {
+    confirmationMsg.close();
+})
