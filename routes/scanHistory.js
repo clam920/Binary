@@ -2,8 +2,8 @@ const router = require('express').Router();
 
 // const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
-const { ObjectId } = require('mongodb');
-const { database } = require('../public/js/databaseConnection');
+// const { ObjectId } = require('mongodb');
+// const { database } = require('../public/js/databaseConnection');
 
 
 // Configure Cloudinary
@@ -13,7 +13,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_CLOUD_SECRET
 });
 
-const userCollection = database.db(process.env.MONGODB_DATABASE).collection('users');
+// const userCollection = database.db(process.env.MONGODB_DATABASE).collection('users');
 
 // const storage = multer.memoryStorage();
 
@@ -34,11 +34,11 @@ const userCollection = database.db(process.env.MONGODB_DATABASE).collection('use
 //     }
 // });
 
-const mongoSanitize = require('express-mongo-sanitize');
+// const mongoSanitize = require('express-mongo-sanitize');
 
-router.use(mongoSanitize(
-    { replaceWith: '%' }
-));
+// router.use(mongoSanitize(
+//     { replaceWith: '%' }
+// ));
 
 // router.post('/picUpload', upload.single('image'), async (req, res) => {
 //     if (req.body.file) {
@@ -98,17 +98,17 @@ router.use(mongoSanitize(
 // });
 
 // Error handling middleware for Multer
-router.use((err, req, res, next) => {
-    if (err instanceof multer.MulterError) {
-        if (err.code === 'LIMIT_FILE_SIZE') {
-            return res.status(400).send('File size exceeds limit of 3MB.');
-        }
-        return res.status(400).send(err.message);
-    } else if (err) {
-        return res.status(400).send(err.message);
-    }
-    next();
-});
+// router.use((err, req, res, next) => {
+//     if (err instanceof multer.MulterError) {
+//         if (err.code === 'LIMIT_FILE_SIZE') {
+//             return res.status(400).send('File size exceeds limit of 3MB.');
+//         }
+//         return res.status(400).send(err.message);
+//     } else if (err) {
+//         return res.status(400).send(err.message);
+//     }
+//     next();
+// });
 
 
 module.exports = router;
