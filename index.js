@@ -362,7 +362,7 @@ app.get('/recycleCenters', async (req, res) => {
 });
 
 app.get('/scan', (req, res) => {
-    res.render('scan', { navLinks, username: req.session, terms: req.session.termsConditions  });
+    res.render('scan', { navLinks, username: req.session.username, terms: req.session.termsConditions  });
 });
 
 const upload = multer();
