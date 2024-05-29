@@ -9,7 +9,7 @@ document.getElementById('aProfile').addEventListener('click', function(){
 
            // Highlight the profile link when it's clicked
      document.querySelectorAll('#linkNav a').forEach(link => {
-      console.log("hello")
+      console.log()
       link.classList.remove('active');
     });
     this.classList.add('active');

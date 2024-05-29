@@ -26,13 +26,10 @@
                         <%= notifications.time %>
     </p>
     <!-- style="display: grid; grid-template-columns: auto auto; text-align: left;" -->
-    <div >
-      <form action="/deleteNotification/<%= notifications.title %>" method="post" >
-        <button class="btn cancel" type="submit">Delete</button>
+    <div>
+      <form action="/deleteNotification/<%= notifications.title %>" method="post">
       </form>
-      <!-- <form method="post" action="/updateNotification/<%= notifications.title %>">
-        <button class="btn btn-primary" type="submit">Update</button>
-      </form> -->
+      <button id="deleteNotif" class="btn cancel" type="submit">Delete</button>
     </div>
   </div>
 </div>

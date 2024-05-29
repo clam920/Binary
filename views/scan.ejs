@@ -12,6 +12,9 @@
                         <!-- <% if(username) {%>
                             <% } else {%>
                                 <% } %> -->
+<<<<<<< HEAD
+                                <div class="containerSize">
+=======
                         <h1 style="text-align: center; margin: 2vw;">Upload an Image</h1>
 
                         <div id="container">
@@ -42,7 +45,41 @@
 
                         <% if(!terms){%>
                             <%- include('templates/termsDialog') %>
+>>>>>>> refs/remotes/origin/style
 
+                                    <h1 style="text-align: center; margin: 2vw;">Upload an Image</h1>
+                                    
+                                    <div id="container">
+                                        <div id="inputChoice">
+                                            <button id="takeAPhoto" class="btn btn-green">Take a Photo</button>
+                                            <span>or</span>
+                                            <input type="file" name="fileupload" accept="image/*" onchange="displayImage(event)" id="inputGroupFile04"
+                                            class="btn btn-green file-btn">
+                                        </div>
+                                        
+                                        <div id="videoContainer">
+                                            <video id="video" class="image" autoplay></video>
+                                            <button id="capture" class="btn btn-green">Take Photo</button>
+                                        </div>
+                                        
+                                        <img id="image" class="image">
+                                        <button id="usePhoto" class="btn btn-green">Use Photo</button>
+                                        <div id="prediction"></div>
+                                        
+                                        <a href="./scan"><button id="done" class="btn btn-green">Done</button></a>
+                                        
+                                        <div id="feedback">
+                                            <div>Rate this prediction:</div>
+                                            <button id="thumbs-up"><img src="./images/thumbs-up.png" width="30px" height="30px"></button>
+                                            <button id="thumbs-down"><img src="./images/thumbs-down.png" width="30px" height="30px"></button>
+                                        </div>
+                                        <div id="feedbackResponse">Thanks for the feedback!</div>
+                                    </div>
+                                    
+                                    <% if(!terms){%>
+                                        <%- include('templates/termsDialog') %>
+                                        
+                                    </div>
                                 <%- include('templates/terms') %>
 
                                     <% } %>

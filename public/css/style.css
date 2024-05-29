@@ -21,6 +21,8 @@ body {
 }
 
 .btn:hover {
+    transition: background-color 0.3s ease;
+    border: 1px solid #45523e;
     background-color: #4F7942;
     color: #f5ece5;
     border: 1px solid #45523e;
