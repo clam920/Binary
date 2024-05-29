@@ -1,87 +1,75 @@
 <%- include('templates/header') %>
-<%- include('templates/navbar', {navLinks: navLinks}) %>
+    <link href="/css/history.css" rel="stylesheet">
+    <%- include('templates/navbar', {navLinks: navLinks}) %>
 
-<div class="scan-history-container">
-    <h1>Scan History</h1>
+        <link rel="stylesheet" href="/css/history.css">
 
-   <!-- Filter Form -->
-   <form id="filterForm" method="GET" action="/history">
-        <div>
-            <label for="timeFilter">Time:</label>
-            <select name="timeFilter" id="timeFilter">
-                <option value="7" <%= (timeFilter == 7 ? 'selected' : '') %>>Past 7 days</option>
-                <option value="14" <%= (timeFilter == 14 ? 'selected' : '') %>>Past 14 days</option>
-                <option value="30" <%= (timeFilter == 30 ? 'selected' : '') %>>Past 30 days</option>
-                <option value="90" <%= (timeFilter == 90 ? 'selected' : '') %>>Past 90 days</option>
-            </select>
+        <div id="container">
+            <h1>Scan History</h1>
+
+            <!-- Filter Form -->
+            <form id="filterForm" method="GET" action="/history">
+                <div>
+                    <label for="timeFilter">Time:</label>
+                    <select name="timeFilter" id="timeFilter">
+                        <option value="7" <%=(timeFilter==7 ? 'selected' : '' ) %>>Past 7 days</option>
+                        <option value="14" <%=(timeFilter==14 ? 'selected' : '' ) %>>Past 14 days</option>
+                        <option value="30" <%=(timeFilter==30 ? 'selected' : '' ) %>>Past 30 days</option>
+                        <option value="90" <%=(timeFilter==90 ? 'selected' : '' ) %>>Past 90 days</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="typeFilter">Type:</label>
+                    <select name="typeFilter" id="typeFilter">
+                        <option value="" <%=(!typeFilter ? 'selected' : '' ) %>>All</option>
+                        <option value="Battery" <%=(typeFilter=='Battery' ? 'selected' : '' ) %>>Battery</option>
+                        <option value="Cardboard" <%=(typeFilter=='Cardboard' ? 'selected' : '' ) %>>Cardboard</option>
+                        <option value="Glass" <%=(typeFilter=='Glass' ? 'selected' : '' ) %>>Glass</option>
+                        <option value="Organic" <%=(typeFilter=='Organic' ? 'selected' : '' ) %>>Organic</option>
+                        <option value="Plastic" <%=(typeFilter=='Plastic' ? 'selected' : '' ) %>>Plastic</option>
+                        <option value="Paper" <%=(typeFilter=='Paper' ? 'selected' : '' ) %>>Paper</option>
+                        <option value="Metal" <%=(typeFilter=='Metal' ? 'selected' : '' ) %>>Metal</option>
+                        <option value="Trash" <%=(typeFilter=='Trash' ? 'selected' : '' ) %>>Trash</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-green">Apply Filters</button>
+            </form>
+
+            <div class="scan-container">
+                <% scanHistory.forEach(scan => { %>
+                    <div class="scan-item">
+                        <div id="description-group">
+                            <div id="item-description">
+                                <p>Time: <%= new Date(scan.timestamp).toLocaleString() %></p>
+                                <p>Type: <%= scan.scanType %></p>            
+                            </div>
+                            <button type="submit" class="btn btn-green" id="delete">Delete</button>
+                        </div>
+                        <img src="<%= scan.scanData %>" alt="Scan Image">
+                    </div>        
+                <% }) %>
+                </div>
+            </div>
         </div>
-        <div>
-        <label for="typeFilter">Type:</label>
-            <select name="typeFilter" id="typeFilter">
-                <option value="" <%= (!typeFilter ? 'selected' : '') %>>All</option>
-                <option value="Battery" <%= (typeFilter == 'Battery' ? 'selected' : '') %>>Battery</option>
-                <option value="Cardboard" <%= (typeFilter == 'Cardboard' ? 'selected' : '') %>>Cardboard</option>
-                <option value="Glass" <%= (typeFilter == 'Glass' ? 'selected' : '') %>>Glass</option>
-                <option value="Organic" <%= (typeFilter == 'Organic' ? 'selected' : '') %>>Organic</option>
-                <option value="Plastic" <%= (typeFilter == 'Plastic' ? 'selected' : '') %>>Plastic</option>
-                <option value="Paper" <%= (typeFilter == 'Paper' ? 'selected' : '') %>>Paper</option>
-                <option value="Metal" <%= (typeFilter == 'Metal' ? 'selected' : '') %>>Metal</option>
-                <option value="Trash" <%= (typeFilter == 'Trash' ? 'selected' : '') %>>Trash</option>
-            </select>
+
+        <!-- Show Statistics Button -->
+        <button id="showStatistics" class="btn btn-green">Show Statistics</button>
+
+        <!-- Pie Chart Container -->
+        <div id="chartContainer" style="width: 80%; height: 400px; margin: 50px auto; display: none;">
+            <canvas id="myChart"></canvas>
         </div>
-        <button type="submit">Apply Filters</button>
-    </form>
 
-    <% scanHistory.forEach(scan => { %>
-        <div class="scan-item">
-            <p>Time: <%= new Date(scan.timestamp).toLocaleString() %></p>
-            <p>Type: <%= scan.scanType %></p>
-            <img src="<%= scan.scanData %>" alt="Scan Image">
+        <!-- Pass chartData to the global scope using a hidden div -->
+        <div id="chartData" style="display: none;">
+            <%= JSON.stringify(chartData) %>
         </div>
-    <% }) %>
-</div>
 
-<!-- Show Statistics Button -->
-<button id="showStatistics" class="btn btn-secondary">Show Statistics</button>
+        <!-- Include Chart.js and Chart.js DataLabels Plugin -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
-<!-- Pie Chart Container -->
-<div id="chartContainer">
-    <canvas id="myChart"></canvas>
-</div>
-
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () =>{
-        const chartData = <%- JSON.stringify(chartData) %>;
-        const chartContainer = document.getElementById('chartContainer');
-        const ctx = document.getElementById('myChart').getContext('2d');
-
-        const myChart = new Chart(ctx, {
-            type: 'pie',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                    position: 'right',
-                },
-                title: {
-                    display: true,
-                    text: 'Waste Distribution',
-                },
-            },
-        });
-
-        // Show chart when button is clicked
-        const showStatisticsButton = document.getElementById('showStatistics');
-        showStatisticsButton.addEventListener('click', () => {
-            chartContainer.style.display = 'block';
-            // Update chart if needed
-            myChart.update();
-        });
-    });
-</script>
-
+<!-- Include the separate JavaScript file -->
+<%- include('templates/navbarMobile') %>
+<script src="/js/chart.js"></script>
 <%- include('templates/footer') %>

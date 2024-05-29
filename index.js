@@ -1,4 +1,5 @@
 require('./public/js/utils.js');
+console.log("in index.js");
 
 const fs = require(`fs`);
 require('dotenv').config();
@@ -8,6 +9,7 @@ const path = require('path');
 const webPush = require('web-push');
 const cron = require('node-cron');
 const bodyParser = require('body-parser');
+const url = require('url');
 
 const publicKey = process.env.PUBLIC_KEY;
 const privateKey = process.env.PRIVATE_KEY;
@@ -19,10 +21,10 @@ webPush.setVapidDetails(
 );
 
 // app.use(bodyParser.json());
-app.use(bodyParser.json({limit: "50mb"}));
+app.use(bodyParser.json({ limit: "50mb" }));
 
 // use scanHistory.js to log user scan history
-const scanHistoryRouter = require('./scanHistory');
+const scanHistoryRouter = require('./routes/scanHistory.js');
 const axios = require('axios');
 const cors = require('cors');
 
@@ -174,16 +176,16 @@ cron.schedule('* * * * *', async () => {
     const users = await userCollection.find({}).toArray();
 
     for (const user of users) {
-        
+
         if (user.notifications && user.subscription) {
             for (const notification of user.notifications) {
-                 //console.log(notification);
+                //console.log(notification);
                 const today = now.getDay();
                 const day = notification.day;
 
                 console.log('The day is: ' + day);
                 console.log('Today is: ' + today);
-                
+
                 alert('The day is: ' + day);
                 alert('Today is: ' + today);
                 // Check if the notification day is today or earlier in the week
@@ -192,16 +194,16 @@ cron.schedule('* * * * *', async () => {
                     const minuteNow = now.getMinutes();
                     const [hour, minute] = notification.time.split(':').map(Number);
 
-                    
-                        console.log('The hour: ' + hour);
-                        console.log('time now is: ' + hourNow);
-                        console.log('The minute: ' + minute);
-                        console.log('minute now is: ' + minuteNow);
 
-                        alert('The hour: ' + hour);
-                        alert('time now is: ' + hourNow);
-                        alert('The minute: ' + minute);
-                        alert('minute now is: ' + minuteNow);
+                    console.log('The hour: ' + hour);
+                    console.log('time now is: ' + hourNow);
+                    console.log('The minute: ' + minute);
+                    console.log('minute now is: ' + minuteNow);
+
+                    alert('The hour: ' + hour);
+                    alert('time now is: ' + hourNow);
+                    alert('The minute: ' + minute);
+                    alert('minute now is: ' + minuteNow);
 
                     // Check if the current time matches the notification time
                     if (hourNow === hour && minuteNow === minute) {
@@ -210,7 +212,7 @@ cron.schedule('* * * * *', async () => {
                             body: notification.notes
                         });
 
-                        
+
                         try {
                             await webPush.sendNotification(user.subscription, payload);
                             console.log('Push notification sent successfully');
@@ -225,24 +227,6 @@ cron.schedule('* * * * *', async () => {
     }
 });
 
-function getMapResult() {
-    // const mapResult = await fetch(`https://maps.googleapis.com/maps/api/place/details/json
-    //     ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
-    //     &key=AIzaSyAqMWhRWQ2etM9TJFgDK7gXxPZ18IznGCQ`)
-    // console.log((mapResult));
-    axios.get(`https://maps.googleapis.com/maps/api/place/details/json
-    ?place_id=ChIJw5MD3ZNwhlQRvstXN3AeLXk
-    &key=${mapsAPIkey}`)
-        .then(function (response) {
-            // handle success
-            console.log(response.data);
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error.message);
-        })
-}
-getMapResult();
 
 /** Arrays of tutorial articles to be parsed from tutorial.json */
 let tutorialArray;
@@ -261,10 +245,6 @@ fs.readFile('tutorial.JSON', 'utf-8', (err, data) => {
     }
 });
 
-app.get('/egg', (req, res) => {
-    res.render("easter_egg", { navLinks: navLinks });
-})
-
 app.get('/tutorial', (req, res) => {
     res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks, username: req.session.username });
 });
@@ -276,6 +256,12 @@ app.post('/articles/:articleId', (req, res) => {
 });
 
 app.use('/', scanHistoryRouter);
+
+app.use("/", (req, res, next)=> {
+    app.locals.navLinks = navLinks;
+    app.locals.currentURL = url.parse(req.url).pathname;
+    next();
+});
 
 app.get('/history', async (req, res) => {
     try {
@@ -320,7 +306,7 @@ app.get('/history', async (req, res) => {
         });
 
         // Prepare data for the pie chart
-        const chartData = {
+        let chartData = {
             labels: Object.keys(wasteDistribution),
             datasets: [{
                 label: 'Waste Distribution',
@@ -359,31 +345,18 @@ app.get('/history', async (req, res) => {
 });
 
 
-
 // Links to the main page
 app.get('/', (req, res) => {
-    if (!req.session.authenticated) {
-        res.redirect('/login');
-        return;
-    }
 
     res.render('scan', { navLinks: navLinks, username: req.session.username });
 });
 
 app.get('/home', (req, res) => {
-    if (!req.session.authenticated) {
-        res.redirect('/login');
-        return;
-    }
 
     res.render('scan', { navLinks: navLinks, username: req.session.username });
 });
 
 app.get('/recycleCenters', async (req, res) => {
-    if (!req.session.authenticated) {
-        res.redirect('/login');
-        return;
-    }
     const email = req.body.email;
     res.render('recycleCenters', { navLinks, username: req.session.username });
 });
@@ -393,7 +366,9 @@ app.get('/scan', (req, res) => {
 });
 
 const upload = multer();
-app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb' }));
 const cloudinary = require('cloudinary').v2;
 const { ObjectId } = require('mongodb');
 
@@ -413,10 +388,10 @@ app.post('/saveImage', async (req, res) => {
     let url;
 
     // cloudinary
-    await cloudinary.uploader.upload(imageURI, { 
+    await cloudinary.uploader.upload(imageURI, {
         public_id: imageID
-    }, async function(error, result) { 
-        console.log(result); 
+    }, async function (error, result) {
+        console.log(result);
         url = result.secure_url;
 
         // Prepare scan history entry
@@ -472,7 +447,7 @@ app.use(express.static(__dirname + "/public"));
 // Catches all 404
 app.get('*', (req, res) => {
     res.status(404);
-    res.render('404', {navLinks, username : req.session.username});
+    res.render('404', { navLinks, username: req.session.username });
 });
 
 app.listen(port, () => {

@@ -1,0 +1,23 @@
+/* dialog {
+    width: 80%;
+    max-width: 500px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    position: relative;
+} */
+
+#modal{
+ border-radius: 30px;
+}
+
+/* Style for the open button */
+.open-button {
+    padding: 10px 20px;
+    background: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

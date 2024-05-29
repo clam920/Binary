@@ -1,20 +1,29 @@
-console.log("in script js")
+console.log("in maps js")
 
 var facilities = [];
 let suggestions = [];
 
+function initMap() {
+    const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 49.26264182277888, lng: -123.06925252771276 },
+        zoom: 12,
+    });
+}
+
+window.initMap = initMap;
+
 document.addEventListener('DOMContentLoaded', async () => {
     const input = document.getElementById('auto-suggest');
     const suggestionsBox = document.getElementById('suggestions');
-
-
-
-    // let suggestions = [];
+    suggestionsBox.classList.add('suggestion-container', 'mb-2');
+    // suggestionsBox.style.color = 'blue';
+    // suggestionsBox.style.border = '1px solid #ccc';
+    // suggestionsBox.style.borderRadius = '10px';
+    // suggestionsBox.style.boxSizing = 'border-box';
 
     try {
         const response = await fetch('type.json');
         suggestions = await response.json();
-        // facilities = await response.json();
         console.log(suggestions);
     } catch (error) {
         console.error('Error fetching suggestions:', error);
@@ -29,7 +38,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             filteredSuggestions.forEach(suggestion => {
                 const suggestionElement = document.createElement('div');
-                suggestionElement.className = 'container';
+                suggestionElement.className = 'suggestion-container';
+                // suggestionElement.style.border = '1px solid #F5F5F5';
+                // suggestionElement.style.borderRadius = '5px';
+                suggestionElement.style.cursor = 'pointer';
                 suggestionElement.textContent = suggestion.type;
                 suggestionElement.addEventListener('click', () => {
                     input.value = suggestion.type;
@@ -39,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 suggestionsBox.appendChild(suggestionElement);
             });
 
-            suggestionsBox.style.display = 'block';
+            suggestionsBox.style.display = 'inline-block';
         } else {
             suggestionsBox.style.display = 'none';
         }
@@ -66,34 +78,95 @@ const getSelected2 = () => {
             facilities = el.facility;
         }
     });
-    console.log(facilities + " facilities after loop");
 
     removeMarkers();
+    const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 49.26264182277888, lng: -123.06925252771276 },
+        zoom: 9,
+    });
 
     document.getElementById("infoCard").innerHTML = "";
     // add markers to map
     for (const feature of facilities) {
         // create a HTML element for each feature
-        const el = document.createElement('div');
-        el.className = 'marker';
-        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(feature.place + "\n\n" + `<a href="${feature.directions}" target="_blank">${feature.directions}</a>`);
+        new google.maps.Marker({
+            position: { lat: feature.coordinates[1], lng: feature.coordinates[0] },
+            map: map,
+            title: feature.place,
+            draggable: false,
+            animation: google.maps.Animation.DROP,
+        });
 
-        // make a marker for each feature and add to the map
-        new mapboxgl.Marker(el).setLngLat(feature.coordinates).addTo(map).setPopup(popup);
 
-        // info card for features
-        const elCard = document.createElement('div');
-        elCard.className = 'card';
-        elCard.style = 'width: 18rem;';
-        elCard.innerHTML = `<div class="card-body">
-<h5 class="card-title">${feature.place}</h5>
-<h6 class="card-subtitle mb-2 text-muted">09.00 - 16.30</h6>
-<a href="${feature.directions}" target="_blank" class="card-link">Get directions..</a>
-</div>`;
 
-        document.getElementById("infoCard").appendChild(elCard);
+        var request = {
+            placeId: feature.placeID,
+            fields: ['name', 'rating', 'opening_hours', 'place_id', 'formatted_address', 'geometry']
+        };
 
+        const infowindow = new google.maps.InfoWindow();
+        service = new google.maps.places.PlacesService(map);
+        service.getDetails(request, (place, status) => {
+            // console.log(place)
+            const marker = new google.maps.Marker({
+                map,
+                position: place.geometry.location,
+            });
+
+            google.maps.event.addListener(marker, "click", () => {
+                const content = document.createElement("div");
+                const nameElement = document.createElement("h2");
+
+                nameElement.textContent = place.name;
+                content.appendChild(nameElement);
+
+                const placeAddressElement = document.createElement("p");
+
+                placeAddressElement.textContent = place.formatted_address;
+                content.appendChild(placeAddressElement);
+                infowindow.setContent(content);
+                infowindow.open(map, marker);
+            });
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                const elCard = document.createElement('div');
+                elCard.className = 'card';
+                elCard.style = 'width: 18rem;';
+                elCard.innerHTML = `<div class="card-body">
+            <h5 class="card-title">${feature.place}</h5>
+            <h6 class="card-subtitle mb-1" id="open">Open</h6>`
+                if (place.opening_hours.open_now) {
+                    for (let i = 0; i < place.opening_hours.weekday_text.length; i++) {
+                        elCard.innerHTML += `<h6 class="card-subtitle mb-2">${place.opening_hours.weekday_text[i]}</h6>`
+                    }
+
+                    elCard.innerHTML += `<a href="${feature.directions}" <button class="btn" href="${feature.directions}" target="_blank">Get directions..</button>
+                </div>`;
+                } else {
+                    elCard.className = 'card';
+                    elCard.style = 'width: 18rem;';
+                    elCard.innerHTML = `<div class="card-body">
+                <h5 class="card-title">${feature.place}</h5>
+                <h6 class="card-subtitle mb-2" id="closed">Closed</h6>`
+
+                for (let i = 0; i < place.opening_hours.weekday_text.length; i++) {
+                    elCard.innerHTML += `<h6 class="card-subtitle mb-2">${place.opening_hours.weekday_text[i]}</h6>`
+                }
+                    elCard.innerHTML += `<button class="btn" href="${feature.directions}" target="_blank">Get directions..</button>
+                    </div>`;
+                }
+
+                document.getElementById("infoCard").appendChild(elCard);
+            }
+        });
     }
+    /** mapbox marker */
+    // const el = document.createElement('div');
+    // el.className = 'marker';
+    // const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(feature.place + "\n\n" + `<a href="${feature.directions}" target="_blank">${feature.directions}</a>`);
+
+    // // make a marker for each feature and add to the map
+    // new mapboxgl.Marker(el).setLngLat(feature.coordinates).addTo(map).setPopup(popup);
+    // }
 }
 function removeMarkers() {
     const markers = document.getElementsByClassName('marker');
@@ -101,4 +174,6 @@ function removeMarkers() {
         markers[0].parentNode.removeChild(markers[0]);
     }
 }
+
+function getDirections(directions) { }
 

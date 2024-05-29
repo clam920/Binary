@@ -1,276 +1,236 @@
 <%- include('templates/header') %>
+    <link href="/css/scan.css" rel="stylesheet">
+    <% if(username) {%>
+        <%- include('templates/navbar', {navLinks: navLinks}) %>
+            <% }else {%>
+                <%- include('templates/navbarGuest') %>
+                    <% }%>
 
-<%- include('templates/navbar', {navLinks: navLinks}) %>
+                        <%- include('templates/termsDialog') %>
 
-<h3 style="text-align: center; margin: 2vw;">Welcome <%= username%>!</h3>
+                            <h3 style="text-align: center; margin: 2vw;">Welcome <%= username%>!</h3>
 
-<h1>Upload an Image</h1>
+                            <h1 style="text-align: center; margin: 2vw;">Upload an Image</h1>
 
-<div>
-    <div id="inputChoice">
-        <button id="takeAPhoto" class="btn btn-secondary">Take a Photo</button>
-        <span>or</span>
-        <!-- <button id="uploadPhoto">Choose from Library</button> -->
-        <input type="file" name="fileupload" accept="image/*" onchange="displayImage(event)" id="inputGroupFile04" class="btn btn-secondary">
-    </div>
+                            <div id="container">
+                                <div id="inputChoice">
+                                    <button id="takeAPhoto" class="btn btn-green">Take a Photo</button>
+                                    <span>or</span>
+                                    <input type="file" name="fileupload" accept="image/*" onchange="displayImage(event)" id="inputGroupFile04"
+                                        class="btn btn-green file-btn">
+                                </div>
 
-    <video id="video" class="image" autoplay></video>
-    <button id="capture" class="btn btn-secondary">Take Photo</button>
-    <img id="image" class="image">
-    <button id="retakePhoto" class="btn btn-secondary">Use Another Photo</button>
-    <button id="usePhoto" class="btn btn-secondary">Use Photo</button>
-    <div id="prediction"></div>
-    <a href="./scan"><button id="done" class="btn btn-secondary">Done</button></a>
+                                <video id="video" class="image" autoplay></video>
+                                <button id="capture" class="btn btn-secondary">Take Photo</button>
+                                <img id="image" class="image">
+                                <button id="usePhoto" class="btn btn-secondary">Use Photo</button>
+                                <div id="prediction"></div>
+                                <a href="./scan"><button id="done" class="btn btn-secondary">Done</button></a>
 
-    <div id="feedback">
-        <div>Rate this prediction:</div>
-        <button id="thumbs-up"><img src="./images/thumbs-up.png" width="30px" height="30px"></button>
-        <button id="thumbs-down"><img src="./images/thumbs-down.png" width="30px" height="30px"></button>
-    </div>
-    <div id="feedbackResponse">Thanks for the feedback!</div>
-</div>
+                                <div id="feedback">
+                                    <div>Rate this prediction:</div>
+                                    <button id="thumbs-up"><img src="./images/thumbs-up.png" width="30px" height="30px"></button>
+                                    <button id="thumbs-down"><img src="./images/thumbs-down.png" width="30px" height="30px"></button>
+                                </div>
+                                <div id="feedbackResponse">Thanks for the feedback!</div>
+                            </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 
-<script>
-    let imageFile;
-    let type;
 
-    const inputChoice = document.getElementById("inputChoice");
-    const image = document.getElementById("image");
-    const video = document.getElementById("video");
-    const capture = document.getElementById("capture");
-    const retakePhoto = document.getElementById("retakePhoto");
-    const usePhoto = document.getElementById("usePhoto")
-    const done = document.getElementById("done");
-    const feedback = document.getElementById("feedback");
-    const feedbackResponse = document.getElementById("feedbackResponse");
 
-    video.style.display = "None";
-    capture.style.display = "None";
-    retakePhoto.style.display = "None";
-    usePhoto.style.display = "None";
-    done.style.display = "None";
-    feedback.style.display = "None";
-    feedbackResponse.style.display = "None";
+                            <%- include('templates/navbarMobile') %>
+                                <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+                                <!-- <button id="openTerms">Open modal</button> -->
 
-    document.getElementById("takeAPhoto").addEventListener("click", () => {
-        inputChoice.style.display = "None";
+                                <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 
-        loadWebcam();
+                                <script>
+                                    let imageFile;
+                                    let type;
 
-        video.style.display = "Block";
-        capture.style.display = "Block";
-    });
-    // load video
-    var imageCapture;
+                                    const inputChoice = document.getElementById("inputChoice");
+                                    const image = document.getElementById("image");
+                                    const video = document.getElementById("video");
+                                    const capture = document.getElementById("capture");
+                                    const usePhoto = document.getElementById("usePhoto")
+                                    const done = document.getElementById("done");
+                                    const feedback = document.getElementById("feedback");
+                                    const feedbackResponse = document.getElementById("feedbackResponse");
 
-    function loadWebcam() {
-        console.log("hello");
+                                    video.style.display = "None";
+                                    capture.style.display = "None";
+                                    usePhoto.style.display = "None";
+                                    done.style.display = "None";
+                                    feedback.style.display = "None";
+                                    feedbackResponse.style.display = "None";
 
-        navigator.mediaDevices.getUserMedia({video: true})
-        .then(mediaStream => {
-            video.srcObject = mediaStream;
+                                    document.getElementById("takeAPhoto").addEventListener("click", () => {
+                                        inputChoice.style.display = "None";
 
-            const track = mediaStream.getVideoTracks()[0];
-            imageCapture = new ImageCapture(track);
-        });
-    }
+                                        loadWebcam();
 
-    capture.addEventListener("click", takePhoto);
+                                        video.style.display = "Block";
+                                        capture.style.display = "Block";
+                                    });
+                                    // load video
+                                    var imageCapture;
 
-    function takePhoto() {
-        imageCapture.takePhoto()
-        .then(async blob => {
-            imageFile = blob;
-            console.log(imageFile);
+                                    function loadWebcam() {
+                                        navigator.mediaDevices.getUserMedia({ video: true })
+                                            .then(mediaStream => {
+                                                video.srcObject = mediaStream;
 
-            image.src = URL.createObjectURL(blob);
-            image.onload = () => { URL.revokeObjectURL(this.src) };
+                                                const track = mediaStream.getVideoTracks()[0];
+                                                imageCapture = new ImageCapture(track);
+                                            });
+                                    }
 
-            video.style.display = "None";
-            capture.style.display = "None";
+                                    capture.addEventListener("click", takePhoto);
 
-            retakePhoto.style.display = "Block";
-            usePhoto.style.display = "Block";
-        })
-    }
+                                    function takePhoto() {
+                                        imageCapture.takePhoto()
+                                            .then(async blob => {
+                                                imageFile = blob;
+                                                console.log(imageFile);
 
-    function displayImage(event) {
-        inputChoice.style.display = "None";
+                                                image.src = URL.createObjectURL(blob);
+                                                image.onload = () => { URL.revokeObjectURL(this.src) };
 
-        imageFile = event.target.files[0];
-        // console.log(imageFile);
+                                                video.style.display = "None";
+                                                capture.style.display = "None";
 
-        image.src = URL.createObjectURL(event.target.files[0]);
-        console.log(URL.createObjectURL(event.target.files[0]));
-        image.onload = () => { URL.revokeObjectURL(this.src) };
+                                                usePhoto.style.display = "Block";
+                                            })
+                                    }
 
-        retakePhoto.style.display = "Block";
-        usePhoto.style.display = "Block";
-    }
+                                    function displayImage(event) {
+                                        inputChoice.style.display = "None";
 
-    retakePhoto.addEventListener("click", () => {
-        window.location.href = './scan';
-    });
+                                        imageFile = event.target.files[0];
+                                        // console.log(imageFile);
 
-    usePhoto.addEventListener("click", predict);
+                                        image.src = URL.createObjectURL(event.target.files[0]);
+                                        console.log(URL.createObjectURL(event.target.files[0]));
+                                        image.onload = () => { URL.revokeObjectURL(this.src) };
 
-    let imageCloudURL;
-    let imageType;
+                                        usePhoto.style.display = "Block";
+                                    }
 
-    async function predict() {
-        model = await tf.loadLayersModel('./FinalModel/model.json');
-        const imageTensor = tf.browser.fromPixels(image).resizeNearestNeighbor([224, 224]).toFloat().div(255.0).expandDims(0);
-        
-        let prediction = model.predict(imageTensor);
-        prediction.print();
-        
-        prediction.data()
-        .then(data => {
-            let categories = ['Battery', 'Cardboard', 'Glass', 'Organic', 'Plastic', 'Paper', 'Metal', 'Trash'];
+                                    usePhoto.addEventListener("click", predict);
 
-            for (let i = 0; i < categories.length; i++) {
-                console.log(categories[i] + ": " + data[i]);
-            }
+                                    let imageCloudURL;
 
-            for (let i = 0, max = -1; i < categories.length; i++) {
-                if (data[i] > max) {
-                    max = data[i];
-                    maxIndex = i;
-                }
-            }
+                                    async function predict() {
+                                        model = await tf.loadLayersModel('./FinalModel/model.json');
+                                        const imageTensor = tf.browser.fromPixels(image).resizeNearestNeighbor([224, 224]).toFloat().div(255.0).expandDims(0);
 
-            type = categories[maxIndex];
-            imageType = type;
+                                        let prediction = model.predict(imageTensor);
+                                        prediction.print();
 
-            let message;
+                                        prediction.data()
+                                            .then(data => {
+                                                let categories = ['Battery', 'Cardboard', 'Glass', 'Organic', 'Plastic', 'Paper', 'Metal', 'Trash'];
 
-            switch (type) {
-                case 'Battery':
-                    message = "Please drop this off at your nearest recycling centre.";
-                    break;
-                case 'Cardboard':
-                    message = "Put this in Mixed Paper (yellow bag).";
-                    break;
-                case 'Glass':
-                    message = "Put this in Glass bottles & Jars (gray bin).";
-                    break;
-                case 'Organic':
-                    message = "Put this in the green bin.";
-                    break;
-                case 'Plastic':
-                    message = "Put this in the garbage bin.";
-                    break;
-                case 'Paper':
-                    message = "Put this in Mixed Paper (yellow bag).";
-                    break;
-                case 'Metal':
-                    message = "Please drop this off at your nearest waste centre.";
-                    break;
-                case 'Trash':
-                    message = "Put this in the garbage bin."
-                    break;
-            }
+                                                for (let i = 0; i < categories.length; i++) {
+                                                    console.log(categories[i] + ": " + data[i]);
+                                                }
 
-            usePhoto.style.display = "None";
-            retakePhoto.style.display = "None";
-    
-            document.getElementById("prediction").innerHTML = "This item is most likely " + type + ". " + message;
+                                                for (let i = 0, max = -1; i < categories.length; i++) {
+                                                    if (data[i] > max) {
+                                                        max = data[i];
+                                                        maxIndex = i;
+                                                    }
+                                                }
 
-            done.style.display = "Block";
-            feedback.style.display = "Block";
+                                                type = categories[maxIndex];
+                                                document.getElementById("prediction").innerHTML = "This item is most likely " + type + ".";
 
-            return;
-        })
-        .then(() => {
-            let reader = new FileReader();
-            console.log(imageFile);
-            reader.readAsDataURL(imageFile);
-            reader.onloadend = async function () {
-                let base64String = reader.result;
+                                                return;
+                                            })
+                                            .then(() => {
+                                                let reader = new FileReader();
+                                                console.log(imageFile);
+                                                reader.readAsDataURL(imageFile);
+                                                reader.onloadend = async function () {
+                                                    let base64String = reader.result;
 
-                let response = await fetch('saveImage', {
-                    method: 'POST',
-                    headers: { "Content-Type": "application/json" },
-                    mode: 'cors',
-                    cache: 'default',
-                    body: JSON.stringify({ file: base64String, type: type }),
-                });
+                                                    let response = await fetch('saveImage', {
+                                                        method: 'POST',
+                                                        headers: { "Content-Type": "application/json" },
+                                                        mode: 'cors',
+                                                        cache: 'default',
+                                                        body: JSON.stringify({ file: base64String, type: type }),
+                                                    });
 
-                response = await response.json();
-                imageCloudURL = response.url;
-                console.log("Saved to cloud: " + imageCloudURL);
-            } 
-        })
-    }
+                                                    response = await response.json();
+                                                    imageCloudURL = response.url;
+                                                    console.log("Saved to cloud: " + imageCloudURL);
 
-    // save.addEventListener("click", () => {
-    //     let reader = new FileReader();
-    //     reader.readAsDataURL(imageFile);
-    //     reader.onloadend = async function () {
-    //         let base64String = reader.result;
+                                                    usePhoto.style.display = "None";
+                                                    done.style.display = "Block";
+                                                    feedback.style.display = "Block";
+                                                }
+                                            })
+                                    }
 
-    //         let response = await fetch('saveImage', {
-    //             method: 'POST',
-    //             headers: { "Content-Type": "application/json" },
-    //             mode: 'cors',
-    //             cache: 'default',
-    //             body: JSON.stringify({ file: base64String, type: type }),
-    //         });
+                                    // save.addEventListener("click", () => {
+                                    //     let reader = new FileReader();
+                                    //     reader.readAsDataURL(imageFile);
+                                    //     reader.onloadend = async function () {
+                                    //         let base64String = reader.result;
 
-    //         response = await response.json();
-    //         imageCloudURL = response.url;
-    //         console.log("Saved to cloud: " + imageCloudURL);
-    //     } 
-    // });
+                                    //         let response = await fetch('saveImage', {
+                                    //             method: 'POST',
+                                    //             headers: { "Content-Type": "application/json" },
+                                    //             mode: 'cors',
+                                    //             cache: 'default',
+                                    //             body: JSON.stringify({ file: base64String, type: type }),
+                                    //         });
 
-    // feedback
-    document.getElementById("thumbs-up").addEventListener("click", () => {
-        let reader = new FileReader();
-        reader.readAsDataURL(imageFile);
-        reader.onloadend = async function () {
-            let base64String = reader.result;
+                                    //         response = await response.json();
+                                    //         imageCloudURL = response.url;
+                                    //         console.log("Saved to cloud: " + imageCloudURL);
+                                    //     } 
+                                    // });
 
-            await fetch('feedback', {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                mode: 'cors',
-                cache: 'default',
-                body: JSON.stringify({ url: imageCloudURL, type : imageType, correct: "true" }),
-            });
+                                    // feedback
+                                    document.getElementById("thumbs-up").addEventListener("click", () => {
+                                        let reader = new FileReader();
+                                        reader.readAsDataURL(imageFile);
+                                        reader.onloadend = async function () {
+                                            let base64String = reader.result;
 
-            feedback.style.display = "None";
-            feedbackResponse.style.display = "Block";
-        } 
-    });
+                                            await fetch('feedback', {
+                                                method: 'POST',
+                                                headers: { "Content-Type": "application/json" },
+                                                mode: 'cors',
+                                                cache: 'default',
+                                                body: JSON.stringify({ url: imageCloudURL, correct: "true" }),
+                                            });
 
-    document.getElementById("thumbs-down").addEventListener("click", () => {
-        let reader = new FileReader();
-        reader.readAsDataURL(imageFile);
-        reader.onloadend = async function () {
-            let base64String = reader.result;
+                                            feedback.style.display = "None";
+                                            feedbackResponse.style.display = "Block";
+                                        }
+                                    });
 
-            await fetch('feedback', {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                mode: 'cors',
-                cache: 'default',
-                body: JSON.stringify({ url: imageCloudURL, type : imageType, correct: "false" }),
-            });
+                                    document.getElementById("thumbs-down").addEventListener("click", () => {
+                                        let reader = new FileReader();
+                                        reader.readAsDataURL(imageFile);
+                                        reader.onloadend = async function () {
+                                            let base64String = reader.result;
 
-            feedback.style.display = "None";
-            feedbackResponse.style.display = "Block";
-        } 
-    });
-</script>
+                                            await fetch('feedback', {
+                                                method: 'POST',
+                                                headers: { "Content-Type": "application/json" },
+                                                mode: 'cors',
+                                                cache: 'default',
+                                                body: JSON.stringify({ url: imageCloudURL, correct: "false" }),
+                                            });
 
-<style>
-    .image {
-        height: 20em;
-        width: auto;
-        border-radius: 30px;
-    }
-</style>
-
-<%- include('templates/footer') %>
+                                            feedback.style.display = "None";
+                                            feedbackResponse.style.display = "Block";
+                                        }
+                                    });
+                                </script>
+                                <script src="/js/termsDialog.js"></script>
+                                <%- include('templates/footer') %>

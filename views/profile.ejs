@@ -3,7 +3,7 @@
 <%- include('templates/navbar', {navLinks: navLinks, username: user[0].username}) %>
 
  <!-- Div wraps evreything and centers it -->
- <div style="display: grid; place-items: center;">
+ <div class="containerSize" style="display: grid; place-items: center;">
     <h2 style="margin: 4vw;">User Information</h2>
     <form action='/createUser' method='post'>
       <!-- Email div -->
@@ -20,7 +20,7 @@
 
       <!-- Registration method -->
       <div class="row mb-3">
-        <label for="inputEmail3" class=" col-form-label">Registration Method</label>
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Registration</label>
         <input type="text" class="form-control" id="inputEmail3" name='username' value="<%= user[0].registrationMethod %>" disabled>
       </div>
 
@@ -43,5 +43,5 @@
   </div>
 
 
-
+  <%- include('templates/navbarMobile') %>
 <%- include('templates/footer') %>

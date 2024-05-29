@@ -2,7 +2,11 @@
     <link rel="stylesheet" href="/css/404.css">
     <link rel="stylesheet" href="/css/easter_egg.css">
 
-    <%- include('templates/navbar', {navLinks: navLinks}) %>
+    <% if(username) {%>
+        <%- include('templates/navbar', {navLinks: navLinks}) %>
+            <% }else {%>
+                <%- include('templates/navbarGuest') %>
+                    <% }%>
 
         
             <div id="content">
@@ -17,5 +21,6 @@
 
         <%- include('templates/easterDialog') %>
 
+        <%- include('templates/navbarMobile') %>
             <script src=/js/easter_egg.js></script>
             <%- include('templates/footer') %>
