@@ -107,8 +107,8 @@ const feedbackCollection = database.db(mongodb_database).collection('feedback');
 // navigation bar links
 const navLinks = [
     { name: 'Home', link: '/scan' },
-    { name: 'Recycle Centers', link: '/recycleCenters' },
-    { name: 'Scan History', link: '/history' },
+    { name: 'Search', link: '/recycleCenters' },
+    { name: 'Dashboard', link: '/history' },
     { name: 'Tutorial', link: '/tutorial' },
 ];
 
@@ -119,7 +119,6 @@ app.use(passport.session());    // initialize the session
 // Will do the login with google 
 app.get('/auth/google',
     passport.authenticate('google', { scope: ['email', 'profile'] }));
-
 // Callback than handles the response after sign in with google
 app.get('/auth/google/callback',
     passport.authenticate('google', {
@@ -313,14 +312,14 @@ app.get('/history', async (req, res) => {
                 label: 'Waste Distribution',
                 data: Object.values(wasteDistribution),
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.5)',
-                    'rgba(255, 206, 86, 0.5)',
-                    'rgba(75, 192, 192, 0.5)',
-                    'rgba(153, 102, 255, 0.5)',
-                    'rgba(255, 159, 64, 0.5)',
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.5)'
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(201, 203, 207, 0.6)',
+                    'rgba(102, 255, 102, 0.6)'
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
@@ -329,8 +328,8 @@ app.get('/history', async (req, res) => {
                     'rgba(75, 192, 192, 1)',
                     'rgba(153, 102, 255, 1)',
                     'rgba(255, 159, 64, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)'
+                    'rgba(201, 203, 207, 1)',
+                    'rgba(102, 255, 102, 1)'
                 ],
                 borderWidth: 1
             }]

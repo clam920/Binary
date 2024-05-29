@@ -52,6 +52,11 @@
             </div>
         </div>
 
+        <dialog id="confirmation">
+            <h3>Scan entry deleted successfully.</h3>
+            <button class="btn btn-green" id="closeDeleteMsg">Close</button>
+        </dialog>
+
         <!-- Show Statistics Button -->
         <button id="showStatistics" class="btn btn-green">Show Statistics</button>
 
@@ -59,6 +64,9 @@
         <div id="chartContainer" style="width: 80%; height: 400px; margin: 50px auto; display: none;">
             <canvas id="myChart"></canvas>
         </div>
+
+        <!-- Download Statistics Button -->
+        <a id="downloadStatistics" download="Canvas.png" class="btn btn-green" href="#">Download Statistics</a>
 
         <!-- Pass chartData to the global scope using a hidden div -->
         <div id="chartData" style="display: none;">
@@ -68,6 +76,38 @@
         <!-- Include Chart.js and Chart.js DataLabels Plugin -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+        <script>
+            const downloadStatisticsButton = document.getElementById("downloadStatistics");
+            downloadStatisticsButton.style.display = "None";
+
+            const showStatisticsButton = document.getElementById("showStatistics");
+            showStatisticsButton.addEventListener("click", () => {
+                downloadStatisticsButton.style.display = "Block";
+            })
+
+            const canvas = document.getElementById("myChart");
+            const canvasContext = canvas.getContext("2d");
+
+            function downloadCanvas() {
+                console.log("Hello!");
+
+                let dt = canvas.toDataURL('image/png');
+                dt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
+                dt = dt.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=statistics.png');
+                this.href = dt;
+            }
+
+            downloadStatisticsButton.addEventListener("click", downloadCanvas);
+        </script>
+
+        <style>
+            #downloadStatistics {
+                width: 190px;
+                margin: auto;
+            }
+        </style>
+
 
 <!-- Include the separate JavaScript file -->
 <%- include('templates/navbarMobile') %>

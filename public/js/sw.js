@@ -24,3 +24,5 @@ self.addEventListener('push', (event) => {
         self.registration.showNotification(title, options)
     );
 });
+
+
