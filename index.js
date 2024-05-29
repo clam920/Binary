@@ -109,7 +109,7 @@ const navLinks = [
     { name: 'Home', link: '/scan' },
     { name: 'Recycle Centers', link: '/recycleCenters' },
     { name: 'Scan History', link: '/history' },
-    { name: 'Tutorial', link: '/tutorial' },
+    { name: 'Tutorial', link: '/tutorial' }
 ];
 
 // Passport to use google authentication
