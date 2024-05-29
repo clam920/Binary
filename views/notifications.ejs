@@ -3,26 +3,32 @@
 
   <%- include('templates/navbar', {navLinks: navLinks, username}) %>
 
-    <h1 style="text-align: center; margin-bottom: 3vh;">Notifications</h1>
 
+  <div class="containerSize">
+
+    <h1 style="text-align: center; margin-bottom: 3vh;">Notifications</h1>
+    
     <div id="notifications">
       
-        <div class="card">
-          <h5 class="card-header">Create a Notification</h5>
-          <div class="card-body">
-            <p class="card-text">The notification will remind you of the weekly waste collection of your place</p>
-            <a href="/createNotification" class="btn">Create</a>
-          </div>
+      <div class="card">
+        <h5 class="card-header">Create a Notification</h5>
+        <div class="card-body">
+          <p class="card-text">The notification will remind you of the weekly waste collection of your place</p>
+          <a href="/createNotification" class="btn">Create</a>
         </div>
+      </div>
       
-
+      
       <!-- It will create the cards -->
       <% if(notifications !== undefined) {%>
-      <% for(let i=0; i < notifications.length; i++) { %>
-        <%- include('templates/notificationCard', {notifications: notifications[i]})%>
+        <% for(let i=0; i < notifications.length; i++) { %>
+          <%- include('templates/notificationCard', {notifications: notifications[i]})%>
           <% } %>
           <% } %>
-    </div>
-
-    <script src="/js/notification.js"></script>
-    <%- include('templates/footer') %>
+        </div>
+        
+      </div>
+        
+        <%- include('templates/navbarMobile') %>
+        <script src="/js/notification.js"></script>
+        <%- include('templates/footer') %>

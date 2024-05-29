@@ -405,22 +405,20 @@ app.post('/history_delete', async (req, res) => {
 
 // Links to the main page
 app.get('/', (req, res) => {
-
-    res.render('scan', { navLinks: navLinks, username: req.session.username });
+    res.render('scan', { navLinks: navLinks, username: req.session.username, terms: req.session.termsConditions });
 });
 
 app.get('/home', (req, res) => {
 
-    res.render('scan', { navLinks: navLinks, username: req.session.username });
+    res.render('scan', { navLinks: navLinks, username: req.session.username, terms: req.session.termsConditions  });
 });
 
 app.get('/recycleCenters', async (req, res) => {
-    const email = req.body.email;
     res.render('recycleCenters', { navLinks, username: req.session.username });
 });
 
 app.get('/scan', (req, res) => {
-    res.render('scan', { navLinks, username: req.session.username });
+    res.render('scan', { navLinks, username: req.session, terms: req.session.termsConditions });
 });
 
 const upload = multer();

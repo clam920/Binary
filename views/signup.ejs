@@ -3,7 +3,7 @@
 <%- include('templates/navbarGuest') %>
 
   <!-- Div wraps evreything and centers it -->
-  <div style="display: grid; place-items: center;">
+  <div class="containerSize" style="display: grid; place-items: center;">
     <h2 style="margin: 4vw;">Create User</h2>
     <form action='/createUser' method='post'>
       <!-- Email div -->
@@ -45,6 +45,16 @@
         <label for="inputEmail3" class="col-sm-2 col-form-label">Answer</label>
         <input type="text" class="form-control" id="inputEmail35" name='sec_Answer' required=true>
       </div>
+
+      <br>
+      <a id="openTermC" style="cursor: pointer;">Click me to read terms and conditions</a>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="termsCondition" value="true" id="flexCheckDefault" required="true">
+        <label class="form-check-label" for="flexCheckDefault">
+          Accept terms and conditions
+        </label>
+      </div>
+      <br>
       <div style="display: grid; place-items: center;">
         <button type="submit" class="btn btn-green col-sm-2" style="width: auto;">Sign up</button>
       </div>
@@ -59,6 +69,10 @@
     </form>
 
     
+    <%- include('templates/termsDialog') %>
   </div>
 
+  <%- include('templates/navbarMobile') %>
+
+  
   <%- include('templates/footer') %>

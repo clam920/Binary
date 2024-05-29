@@ -41,6 +41,7 @@ router.post('/', async (req, res) => {
     let email = req.body.email;
     let secQ = req.body.sec_question;
     let secA = req.body.sec_Answer;
+    let terms = req.body.termsCondition;
 
     console.log("Security question: "+ secQ);
     console.log("Security answer: " + secA);
@@ -73,12 +74,13 @@ router.post('/', async (req, res) => {
     const method = 'Binary';
 
     // inserts the user to the database
-    await userCollection.insertOne({username: username, email: email, password: hashPassword, security_question: secQ, security_answer: secA, registrationMethod: method});
+    await userCollection.insertOne({username: username, email: email, password: hashPassword, security_question: secQ, security_answer: secA, registrationMethod: method, termsConditions: terms});
 
     req.session.authenticated = true;
     req.session.username = username;
     req.session.email = email;
     req.session.cookie.maxAge = expireTime;
+    req.session.termsConditions = true;
 
     res.redirect('/');
 });
