@@ -56,28 +56,10 @@
             <canvas id="myChart"></canvas>
         </div>
 
-<<<<<<< HEAD
-    <div class="scan-container">
-    <% scanHistory.forEach(scan => { %>
-        <div class="scan-item">
-            <div id="discription-group">
-                <div id="item-discription">
-                    <p>Time: <%= new Date(scan.timestamp).toLocaleString() %></p>
-                    <p>Type: <%= scan.scanType %></p>            
-                </div>
-                <button type="submit" class="btn btn-green" id="delete">Delete</button>
-            </div>
-            <img src="<%= scan.scanData %>" alt="Scan Image">
-        </div>        
-    <% }) %>
-    </div>
-</div>
-=======
         <!-- Pass chartData to the global scope using a hidden div -->
         <div id="chartData" style="display: none;">
             <%= JSON.stringify(chartData) %>
         </div>
->>>>>>> da1ae2d571d9448da337c7e1f11389cd0e6fe12c
 
         <!-- Include Chart.js and Chart.js DataLabels Plugin -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
