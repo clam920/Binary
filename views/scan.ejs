@@ -16,8 +16,8 @@
                             <div id="inputChoice">
                                 <button id="takeAPhoto" class="btn btn-green">Take a Photo</button>
                                 <span>or</span>
-                                <input type="file" name="fileupload" accept="image/*" onchange="displayImage(event)"
-                                    id="inputGroupFile04" class="btn btn-green file-btn">
+                                <input type="file" name="fileupload" accept="image/*" onchange="displayImage(event)" id="inputGroupFile04"
+                                    class="btn btn-green file-btn">
                             </div>
 
                             <div id="videoContainer">
@@ -28,56 +28,22 @@
                             <img id="image" class="image">
                             <button id="usePhoto" class="btn btn-green">Use Photo</button>
                             <div id="prediction"></div>
-                            <!-- <button id="save" class="btn btn-green">Save to History</button>
-                            <a href="./scan"><button id="done" class="btn btn-green">Done</button></a>
-                            
-                            <div class="dropdown" id="complaintForm">
-                                <button class="btn btn-green dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Not quite right?
-                                </button>
-                                <div class="dropdown-menu">
-                                    <div>
-                                        We're sorry about that. Our model isn't accurate 100% of the time, but we're working to improve it!
-                                    </div>
-                                    <form action="/complaint" method="post">
-                                        <div class="form-group">
-                                            <label for="options">What is this item actually?</label>
-                                            <select name="type" class="form-control" id="options" onchange="showOtherInput()">
-                                                <option value="Cardboard">Cardboard</option>
-                                                <option value="Glass">Glass</option>
-                                                <option value="Metal">Metal</option>
-                                                <option value="Paper">Paper</option>
-                                                <option value="Plastic">Plastic</option>
-                                                <option value="Trash">Trash</option>
-                                                <option value="Other">Other</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group" id="otherOption" style="display: none;">
-                                            <label for="other">Please specify:</label>
-                                            <input name="type" type="text" class="form-control" id="other">
-                                        </div>
-                                        <input name="allowForTraining" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            Allow Binary to use this photo for future training.
-                                        </label>
-                                        <input type="submit" class="btn btn-primary" value="Submit">
-                                    </form>
-                                </div> -->
+
                             <a href="./scan"><button id="done" class="btn btn-green">Done</button></a>
 
                             <div id="feedback">
                                 <div>Rate this prediction:</div>
-                                <button id="thumbs-up"><img src="./images/thumbs-up.png" width="30px"
-                                        height="30px"></button>
-                                <button id="thumbs-down"><img src="./images/thumbs-down.png" width="30px"
-                                        height="30px"></button>
+                                <button id="thumbs-up"><img src="./images/thumbs-up.png" width="30px" height="30px"></button>
+                                <button id="thumbs-down"><img src="./images/thumbs-down.png" width="30px" height="30px"></button>
                             </div>
                             <div id="feedbackResponse">Thanks for the feedback!</div>
                         </div>
 
                         <% if(!terms){%>
                             <%- include('templates/termsDialog') %>
+
                                 <%- include('templates/terms') %>
+
                                     <% } %>
                                         <%- include('templates/navbarMobile') %>
                                             <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
