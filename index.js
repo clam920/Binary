@@ -258,7 +258,7 @@ app.post('/articles/:articleId', (req, res) => {
 
 app.use('/', scanHistoryRouter);
 
-app.use("/", (req, res, next)=> {
+app.use("/", (req, res, next) => {
     app.locals.navLinks = navLinks;
     app.locals.currentURL = url.parse(req.url).pathname;
     next();
@@ -436,8 +436,6 @@ cloudinary.config({
 });
 
 app.post('/saveImage', async (req, res) => {
-    const username = req.session.username;
-
     const imageURI = req.body.file;
     const imageType = req.body.type;
     const imageID = new ObjectId();
@@ -461,10 +459,14 @@ app.post('/saveImage', async (req, res) => {
         };
 
         // Update user's scan history in MongoDB
-        const updateResult = await userCollection.updateOne(
-            { username: username },
-            { $push: { scanHistory: scanEntry } }
-        );
+        const username = req.session.username;
+
+        if (username) {
+            const updateResult = await userCollection.updateOne(
+                { username: username },
+                { $push: { scanHistory: scanEntry } }
+            );
+        }
     });
 
     res.send({ url });
@@ -474,6 +476,7 @@ app.post('/saveImage', async (req, res) => {
 
 app.post('/feedback', async (req, res) => {
     const url = req.body.url;
+    const type = req.body.type;
     const correct = req.body.correct === 'true' ? true : false;
 
     console.log(url);
@@ -481,6 +484,7 @@ app.post('/feedback', async (req, res) => {
 
     await feedbackCollection.insertOne({
         url,
+        type,
         correct,
     })
 
