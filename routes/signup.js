@@ -80,6 +80,7 @@ router.post('/', async (req, res) => {
     req.session.username = username;
     req.session.email = email;
     req.session.cookie.maxAge = expireTime;
+    req.session.termsConditions = true;
 
     res.redirect('/');
 });
