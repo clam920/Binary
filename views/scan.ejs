@@ -23,7 +23,10 @@
                                 <video id="video" class="image" autoplay></video>
                                 <button id="capture" class="btn btn-secondary">Take Photo</button>
                                 <img id="image" class="image">
-                                <button id="usePhoto" class="btn btn-secondary">Use Photo</button>
+                                <div>
+                                    <button id="retakePhoto" class="btn btn-green">Retake Photo</button>
+                                    <button id="usePhoto" class="btn btn-green">Use Photo</button>
+                                </div>
                                 <div id="prediction"></div>
                                 <a href="./scan"><button id="done" class="btn btn-secondary">Done</button></a>
 
@@ -52,6 +55,7 @@
                                     const image = document.getElementById("image");
                                     const video = document.getElementById("video");
                                     const capture = document.getElementById("capture");
+                                    const retakePhoto = document.getElementById("retakePhoto");
                                     const usePhoto = document.getElementById("usePhoto")
                                     const done = document.getElementById("done");
                                     const feedback = document.getElementById("feedback");
@@ -59,6 +63,7 @@
 
                                     video.style.display = "None";
                                     capture.style.display = "None";
+                                    retakePhoto.style.display = "None";
                                     usePhoto.style.display = "None";
                                     done.style.display = "None";
                                     feedback.style.display = "None";
@@ -99,9 +104,14 @@
                                                 video.style.display = "None";
                                                 capture.style.display = "None";
 
-                                                usePhoto.style.display = "Block";
+                                                retakePhoto.style.display = "Inline-Block";
+                                                usePhoto.style.display = "Inline-Block";
                                             })
                                     }
+
+                                    retakePhoto.addEventListener("click", () => {
+                                        window.location.href = "/scan";
+                                    });
 
                                     function displayImage(event) {
                                         inputChoice.style.display = "None";
@@ -113,7 +123,8 @@
                                         console.log(URL.createObjectURL(event.target.files[0]));
                                         image.onload = () => { URL.revokeObjectURL(this.src) };
 
-                                        usePhoto.style.display = "Block";
+                                        retakePhoto.style.display = "Inline-Block";
+                                        usePhoto.style.display = "Inline-Block";
                                     }
 
                                     usePhoto.addEventListener("click", predict);
@@ -128,7 +139,7 @@
                                         prediction.print();
 
                                         prediction.data()
-                                            .then(data => {
+                                            .then(async data => {
                                                 let categories = ['Battery', 'Cardboard', 'Glass', 'Organic', 'Plastic', 'Paper', 'Metal', 'Trash'];
 
                                                 for (let i = 0; i < categories.length; i++) {
@@ -166,6 +177,7 @@
                                                     imageCloudURL = response.url;
                                                     console.log("Saved to cloud: " + imageCloudURL);
 
+                                                    retakePhoto.style.display = "None";
                                                     usePhoto.style.display = "None";
                                                     done.style.display = "Block";
                                                     feedback.style.display = "Block";
