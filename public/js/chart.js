@@ -1,8 +1,6 @@
 const confirmationMsg = document.getElementById('confirmation');
-// const close = document.getElementById('close');
 
 document.addEventListener('DOMContentLoaded', () => {
-    
     const chartDataElement = document.getElementById('chartData');
     const chartData = JSON.parse(chartDataElement.textContent);
     const chartContainer = document.getElementById('chartContainer');
@@ -24,11 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
         },
     });
 
-    // Show chart when button is clicked
     const showStatisticsButton = document.getElementById('showStatistics');
     showStatisticsButton.addEventListener('click', () => {
         chartContainer.style.display = 'block';
-        // Update chart if needed
         myChart.update();
     });
 
@@ -47,10 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                // Remove the scan item from the DOM
                 console.log('Scan entry deleted successfully.');
                 scanItemElement.remove();
-                confirmationMsg.showModal();
+                // Show success message in modal
+                document.getElementById('confirmToDelete').style.display = 'none';
+                document.getElementById('itemDeleted').style.display = 'block';
             } else {
                 const errorMessage = await response.text();
                 console.error('Failed to delete scan entry:', errorMessage);
@@ -65,13 +62,26 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', (event) => {
             const scanItemElement = event.target.closest('.scan-item');
             const scanId = scanItemElement.getAttribute('data-id');
-            console.log(`Button clicked for scan ID: ${scanId}`); 
-            deleteScan(scanId, scanItemElement);
+            confirmationMsg.setAttribute('data-scan-id', scanId);
+            confirmationMsg.setAttribute('data-scan-element-id', scanItemElement.id);
+            document.getElementById('confirmToDelete').style.display = 'block';
+            document.getElementById('itemDeleted').style.display = 'none';
+            confirmationMsg.showModal();
+            console.log(`Button clicked for scan ID: ${scanId}`);
         });
     });
 
-});
+    document.querySelector('.confirm-To-Delete').addEventListener('click', () => {
+        const scanId = confirmationMsg.getAttribute('data-scan-id');
+        const scanItemElement = document.querySelector(`.scan-item[data-id="${scanId}"]`);
+        if (scanId && scanItemElement) {
+            deleteScan(scanId, scanItemElement);
+        }
+    });
 
-document.getElementById('closeDeleteMsg').addEventListener('click', function () {
-    confirmationMsg.close();
-})
+    document.querySelectorAll('#closeDeleteMsg, #closeDeleteMsgSuccess').forEach(button => {
+        button.addEventListener('click', () => {
+            confirmationMsg.close();
+        });
+    });
+});

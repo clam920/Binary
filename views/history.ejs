@@ -53,8 +53,16 @@
         </div>
 
         <dialog id="confirmation">
-            <h3>Scan entry deleted successfully.</h3>
-            <button class="btn btn-green" id="closeDeleteMsg">Close</button>
+            <div id="confirmToDelete">
+                <p> Confirm to delete?</p>
+                <button type="button" class="btn btn-green confirm-To-Delete">Confirm</button>
+                <button class="btn btn-green" id="closeDeleteMsg">Back</button>
+            </div>
+        
+            <div id="itemDeleted" style="display: none;">
+                <h3>Scan entry deleted successfully.</h3>
+                <button class="btn btn-green" id="closeDeleteMsgSuccess">Close</button>
+            </div>
         </dialog>
 
         <!-- Show Statistics Button -->
