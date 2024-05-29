@@ -117,6 +117,7 @@
     usePhoto.addEventListener("click", predict);
 
     let imageCloudURL;
+    let imageType;
 
     async function predict() {
         model = await tf.loadLayersModel('./FinalModel/model.json');
@@ -141,6 +142,7 @@
             }
 
             type = categories[maxIndex];
+            imageType = type;
 
             let message;
 
@@ -235,7 +237,7 @@
                 headers: { "Content-Type": "application/json" },
                 mode: 'cors',
                 cache: 'default',
-                body: JSON.stringify({ url: imageCloudURL, correct: "true" }),
+                body: JSON.stringify({ url: imageCloudURL, type : imageType, correct: "true" }),
             });
 
             feedback.style.display = "None";
@@ -254,7 +256,7 @@
                 headers: { "Content-Type": "application/json" },
                 mode: 'cors',
                 cache: 'default',
-                body: JSON.stringify({ url: imageCloudURL, correct: "false" }),
+                body: JSON.stringify({ url: imageCloudURL, type : imageType, correct: "false" }),
             });
 
             feedback.style.display = "None";

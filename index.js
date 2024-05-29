@@ -445,6 +445,7 @@ app.post('/saveImage', async (req, res) => {
 
 app.post('/feedback', async (req, res) => {
     const url = req.body.url;
+    const type = req.body.type;
     const correct = req.body.correct === 'true' ? true : false;
 
     console.log(url);
@@ -452,6 +453,7 @@ app.post('/feedback', async (req, res) => {
 
     await feedbackCollection.insertOne({
         url,
+        type,
         correct,
     })
 
