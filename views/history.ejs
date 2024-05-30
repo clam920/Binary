@@ -4,52 +4,57 @@
 
         <link rel="stylesheet" href="/css/history.css">
 
-        <div id="container">
-            <h1>Scan History</h1>
+        <div class="containerSize">
+            <div id="container">
+                <h1>Scan History</h1>
 
-            <!-- Filter Form -->
-            <form id="filterForm" method="GET" action="/history">
-                <div>
-                    <label for="timeFilter">Time:</label>
-                    <select name="timeFilter" id="timeFilter">
-                        <option value="7" <%=(timeFilter==7 ? 'selected' : '' ) %>>Past 7 days</option>
-                        <option value="14" <%=(timeFilter==14 ? 'selected' : '' ) %>>Past 14 days</option>
-                        <option value="30" <%=(timeFilter==30 ? 'selected' : '' ) %>>Past 30 days</option>
-                        <option value="90" <%=(timeFilter==90 ? 'selected' : '' ) %>>Past 90 days</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="typeFilter">Type:</label>
-                    <select name="typeFilter" id="typeFilter">
-                        <option value="" <%=(!typeFilter ? 'selected' : '' ) %>>All</option>
-                        <option value="Battery" <%=(typeFilter=='Battery' ? 'selected' : '' ) %>>Battery</option>
-                        <option value="Cardboard" <%=(typeFilter=='Cardboard' ? 'selected' : '' ) %>>Cardboard</option>
-                        <option value="Glass" <%=(typeFilter=='Glass' ? 'selected' : '' ) %>>Glass</option>
-                        <option value="Organic" <%=(typeFilter=='Organic' ? 'selected' : '' ) %>>Organic</option>
-                        <option value="Plastic" <%=(typeFilter=='Plastic' ? 'selected' : '' ) %>>Plastic</option>
-                        <option value="Paper" <%=(typeFilter=='Paper' ? 'selected' : '' ) %>>Paper</option>
-                        <option value="Metal" <%=(typeFilter=='Metal' ? 'selected' : '' ) %>>Metal</option>
-                        <option value="Trash" <%=(typeFilter=='Trash' ? 'selected' : '' ) %>>Trash</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-green">Apply Filters</button>
-            </form>
+                <!-- Filter Form -->
+                <form id="filterForm" method="GET" action="/history">
+                    <div>
+                        <label for="timeFilter">Time:</label>
+                        <select name="timeFilter" id="timeFilter">
+                            <option value="7" <%=(timeFilter==7 ? 'selected' : '' ) %>>Past 7 days</option>
+                            <option value="14" <%=(timeFilter==14 ? 'selected' : '' ) %>>Past 14 days</option>
+                            <option value="30" <%=(timeFilter==30 ? 'selected' : '' ) %>>Past 30 days</option>
+                            <option value="90" <%=(timeFilter==90 ? 'selected' : '' ) %>>Past 90 days</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="typeFilter">Type:</label>
+                        <select name="typeFilter" id="typeFilter">
+                            <option value="" <%=(!typeFilter ? 'selected' : '' ) %>>All</option>
+                            <option value="Battery" <%=(typeFilter=='Battery' ? 'selected' : '' ) %>>Battery</option>
+                            <option value="Cardboard" <%=(typeFilter=='Cardboard' ? 'selected' : '' ) %>>Cardboard
+                            </option>
+                            <option value="Glass" <%=(typeFilter=='Glass' ? 'selected' : '' ) %>>Glass</option>
+                            <option value="Organic" <%=(typeFilter=='Organic' ? 'selected' : '' ) %>>Organic</option>
+                            <option value="Plastic" <%=(typeFilter=='Plastic' ? 'selected' : '' ) %>>Plastic</option>
+                            <option value="Paper" <%=(typeFilter=='Paper' ? 'selected' : '' ) %>>Paper</option>
+                            <option value="Metal" <%=(typeFilter=='Metal' ? 'selected' : '' ) %>>Metal</option>
+                            <option value="Trash" <%=(typeFilter=='Trash' ? 'selected' : '' ) %>>Trash</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-green">Apply Filters</button>
+                </form>
 
-            <div class="scan-container">
-                <% scanHistory.forEach(scan => { %>
-                    <div class="scan-item" data-id="<%= scan.scanId %>">
-                        <div id="description-group">
-                            <div id="item-description">
-                                <p>Time: <%= new Date(scan.timestamp).toLocaleString() %></p>
-                                <p>Type: <%= scan.scanType %></p>            
+                <div class="scan-container">
+                    <% scanHistory.forEach(scan=> { %>
+                        <div class="scan-item" data-id="<%= scan.scanId %>">
+                            <div id="description-group">
+                                <div id="item-description">
+                                    <p>Time: <%= new Date(scan.timestamp).toLocaleString() %>
+                                    </p>
+                                    <p>Type: <%= scan.scanType %>
+                                    </p>
+                                </div>
+                                <button type="button" class="btn btn-green delete-button">Delete</button>
                             </div>
-                            <button type="button" class="btn btn-green delete-button">Delete</button>
+                            <img src="<%= scan.scanData %>" alt="Scan Image">
                         </div>
-                        <img src="<%= scan.scanData %>" alt="Scan Image">
-                    </div>  
-                <% }) %>
+                        <% }) %>
                 </div>
             </div>
+            <button id="showStatistics" class="btn btn-green">Show Statistics</button>
         </div>
 
         <dialog id="confirmation">
@@ -58,7 +63,7 @@
                 <button type="button" class="btn btn-green confirm-To-Delete">Confirm</button>
                 <button class="btn btn-green" id="closeDeleteMsg">Back</button>
             </div>
-        
+
             <div id="itemDeleted" style="display: none;">
                 <h3>Scan entry deleted successfully.</h3>
                 <button class="btn btn-green" id="closeDeleteMsgSuccess">Close</button>
@@ -66,7 +71,6 @@
         </dialog>
 
         <!-- Show Statistics Button -->
-        <button id="showStatistics" class="btn btn-green">Show Statistics</button>
 
         <!-- Pie Chart Container -->
         <div id="chartContainer" style="width: 80%; height: 400px; margin: 50px auto; display: none;">
@@ -117,7 +121,7 @@
         </style>
 
 
-<!-- Include the separate JavaScript file -->
+        <!-- Include the separate JavaScript file -->
 <%- include('templates/navbarMobile') %>
-<script src="/js/chart.js"></script>
+            <script src="/js/chart.js"></script>
 <%- include('templates/footer') %>
