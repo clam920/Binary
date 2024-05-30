@@ -90,6 +90,12 @@ const deleteNotification = require('./routes/notifications/deleteNotification.js
 // const saveSubscription = require('./routes/notifications/saveSubscription.js');
 // const updateNotification = require('./routes/notifications/modifyNotification.js');
 
+app.use("/", (req, res, next)=> {
+    app.locals.navLinks = navLinks;
+    res.locals.currentURL = req.path;;
+    console.log(res.locals.currentURL);
+    next();
+});
 
 const port = process.env.PORT || 3000;
 const expireTime = 60 * 60 * 1000;// Hour, minutes, seconds miliseconds
@@ -109,7 +115,7 @@ const navLinks = [
     { name: 'Home', link: '/scan' },
     { name: 'Search', link: '/recycleCenters' },
     { name: 'Dashboard', link: '/history' },
-    { name: 'Tutorial', link: '/tutorial' },
+    { name: 'Tutorial', link: '/tutorial' }
 ];
 
 // Passport to use google authentication
@@ -250,22 +256,17 @@ fs.readFile('tutorial.JSON', 'utf-8', (err, data) => {
 });
 
 app.get('/tutorial', (req, res) => {
-    res.render("tutorial", { tutorialArray: tutorialArray, navLinks: navLinks, username: req.session.username });
+    res.render("tutorial", { tutorialArray: tutorialArray, navLinks, username: req.session.username });
 });
 
 /** clickable article details. */
 app.post('/articles/:articleId', (req, res) => {
     const articleId = req.params.articleId;
-    res.render("articles", { tutorialArray: tutorialArray, articleId, navLinks: navLinks });
+    res.render("articles", { tutorialArray: tutorialArray, articleId, navLinks });
 });
 
 app.use('/', scanHistoryRouter);
 
-app.use("/", (req, res, next)=> {
-    app.locals.navLinks = navLinks;
-    app.locals.currentURL = url.parse(req.url).pathname;
-    next();
-});
 
 app.get('/history', async (req, res) => {
     try {
