@@ -48,12 +48,16 @@
     margin-bottom: 3vh;
 }
 
-/* #linkNav div a.active {
+#linkNav div a.active {
     background-color: #5e9b55;
-    padding: 0.2px;
-    border-radius: 100px 90px 0px 0px;
+    padding: 28px;
+    border-radius: 10px 10px 0px 0px;
     border: 2px solid #ebebeb;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* #linkNav div a.active{
+    color: #5e9b55;
 } */
 
 /* #linkNav div img .active .homeLinkWhite{
