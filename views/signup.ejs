@@ -8,19 +8,19 @@
     <form action='/createUser' method='post'>
       <!-- Email div -->
       <div class="row mb-3">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Email*</label>
         <input type="email" class="form-control" id="inputEmail31" name='email' required=true>
       </div>
 
       <!-- Username div -->
       <div class="row mb-3">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Username</label>
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Username*</label>
         <input type="text" class="form-control" id="inputEmail3" name='username' required=true>
       </div>
 
       <!-- Password Div -->
       <div class="row mb-3">
-        <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+        <label for="inputPassword3" class="col-sm-2 col-form-label">Password*</label>
         <input type="password" class="form-control" id="inputPassword3" name='password' required>
       </div>
       <br>
@@ -30,7 +30,7 @@
       <!-- Security question -->
       <div class="row mb-3" >
         <!-- <label for="inputPassword3" class="col-sm-2 col-form-label" >Security Question</label> -->
-        <label for="inputPassword3" class="col-sm-2 col-form-label">question</label>
+        <label for="inputPassword3" class="col-sm-2 col-form-label">Question*</label>
 
         <select class="form-select" aria-label="Default select example" name="sec_question">
           <option selected>Open this select menu</option>
@@ -42,7 +42,7 @@
       </div>
       <!-- Answer -->
       <div class="row mb-3">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Answer</label>
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Answer*</label>
         <input type="text" class="form-control" id="inputEmail35" name='sec_Answer' required=true>
       </div>
 
@@ -51,9 +51,11 @@
       <div class="form-check">
         <input class="form-check-input" type="checkbox" name="termsCondition" value="true" id="acceptCondition" required="true">
         <label class="form-check-label" for="flexCheckDefault">
-          Accept terms and conditions
+          *Accept terms and conditions
         </label>
       </div>
+      <br>
+      <h6>(*) Fields are required</h6>
       <br>
       <div style="display: grid; place-items: center;">
         <button type="submit" class="btn btn-green col-sm-2" style="width: auto;">Sign up</button>
