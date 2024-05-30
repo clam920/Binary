@@ -267,8 +267,9 @@ app.get('/history', async (req, res) => {
     try {
         // Get username from session
         const username = req.session.username;
-        if (!username) {
-            return res.status(400).send('Username is required.');
+        if (!req.session.authenticated) {
+            res.redirect('/login');
+            return;
         }
 
         // Fetch user document from MongoDB

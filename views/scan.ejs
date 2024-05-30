@@ -9,19 +9,18 @@
                 <h3 style="text-align: center; margin: 2vw;">Welcome!</h3>
                     <% }%>
 
-                        <!-- <% if(username) {%>
-                            <% } else {%>
-                                <% } %> -->
-                        <h1 style="text-align: center; margin: 2vw;">Upload an Image</h1>
+                        <div class="containcerSize">
 
-                        <div id="container">
-                            <div id="inputChoice">
-                                <button id="takeAPhoto" class="btn btn-green">Take a Photo</button>
-                                <span>or</span>
-                                <input type="file" name="fileupload" accept="image/*" onchange="displayImage(event)" id="inputGroupFile04"
+                            <h1 style="text-align: center; margin: 2vw;">Upload an Image</h1>
+                            
+                            <div id="container">
+                                <div id="inputChoice">
+                                    <button id="takeAPhoto" class="btn btn-green">Take a Photo</button>
+                                    <span>or</span>
+                                    <input type="file" name="fileupload" accept="image/*" onchange="displayImage(event)" id="inputGroupFile04"
                                     class="btn btn-green file-btn">
-                            </div>
-
+                                </div>
+                                
                                 <video id="video" class="image" autoplay></video>
                                 <button id="capture" class="btn btn-secondary">Take Photo</button>
                                 <img id="image" class="image">
@@ -31,27 +30,27 @@
                                 </div>
                                 <div id="prediction"></div>
                                 <a href="./scan"><button id="done" class="btn btn-secondary">Done</button></a>
-
-                            <div id="feedback">
-                                <div>Rate this prediction:</div>
-                                <button id="thumbs-up"><img src="./images/thumbs-up.png" width="30px" height="30px"></button>
-                                <button id="thumbs-down"><img src="./images/thumbs-down.png" width="30px" height="30px"></button>
+                                
+                                <div id="feedback">
+                                    <div>Rate this prediction:</div>
+                                    <button id="thumbs-up"><img src="./images/thumbs-up.png" width="30px" height="30px"></button>
+                                    <button id="thumbs-down"><img src="./images/thumbs-down.png" width="30px" height="30px"></button>
+                                </div>
+                                <div id="feedbackResponse">Thanks for the feedback!</div>
                             </div>
-                            <div id="feedbackResponse">Thanks for the feedback!</div>
-                        </div>
-
-                        <% if(!terms){%>
-                            <%- include('templates/termsDialog') %>
-
+                            <% if(!terms){%>
+                                <%- include('templates/termsDialog') %>
                                 <%- include('templates/terms') %>
-
-                                    <% } %>
-                                        <%- include('templates/navbarMobile') %>
-                                            <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-                                            <!-- <button id="openTerms">Open modal</button> -->
-
-                                            <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-
+                                <% } %>
+                                
+                            </div>
+                                
+                                <%- include('templates/navbarMobile') %>
+                                <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+                                <!-- <button id="openTerms">Open modal</button> -->
+                                
+                                <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+                                
                                             <script>
                                                 let imageFile;
                                                 let type;
