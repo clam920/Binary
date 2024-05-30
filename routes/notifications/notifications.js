@@ -31,4 +31,13 @@ router.get('/', async (req, res) => {
     res.render('notifications', { navLinks, username: req.session.username, notifications: notifications[0].notifications })
 });
 
+router.post('/', async (req, res) => {
+
+    const email = req.session.email;
+
+    const notifications = await userCollection.find({ email: email }).project({ notifications: 1 }).toArray();
+
+    res.render('notifications', { navLinks, username: req.session.username, notifications: notifications[0].notifications })
+});
+
 module.exports = router

@@ -1,4 +1,4 @@
-console.log("terms dialog")
+// console.log("terms dialog")
 
 const modalTerm = document.getElementById('modal');
 // if (localStorage.getItem('checkTerms')) {

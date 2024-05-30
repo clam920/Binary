@@ -27,9 +27,9 @@
     </p>
     <!-- style="display: grid; grid-template-columns: auto auto; text-align: left;" -->
     <div>
-      <form action="/deleteNotification/<%= notifications.title %>" method="post">
-      </form>
-      <button id="deleteNotif" class="btn cancel" type="submit">Delete</button>
+      <!-- <form action="/deleteNotification/<%= notifications.title %>" method="post">
+      </form> -->
+      <button class="btn cancel  delete-btn" type="submit" data-id="<%= notifications.title %>">Delete</button>
     </div>
   </div>
 </div>
