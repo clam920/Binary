@@ -93,7 +93,7 @@ const deleteNotification = require('./routes/notifications/deleteNotification.js
 app.use("/", (req, res, next)=> {
     app.locals.navLinks = navLinks;
     res.locals.currentURL = req.path;;
-    console.log(res.locals.currentURL);
+    // console.log(res.locals.currentURL);
     next();
 });
 
