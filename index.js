@@ -156,7 +156,7 @@ app.use('/changePassword', changePassword); // gets the new password and verify 
 app.use('/notifications', notifications);
 app.use('/createNotification', createNotification); // form to create notifications
 app.use('/recordNotification', recordNotification); // it is post it will store the notification in database
-//app.use('/deleteNotification', deleteNotification); //it will delete a notification
+// app.use('/deleteNotification', deleteNotification); //it will delete a notification
 // app.use('/save-subscription', saveSubscription); // it will save the subscribtion of the user that is necessary to webPush and service worker
 // app.use('/updateNotification', updateNotification); // to update a notification
 
@@ -180,7 +180,6 @@ app.post('/deleteNotification/:id', async (req, res) =>{
     res.json({ success: 'true'});
 });
 
-// test to merge
 // Schedule notifications check
 cron.schedule('* * * * *', async () => {
     console.log('Checking for due notifications...');

@@ -45,7 +45,11 @@
                                 
                             </div>
                                 
+                            <% if(username) {%> 
                                 <%- include('templates/navbarMobile') %>
+                                <% }else {%> 
+                                    <%- include('templates/navbarMNU') %>
+                            <% }%>
                                 <script src="js/termsDialog.js"></script>
                                 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
                                 <!-- <button id="openTerms">Open modal</button> -->

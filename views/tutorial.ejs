@@ -2,8 +2,11 @@
 
 <link href="/css/tutorial.css" rel="stylesheet" />
 <link href="/css/style.css" rel="stylesheet" />
-<% if(username) {%> <%- include('templates/navbar', {navLinks: navLinks}) %>
-    <% }else {%> <%- include('templates/navbarGuest') %>
+<% if(username) {%> 
+    <%- include('templates/navbar', {navLinks: navLinks}) %>
+    <% }else {%> 
+        <%- include('templates/navbarGuest') %>
+      
 <% }%>
 
 <div class="containerSize">
@@ -46,6 +49,12 @@
             </div>
             
             </div>
+
+            <% if(username) {%> 
+                <%- include('templates/navbarMobile') %>
+                <% }else {%> 
+                    <%- include('templates/navbarMNU') %>
+            <% }%>
             <script>
     // JavaScript to handle opening modals when "Details" button is clicked
     const openModalButtons = document.querySelectorAll(".open-modal");
@@ -57,5 +66,5 @@
         });
     });
 </script>
-<%- include('templates/navbarMobile') %>
+
 <%- include('templates/footer') %>
