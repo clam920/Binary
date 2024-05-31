@@ -2,11 +2,12 @@ require('dotenv');
 const express = require('express');
 const router = express.Router();
 
+// navigation bar links
 const navLinks = [
-    {name: 'Home', link: '/'},
-    {name: 'Recycle Centers', link: '/'},
-    {name: 'Scan', link: '/'},
-    {name: 'Tutorial', link: '/tutorial'},
+    { name: 'Home', link: '/scan' },
+    { name: 'Search', link: '/recycleCenters' },
+    { name: 'Dashboard', link: '/history' },
+    { name: 'Tutorial', link: '/tutorial' }
 ];
 
 const mongodb_database = process.env.MONGODB_DATABASE;
