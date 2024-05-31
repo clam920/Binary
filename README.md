@@ -358,6 +358,18 @@ Maps:
 - Google Maps JavaScript API
 - Places API
 
+Authentication:
+passport js: https://www.passportjs.org/
+crone node: https://www.npmjs.com/package/node-cron
+Google workspace: https://workspace.google.com/?_gl=1*1xb0o6w*_up*MQ..&gclid=Cj0KCQjw6uWyBhD1ARIsAIMcADp9nyfe0RS2LD6FEUjp_F2S3IqufHAu5yN3EdXKyXn6fHPG6WoFUp0aAugUEALw_wcB&gclsrc=aw.ds
+
+Css
+Bootstrap: https://getbootstrap.com/
+Flaticon: https://www.flaticon.com/
+
+Notifications
+WebPush: https://www.npmjs.com/package/web-push
+
 ## 8 How did you use AI
 
 We used AI to develop our main feature. Specifically, our main feature centered on using image detection, a recent technology that’s made possible with Deep Learning and Convolutional Neural Networks (CNNs). We also used a pre-existing model that has been trained to recognize common image patterns with our own fine tuning. For our datasets, we used existing datasets from Kaggle. While the model had a final accuracy of around 90%, it didn't perform as well in real-life use cases. Furthermore, the model is only limited to recognize single-item photos, and may also be confused if the item has a complex background. An expansion of the dataset for more complex subjects and further training is recommended for future implementations of the app.
