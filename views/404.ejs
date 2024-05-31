@@ -1,6 +1,6 @@
 <%- include('templates/header') %>
     <link rel="stylesheet" href="/css/404.css">
-    <link rel="stylesheet" href="/css/easter_egg.css">
+    <link rel="stylesheet" href="/css/easterEgg.css">
 
     <% if(username) {%>
         <%- include('templates/navbar', {navLinks: navLinks}) %>
@@ -26,5 +26,6 @@
                 <% }else {%>
                     <%- include('templates/navbarMNU') %>
                         <% }%>
-            <script src=/js/easter_egg.js></script>
+            <script src=/js/easterEgg.js></script>
+
             <%- include('templates/footer') %>
