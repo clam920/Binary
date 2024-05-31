@@ -13,8 +13,6 @@ const trigger = document.getElementById('world');
 
 document.addEventListener("DOMContentLoaded", sortingGame);
 
-
-
 function sortingGame() {
     const itemsData = [
         { id: "apple", emoji: "🍎", name: "Apple", bin: "compost-bin" },
@@ -28,7 +26,7 @@ function sortingGame() {
     const itemsContainer = document.querySelector(".items");
     const bins = document.querySelectorAll(".bin");
     const binContainers = document.querySelectorAll('.bin-container');
-    itemsContainer.innerHTML = ""; // Clear previous items
+    itemsContainer.innerHTML = ""; 
     bins.forEach((bin) => {
         while (bin.firstChild && bin.firstChild.className !== "bin-name") {
             bin.removeChild(bin.firstChild);
@@ -48,10 +46,10 @@ function sortingGame() {
 
     const mistakesElement = document.getElementById("mistakes");
     const messageElement = document.getElementById("message");
-    let mistakes = 0; // to track the number of mistakes
+    let mistakes = 0; 
 
-    const correctSound = new Audio("/audio/correct.mp3"); // Add your correct sound file here
-    const incorrectSound = new Audio("/audio/wrong.mp3"); // Add your incorrect sound file here
+    const correctSound = new Audio("/audio/correct.mp3"); 
+    const incorrectSound = new Audio("/audio/wrong.mp3"); 
 
     const items = document.querySelectorAll(".item");
     items.forEach((item) => {
@@ -165,7 +163,6 @@ function sortingGame() {
         });
 
         if (allCorrect) {
-            // alert(`Congratulations! You have successfully sorted all the items with ${mistakes} mistakes.`);
             Swal.fire({
                 title: `Congratulations! You have successfully sorted all the items with ${mistakes} mistakes.`,
                 width: 600,
@@ -179,7 +176,6 @@ function sortingGame() {
                 `
               });
             resetGame();
-            // window.location.href("https://www.google.com/")
             dialog.close();
         }
     }
@@ -191,7 +187,6 @@ function sortingGame() {
             text: "Game over!",
             footer: '<a href="#">You got it wrong three times 😢</a>'
           });
-        // alert("Game over! You got it wrong three times 😢");
         resetGame();
         dialog.close();
     }
