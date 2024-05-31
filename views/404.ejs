@@ -21,6 +21,10 @@
 
         <%- include('templates/easterDialog') %>
 
-        <%- include('templates/navbarMobile') %>
+        <% if(username) {%>
+            <%- include('templates/navbarMobile') %>
+                <% }else {%>
+                    <%- include('templates/navbarMNU') %>
+                        <% }%>
             <script src=/js/easter_egg.js></script>
             <%- include('templates/footer') %>

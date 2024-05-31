@@ -5,9 +5,9 @@ require('dotenv').config();
 
 // navigation bar links
 const navLinks = [
-    { name: 'Home', link: '/' },
-    { name: 'Recycle Centers', link: '/recycleCenters' },
-    { name: 'Scan', link: '/' },
+    { name: 'Home', link: '/scan' },
+    { name: 'Search', link: '/recycleCenters' },
+    { name: 'Dashboard', link: '/history' },
     { name: 'Tutorial', link: '/tutorial' }
 ];
 
