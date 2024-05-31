@@ -1,0 +1,225 @@
+/* body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: scroll;
+} */
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+#message {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#mistakes {
+    margin-top: 3vh;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.items {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 100px;
+    gap: 20px;
+}
+
+.item {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 5px;
+    cursor: grab;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    position: relative;
+}
+
+.item:active {
+    transform: scale(1.1);
+}
+
+.bins {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    justify-content: center;
+    gap: 20px;
+    height: auto;
+    width: 100vw;
+}
+
+.bin-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.bin {
+    background-color: #fff;
+    border: 2px solid black;
+    padding: 40px 20px;
+    margin: 0 10px;
+    width: 15vw;
+    max-width: 150px;
+    height: 20vh;
+    text-align: center;
+    border-top-left-radius: 1px;
+    border-top-right-radius: 1px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s, transform 0.2s;
+    position: relative;
+    z-index: 1;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.bin:hover {
+    background-color: #f9f9f9;
+    transform: scale(1.05);
+}
+
+.bin-name {
+    color: whitesmoke;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.lid {
+    width: 100%;
+    height: 30px;
+    border: 2px solid black;
+    border-top-right-radius: 25px;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: -10px;
+    position: absolute;
+    top: -40px;
+    transition: transform 0.3s ease;
+    transform-origin: bottom;
+}
+
+.handle {
+    background-color: grey;
+    width: 50px;
+    height: 15px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    border: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -50px;
+}
+
+.inHandle {
+    background-color: white;
+    color: white;
+    width: 30px;
+    height: 5px;
+    font-size: 0px;
+}
+
+.bin-container:hover .lid,
+.bin-container.dragging-over .lid {
+    transform: translateY(-30px);
+}
+
+.lid::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.1);
+    bottom: -10px;
+    left: 0;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.highlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    pointer-events: none;
+    background: linear-gradient(145deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+}
+
+.shadow {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    border-radius: 8px;
+    pointer-events: none;
+    background: linear-gradient(145deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 70%);
+}
+
+.sad {
+    color: #f00;
+}
+
+.correct {
+    color: green;
+}
+
+.incorrect {
+    color: #ee2400;
+}
+
+@media (max-width: 1000px) {
+    .bins {
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-template-rows:  auto auto;
+        grid-row-gap: 100px;
+        justify-items: center;
+    }
+
+    .bin {
+        height: 15vh;
+        width: 20vw;
+    }
+
+    .lid {
+        height: 20px;
+        top: -30px;
+    }
+
+    .handle {
+        margin-top: -45px
+    }
+
+    .bin-name {
+    color: whitesmoke;
+    font-weight: bold;
+    font-size: 1em;
+    }
+}
+
+@media (max-width: 600px){
+    .bin {
+        width: 30vw;
+    }
+    
+}
