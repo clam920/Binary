@@ -352,6 +352,7 @@ and the notification will be sent to you
 Image Training:
 
 - Tensorflow Resnet 101v2 Model https://www.tensorflow.org/api_docs/python/tf/keras/applications/ResNet101V2
+- Dataset: https://www.kaggle.com/datasets/feyzazkefe/trashnet
 
 Maps:
 
