@@ -12,7 +12,7 @@ Binary, your pocket waste identifier that does the work for you! Smart waste for
 | ------: | ----------------- |
 |     Dom | Front End         |
 |  Darrel | Back End          |
-|    John | AI Implementation |
+|    John | AI Implementation / Front End |
 | Chun Ki | Back End/AI       |
 | Manases | Front End         |
 
@@ -33,7 +33,7 @@ Google colab, Kaggle, Tensorflow, Resnet 101
 ## 4 Listing of file contents of folder
 
 .
-├── Binary_Image_Classification.ipynb
+├── Binary_Image_Classification.ipynb/n
 ├── Model
 ├── Procfile
 ├── README.md
