@@ -33,7 +33,7 @@ Google colab, Kaggle, Tensorflow, Resnet 101
 ## 4 Listing of file contents of folder
 
 .
-├── Binary_Image_Classification.ipynb/n
+├── Binary_Image_Classification.ipynb</br>
 ├── Model
 ├── Procfile
 ├── README.md
